@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block title %}News - Deepfake Scam Analysis{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto pt-10 pb-20">
+    <!-- Back Button -->
+    <a href="/news" class="inline-flex items-center gap-2 text-slate-500 hover:text-red-500 transition mb-10 group">
+        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition"></i> กลับไปหน้าข่าวสาร
+    </a>
+
+    <article class="animate__animated animate__fadeIn">
+        <header class="mb-12">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
+                Next-Gen Threat Alert
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white font-['Kanit'] leading-tight mb-6">
+                จับตา Deepfake! วิดีโอคอลปลอมเป็นคนรู้จักด้วยเทคโนโลยี AI
+            </h1>
+            <div class="flex items-center gap-6 text-slate-500 text-sm font-mono">
+                <span><i class="fa-regular fa-calendar mr-2"></i> 18 ก.พ. 2024</span>
+                <span><i class="fa-regular fa-user mr-2"></i> Cyber Intelligence Team</span>
+            </div>
+        </header>
+
+        <div
+            class="aspect-video bg-slate-900 rounded-[2.5rem] mb-12 flex items-center justify-center border border-white/5 overflow-hidden relative">
+            <i class="fa-solid fa-mask text-9xl text-slate-800 opacity-20"></i>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent"></div>
+            <div class="absolute bottom-10 left-10 right-10">
+                <p class="text-white text-xl font-['Kanit'] font-bold mb-2">AI-Powered Impersonation</p>
+                <p class="text-slate-400 text-sm">การสวมรอยขั้นสูงผ่านภาพและเสียง</p>
+            </div>
+        </div>
+
+        <div class="prose prose-invert max-w-none text-slate-300 font-['Kanit'] space-y-8 leading-relaxed text-lg">
+            <p>
+                โลกก้าวเข้าสู่ยุคที่ "เห็นไม่ได้แปลว่าจริง" อีกต่อไป เมื่อเทคโนโลยี Deepfake หรือการใช้ AI
+                สร้างภาพและเสียงเลียนแบบบุคคลเริ่มถูกนำมาใช้ในแผนการฉ้อโกงที่มีมูลค่าความเสียหายมหาศาล
+            </p>
+
+            <div class="bg-red-500/5 border-l-4 border-red-500 p-8 rounded-r-2xl my-10">
+                <h3 class="text-red-500 font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-eye"></i> วิธีสังเกตความผิดปกติของ Deepfake
+                </h3>
+                <ul class="space-y-4 list-none p-0">
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">1.</span>
+                        <span><b>การกะพริบตา:</b> ระบบ AI มักจะเลียนแบบการกะพริบตาได้ไม่เป็นธรรมชาติ
+                            หรือแทบไม่กะพริบตาเลย</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">2.</span>
+                        <span><b>รอยต่อบริเวณใบหน้า:</b> สังเกตบริเวณไรผมหรือขอบกราม หากมีการเคลื่อนไหวเร็วๆ
+                            อาจพบรอยเบลอหรือรอยแยกของภาพ</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">3.</span>
+                        <span><b>โทนเสียงและจังหวะ:</b> เสียงอาจจะมีความแบนราบ (Monotone)
+                            หรือมีจังหวะการหยุดที่ผิดธรรมชาติเหมือนการประมวลผลข้อมูล</span>
+                    </li>
+                </ul>
+            </div>
+
+            <h2 class="text-2xl font-bold text-white mt-12 mb-6">ความท้าทายของการพิสูจน์ตัวตน</h2>
+            <p>
+                มิจฉาชีพอาจจะทักวิดีโอคอลมาสั้นๆ เพียงไม่กี่วินาทีเพื่ออ้างว่าสัญญาณไม่ดี
+                แล้วรีบตัดสายไปเพื่อให้เราเห็นใบหน้าของ "คนคุ้นเคย" ก่อนจะพิมพ์ข้อความส่งมาขอยืมเงิน
+                เพื่อเป็นการยืนยันความเชื่อใจ
+            </p>
+
+            <div class="p-8 bg-slate-900 rounded-3xl border border-white/5 mt-10">
+                <p class="font-bold text-red-400 mb-4">เทคนิคการรับมือ:</p>
+                <p>ลองถามคำถามส่วนตัวที่มีเพียงคุณและเขาเท่านั้นที่รู้ หรือขอให้เขาสลับมุมกล้อง เอามือมาปัดผ่านใบหน้า
+                    หากเป็นภาพ Deepfake จะเกิดอาการภาพวืดหรือเละทันที</p>
+            </div>
+        </div>
+    </article>
+</div>
+{% endblock %}

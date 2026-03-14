@@ -1,0 +1,182 @@
+{% extends "layout.html" %}
+
+{% block title %}News & Knowledge{% endblock %}
+
+{% block content %}
+<div class="fade-in max-w-5xl mx-auto">
+    <div class="text-center mb-10">
+        <h1 class="text-4xl text-neon mb-2">Cyber Security News</h1>
+        <p class="text-gray-400">อัปเดตข่าวสารและความรู้ด้านความปลอดภัยล่าสุด</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- News Card 1: FB Scam -->
+        <div onclick="window.location.href='/news/fb'"
+            class="cyber-card group cursor-pointer hover:border-blue-500 transition-all duration-300">
+            <div
+                class="h-48 bg-slate-900 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative border border-slate-800">
+                <i
+                    class="fa-brands fa-facebook text-6xl text-slate-700 group-hover:text-blue-500 transition-all duration-500"></i>
+                <div
+                    class="absolute top-4 left-4 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                    Social Alert</div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-white group-hover:text-blue-400 font-['Kanit'] transition-colors">
+                ระวัง! เพจปลอมระบาดหนัก แอบอ้างเป็นหน่วยงานรัฐ</h3>
+            <p class="text-xs text-slate-500 mb-4 font-mono">24 ก.พ. 2024</p>
+            <p class="text-slate-400 text-sm leading-relaxed line-clamp-3 font-['Kanit']">
+                มิจฉาชีพสร้างเพจปลอมเลียนแบบหน่วยงานราชการและธนาคาร เพื่อหลอกขอข้อมูลส่วนตัวหรือให้ดาวน์โหลดแอปฯ ดูดเงิน
+                สังเกตเครื่องหมายติ๊กถูกสีฟ้าและจำนวนผู้ติดตามก่อนหลงเชื่อ...
+            </p>
+            <div
+                class="inline-flex items-center mt-6 text-blue-500 text-sm font-bold uppercase tracking-widest group-hover:text-blue-300 transition-colors">
+                Read Analysis <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
+            </div>
+        </div>
+
+        <!-- News Card 2: Line Scam -->
+        <div onclick="window.location.href='/news/line'"
+            class="cyber-card group cursor-pointer hover:border-green-500 transition-all duration-300">
+            <div
+                class="h-48 bg-slate-900 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative border border-slate-800">
+                <i
+                    class="fa-brands fa-line text-6xl text-slate-700 group-hover:text-green-500 transition-all duration-500"></i>
+                <div
+                    class="absolute top-4 left-4 bg-green-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                    Chat Alert</div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-white group-hover:text-green-400 font-['Kanit'] transition-colors">
+                ภัยใกล้ตัว! กลโกง Line "ยืมเงินเพื่อน"</h3>
+            <p class="text-xs text-slate-500 mb-4 font-mono">22 ก.พ. 2024</p>
+            <p class="text-slate-400 text-sm leading-relaxed line-clamp-3 font-['Kanit']">
+                เตือนภัยการแฮกบัญชี Line หรือสร้างโพรไฟล์ปลอมทักแชทมายืมเงินคนรู้จัก
+                หากได้รับการติดต่อขอยืมเงินผ่านแชท ให้โทรศัพท์ยืนยันตัวตนกับเจ้าตัวก่อนโอนเสมอ...
+            </p>
+            <div
+                class="inline-flex items-center mt-6 text-green-500 text-sm font-bold uppercase tracking-widest group-hover:text-green-300 transition-colors">
+                Read Analysis <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
+            </div>
+        </div>
+
+        <!-- News Card 3: Deepfake -->
+        <div onclick="window.location.href='/news/deepfake'"
+            class="cyber-card group cursor-pointer hover:border-red-500 transition-all duration-300">
+            <div
+                class="h-48 bg-slate-900 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative border border-slate-800">
+                <i
+                    class="fa-solid fa-mask text-6xl text-slate-700 group-hover:text-red-500 transition-all duration-500"></i>
+                <div
+                    class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                    Tech Alert</div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-white group-hover:text-red-400 font-['Kanit'] transition-colors">
+                จับตา Deepfake! วิดีโอคอลปลอมเป็นคนรู้จัก</h3>
+            <p class="text-xs text-slate-500 mb-4 font-mono">18 ก.พ. 2024</p>
+            <p class="text-slate-400 text-sm leading-relaxed line-clamp-3 font-['Kanit']">
+                เทคโนโลยี AI พัฒนาไปไกลจนมิจฉาชีพใช้สร้างวิดีโอและเสียงปลอมเพื่อหลอกเหยื่อผ่าน Social Media
+                พบวิธีการสังเกตความผิดปกติของใบหน้าและน้ำเสียงเบื้องต้นได้ที่นี่...
+            </p>
+            <div
+                class="inline-flex items-center mt-6 text-red-500 text-sm font-bold uppercase tracking-widest group-hover:text-red-300 transition-colors">
+                Read Analysis <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
+            </div>
+        </div>
+
+        <!-- News Card 4: Email Phishing (New) -->
+        <div onclick="window.location.href='/news/email'"
+            class="cyber-card group cursor-pointer hover:border-orange-500 transition-all duration-300">
+            <div
+                class="h-48 bg-slate-900 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative border border-slate-800">
+                <i
+                    class="fa-solid fa-envelope-open-text text-6xl text-slate-700 group-hover:text-orange-500 transition-all duration-500"></i>
+                <div
+                    class="absolute top-4 left-4 bg-orange-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                    Email Alert</div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-white group-hover:text-orange-400 font-['Kanit'] transition-colors">
+                จับผิด "อีเมลฟิชชิ่ง" กลโกงระดับองค์กร</h3>
+            <p class="text-xs text-slate-500 mb-4 font-mono">24 ก.พ. 2024</p>
+            <p class="text-slate-400 text-sm leading-relaxed line-clamp-3 font-['Kanit']">
+                อีเมลยังคงเป็นช่องทางหลักที่มิจฉาชีพใช้เพื่อเข้าถึงข้อมูลสำคัญขององค์กรและบุคคล
+                สังเกตโดเมนผู้ส่งและลักษณะคำเรียกร้องที่ผิดปกติก่อนคลิกลิงก์...
+            </p>
+            <div
+                class="inline-flex items-center mt-6 text-orange-500 text-sm font-bold uppercase tracking-widest group-hover:text-orange-300 transition-colors">
+                Read Analysis <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
+            </div>
+        </div>
+
+        <!-- News Card 5: Web Phishing (New) -->
+        <div onclick="window.location.href='/news/web'"
+            class="cyber-card group cursor-pointer hover:border-cyan-500 transition-all duration-300">
+            <div
+                class="h-48 bg-slate-900 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative border border-slate-800">
+                <i
+                    class="fa-solid fa-globe text-6xl text-slate-700 group-hover:text-cyan-500 transition-all duration-500"></i>
+                <div
+                    class="absolute top-4 left-4 bg-cyan-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                    Web Alert</div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-white group-hover:text-cyan-400 font-['Kanit'] transition-colors">
+                เปิดโปง "เว็บฟิชชิ่ง" หน้าเว็บเลียนแบบ</h3>
+            <p class="text-xs text-slate-500 mb-4 font-mono">24 ก.พ. 2024</p>
+            <p class="text-slate-400 text-sm leading-relaxed line-clamp-3 font-['Kanit']">
+                การเลียนแบบหน้าเว็บที่เหมือนจนแยกไม่ออก มิจฉาชีพใช้ Typosquatting หรือการตั้งชื่อโดเมนใกล้เคียง
+                ตรวจสอบ SSL และ Address Bar ทุกครั้งก่อนกรอกข้อมูล...
+            </p>
+            <div
+                class="inline-flex items-center mt-6 text-cyan-500 text-sm font-bold uppercase tracking-widest group-hover:text-cyan-300 transition-colors">
+                Read Analysis <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
+            </div>
+        </div>
+
+        <!-- News Card 6: Fake News (New) -->
+        <div onclick="window.location.href='/news/fake'"
+            class="cyber-card group cursor-pointer hover:border-red-500 transition-all duration-300">
+            <div
+                class="h-48 bg-slate-900 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative border border-slate-800">
+                <i
+                    class="fa-solid fa-newspaper text-6xl text-slate-700 group-hover:text-red-500 transition-all duration-500"></i>
+                <div
+                    class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                    Info Alert</div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-white group-hover:text-red-400 font-['Kanit'] transition-colors">
+                รับมือ "ข่าวปลอม" และการชี้นำที่ผิด</h3>
+            <p class="text-xs text-slate-500 mb-4 font-mono">24 ก.พ. 2024</p>
+            <p class="text-slate-400 text-sm leading-relaxed line-clamp-3 font-['Kanit']">
+                ข้อมูลเท็จแพร่กระจายเร็วในโลกออนไลน์ มักสร้างความแตกแยกหรือตื่นตระหนก
+                เช็กแหล่งที่มาและ Fact-check ก่อนเชื่อและแชร์ข้อมูลใดๆ ออกไป...
+            </p>
+            <div
+                class="inline-flex items-center mt-6 text-red-500 text-sm font-bold uppercase tracking-widest group-hover:text-red-300 transition-colors">
+                Read Analysis <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
+            </div>
+        </div>
+
+        <!-- News Card 7: Scammer (New) -->
+        <div onclick="window.location.href='/news/scammer'"
+            class="cyber-card group cursor-pointer hover:border-purple-500 transition-all duration-300">
+            <div
+                class="h-48 bg-slate-900 rounded-2xl mb-5 flex items-center justify-center overflow-hidden relative border border-slate-800">
+                <i
+                    class="fa-solid fa-user-secret text-6xl text-slate-700 group-hover:text-purple-500 transition-all duration-500"></i>
+                <div
+                    class="absolute top-4 left-4 bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                    Crime Alert</div>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-white group-hover:text-purple-400 font-['Kanit'] transition-colors">
+                ล้วงลึก "สแกมเมอร์" จิตวิทยาการหลอกลวง</h3>
+            <p class="text-xs text-slate-500 mb-4 font-mono">24 ก.พ. 2024</p>
+            <p class="text-slate-400 text-sm leading-relaxed line-clamp-3 font-['Kanit']">
+                จิตวิทยาการหลอกให้รักและโอนเงิน มิจฉาชีพสร้างโปรไฟล์ที่ดูดีเกินจริง
+                สังเกตสัญญาณเตือนภัยพฤติกรรมการขอยืมเงินและอุปสรรคการวิดีโอคอล...
+            </p>
+            <div
+                class="inline-flex items-center mt-6 text-purple-500 text-sm font-bold uppercase tracking-widest group-hover:text-purple-300 transition-colors">
+                Read Analysis <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

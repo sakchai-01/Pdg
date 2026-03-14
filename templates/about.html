@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}About Phishing{% endblock %}
+
+{% block content %}
+<div class="fade-in max-w-4xl mx-auto">
+    <!-- Hero Header -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl text-neon mb-4">About Phishing</h1>
+        <p class="text-gray-400 text-lg">รู้ทันภัยไซเบอร์ ก่อนตกเป็นเหยื่อ</p>
+    </div>
+
+    <!-- What is Phishing -->
+    <div class="cyber-card">
+        <h2 class="text-2xl text-[#00f0ff] mb-4">Phishing คืออะไร?</h2>
+        <p class="mb-4">
+            Phishing (ฟิชชิง) คือรูปแบบการโจมตีทางไซเบอร์ที่ผู้ไม่หวังดีพยายามหลอกลวงให้เหยื่อเปิดเผยข้อมูลสำคัญ
+            เช่น รหัสผ่าน หมายเลขบัตรเครดิต หรือข้อมูลส่วนตัวอื่น ๆ โดยการปลอมแปลงเป็นบุคคลหรือองค์กรที่น่าเชื่อถือ
+            ผ่านทางอีเมล เว็บไซต์ปลอม หรือข้อความ SMS
+        </p>
+        <p>
+            คำว่า "Phishing" มาจากการพ้องเสียงกับคำว่า "Fishing" (การตกปลา)
+            ซึ่งเปรียบเสมือนการเหวี่ยงเบ็ดรอให้เหยื่อมาติดกับดักนั่นเอง
+        </p>
+    </div>
+
+    <!-- Types of Phishing -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="cyber-card">
+            <h3 class="text-xl text-yellow-400 mb-2"><i class="fa-solid fa-envelope mr-2"></i>Email Phishing</h3>
+            <p class="text-sm">การส่งอีเมลปลอมที่ดูเหมือนมาจากธนาคารหรือบริษัทที่รู้จัก
+                เพื่อขอให้รีเซ็ตรหัสผ่านหรือยืนยันข้อมูล</p>
+        </div>
+        <div class="cyber-card">
+            <h3 class="text-xl text-yellow-400 mb-2"><i class="fa-solid fa-globe mr-2"></i>Website Phishing</h3>
+            <p class="text-sm">การสร้างเว็บไซต์ปลอมที่มีหน้าตาเหมือนเว็บจริงทุกประการ
+                เพื่อดักจับข้อมูลเมื่อเหยื่อกรอกลงไป</p>
+        </div>
+        <div class="cyber-card">
+            <h3 class="text-xl text-yellow-400 mb-2"><i class="fa-solid fa-comments mr-2"></i>Smishing (SMS)</h3>
+            <p class="text-sm">การส่งข้อความ SMS หลอกลวง ล่อลวงให้คลิกลิงก์อันตรายบนมือถือ</p>
+        </div>
+        <div class="cyber-card">
+            <h3 class="text-xl text-yellow-400 mb-2"><i class="fa-solid fa-phone mr-2"></i>Vishing (Voice)</h3>
+            <p class="text-sm">การใช้โทรศัพท์โทรหาเหยื่อและอ้างว่าเป็นเจ้าหน้าที่เพื่อหลอกถามข้อมูล</p>
+        </div>
+    </div>
+
+    <!-- Prevention -->
+    <div class="cyber-card border-l-4 border-green-500">
+        <h2 class="text-2xl text-green-400 mb-4">วิธีป้องกันตัวเอง</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-300">
+            <li><strong class="text-white">ตรวจสอบ URL:</strong> สังเกตชื่อโดเมนให้ดีก่อนคลิกหรือกรอกข้อมูล</li>
+            <li><strong class="text-white">ไม่คลิกลิงก์แปลกปลอม:</strong> จากอีเมลหรือ SMS ที่ไม่ทราบแหล่งที่มา</li>
+            <li><strong class="text-white">ใช้ 2FA:</strong> เปิดใช้งานการยืนยันตัวตนสองชั้นเสมอ</li>
+            <li><strong class="text-white">ใช้เครื่องมือตรวจสอบ:</strong> ใช้ระบบ URL Check ของเราเพื่อความมั่นใจ</li>
+            <li><strong class="text-white">อัปเดตสม่ำเสมอ:</strong> อัปเดตเบราว์เซอร์และซอฟต์แวร์ป้องกันไวรัส</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

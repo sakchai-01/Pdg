@@ -1,0 +1,47 @@
+name: Deploy FastAPI Pdg App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Pdg/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'Pdg/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        working-directory: ./Pdg
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      # - name: Run tests (if you have pytest)
+      #   working-directory: ./Pdg
+      #   run: |
+      #     pip install pytest httpx
+      #     pytest
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Trigger Deploy
+        run: echo "To automatically deploy, hook up Render/Railway webhooks or use an action here."
+        # example: 
+        # run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}

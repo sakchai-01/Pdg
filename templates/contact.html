@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+{% block title %}Contact Us{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-4xl fade-in flex flex-col min-h-[80vh] justify-center">
+
+    <div class="text-center mb-10">
+        <h1 class="text-4xl text-gray-800 mb-2 font-bold tracking-tight">Contact & Support</h1>
+        <p class="text-gray-400 font-medium">How can we help you today?</p>
+    </div>
+
+    <!-- Main Menu Options -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+
+        <!-- Option 1: Developer -->
+        <div onclick="window.location='/contact/developer'"
+            class="group bg-white p-8 rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] transition cursor-pointer border border-gray-100 text-center transform hover:-translate-y-2">
+            <div
+                class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center text-green-500 mx-auto mb-6 group-hover:scale-110 transition">
+                <i class="fa-solid fa-code text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Developer</h3>
+            <p class="text-sm text-gray-400">Contact the dev team for bug reports or inquiries.</p>
+        </div>
+
+        <!-- Option 2: FAQ -->
+        <div onclick="window.location='/contact/faq'"
+            class="group bg-white p-8 rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_rgba(244,114,182,0.15)] transition cursor-pointer border border-gray-100 text-center transform hover:-translate-y-2">
+            <div
+                class="w-20 h-20 bg-pink-50 rounded-full flex items-center justify-center text-pink-500 mx-auto mb-6 group-hover:scale-110 transition">
+                <i class="fa-solid fa-circle-question text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">FAQ</h3>
+            <p class="text-sm text-gray-400">Frequently Asked Questions about PhishGuard.</p>
+        </div>
+
+        <!-- Option 3: Q&A -->
+        <div onclick="window.location='/contact/qa'"
+            class="group bg-white p-8 rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_rgba(167,139,250,0.15)] transition cursor-pointer border border-gray-100 text-center transform hover:-translate-y-2">
+            <div
+                class="w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center text-purple-500 mx-auto mb-6 group-hover:scale-110 transition">
+                <i class="fa-solid fa-comments text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Q&A</h3>
+            <p class="text-sm text-gray-400">Ask questions and get community answers.</p>
+        </div>
+
+    </div>
+
+    <!-- Navigation Footer (4 Icons) -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto w-full border-t border-gray-100 pt-10">
+        <!-- OCR -->
+        <div class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition duration-300 transform hover:scale-105"
+            onclick="window.location='/tools/ocr'">
+            <div
+                class="w-20 h-20 bg-white shadow-sm hover:shadow-lg rounded-3xl flex items-center justify-center text-gray-700 hover:text-blue-500 transition-all mb-4">
+                <i class="fa-solid fa-image text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">OCR Analysis</h3>
+            <p class="hidden md:block text-xs text-gray-400 mt-1 max-w-[150px]">อ่านข้อความจากรูปภาพ</p>
+        </div>
+
+        <!-- Zero-Day -->
+        <div class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition duration-300 transform hover:scale-105"
+            onclick="window.location='/tools/zeroday'">
+            <div
+                class="w-20 h-20 bg-white shadow-sm hover:shadow-lg rounded-3xl flex items-center justify-center text-gray-700 hover:text-purple-500 transition-all mb-4">
+                <i class="fa-solid fa-brain text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">Zero-Day</h3>
+            <p class="hidden md:block text-xs text-gray-400 mt-1 max-w-[150px]">วิเคราะห์พฤติกรรมโค้ด</p>
+        </div>
+
+        <!-- Contact (New) -->
+        <div class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition duration-300 transform hover:scale-105"
+            onclick="window.location='/contact'">
+            <div
+                class="w-20 h-20 bg-white shadow-sm hover:shadow-lg rounded-3xl flex items-center justify-center text-gray-700 hover:text-green-500 transition-all mb-4">
+                <i class="fa-solid fa-address-book text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">Contact Us</h3>
+            <p class="hidden md:block text-xs text-gray-400 mt-1 max-w-[150px]">ติดต่อผู้พัฒนา</p>
+        </div>
+
+        <!-- URL (Active) -->
+        <div class="flex flex-col items-center group cursor-default">
+            <div
+                class="w-20 h-20 bg-white border-2 border-transparent shadow-xl rounded-3xl flex items-center justify-center text-gray-800 transition transform scale-105 ring-4 ring-gray-50 mb-4">
+                <i class="fa-solid fa-link text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">URL Check</h3>
+            <p class="hidden md:block text-xs text-gray-400 mt-1 max-w-[150px]">ตรวจสอบฐานข้อมูล</p>
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}

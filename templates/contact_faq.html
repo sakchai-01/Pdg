@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}FAQ{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-4xl fade-in flex flex-col min-h-[80vh] justify-center">
+
+    <!-- Back Button -->
+    <div class="w-full flex justify-start mb-6">
+        <button onclick="window.location='/contact'"
+            class="bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow-sm hover:shadow-md transition text-gray-500 hover:text-blue-500 flex items-center gap-2 border border-gray-100">
+            <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+        </button>
+    </div>
+
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-bold text-gray-800">Frequently Asked Questions</h1>
+    </div>
+
+    <div class="space-y-4">
+        <!-- Q1 -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <h3 class="font-bold text-gray-800 mb-2 text-lg"><span class="text-pink-400 mr-2">Q:</span> PhishGuard
+                คืออะไร?</h3>
+            <p class="text-gray-500 ml-6">A: ระบบตรวจจับเว็บปลอมด้วย AI ที่ช่วยป้องกันการถูกหลอกลวงข้อมูลส่วนตัว</p>
+        </div>
+        <!-- Q2 -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <h3 class="font-bold text-gray-800 mb-2 text-lg"><span class="text-pink-400 mr-2">Q:</span> แม่นยำแค่ไหน?
+            </h3>
+            <p class="text-gray-500 ml-6">A: เราใช้ AI วิเคราะห์ร่วมกับฐานข้อมูล Blacklist ระดับสากล มีความแม่นยำสูงกว่า
+                95%</p>
+        </div>
+        <!-- Q3 -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <h3 class="font-bold text-gray-800 mb-2 text-lg"><span class="text-pink-400 mr-2">Q:</span>
+                ใช้งานฟรีหรือไม่?</h3>
+            <p class="text-gray-500 ml-6">A: สำหรับผู้ใช้งานทั่วไป ฟรีตลอดชีพ!</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

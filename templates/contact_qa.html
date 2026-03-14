@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}Q&A{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-4xl fade-in flex flex-col min-h-[80vh] justify-center text-center">
+
+    <!-- Back Button -->
+    <div class="w-full flex justify-start mb-6">
+        <button onclick="window.location='/contact'"
+            class="bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow-sm hover:shadow-md transition text-gray-500 hover:text-blue-500 flex items-center gap-2 border border-gray-100">
+            <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+        </button>
+    </div>
+
+    <div class="bg-white p-10 rounded-3xl shadow-lg border border-gray-100 max-w-2xl mx-auto w-full">
+        <div class="w-24 h-24 bg-purple-50 rounded-full flex items-center justify-center text-purple-500 mx-auto mb-6">
+            <i class="fa-solid fa-comments text-4xl"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Q & A</h1>
+        <p class="text-gray-500 mb-8">Send us your questions</p>
+
+        <form class="space-y-4">
+            <textarea
+                class="w-full h-40 p-4 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-4 focus:ring-purple-100 transition resize-none"
+                placeholder="Type your question here..."></textarea>
+
+            <button type="button"
+                class="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-purple-200 transition transform hover:-translate-y-1">
+                Send Question
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

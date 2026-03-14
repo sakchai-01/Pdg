@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600;700&display=swap');
+
+:root {
+    /* Default Theme (Cyber: Blue/Purple/Pink) */
+    --bg-dark: #001449;
+    --bg-darker: #020617;
+    --primary: #00f0ff;
+    /* Cyan */
+    --secondary: #0066ff;
+    /* Blue */
+    --accent: #d946ef;
+    /* Purple/Pink */
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+
+    --glass-bg: rgba(17, 24, 39, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --success: #10b981;
+    --danger: #ef4444;
+
+    --glow-color: rgba(0, 240, 255, 0.5);
+}
+
+/* --- THEME PRESETS --- */
+
+/* Red Ops: Red / Black / White */
+[data-theme="red"] {
+    --bg-dark: #3b0000;
+    --bg-darker: #000000;
+    --primary: #ef4444;
+    /* Red */
+    --secondary: #ffffff;
+    /* White */
+    --accent: #991b1b;
+    /* Dark Red */
+    --glass-bg: rgba(54, 2, 2, 0.7);
+    --glass-border: rgba(239, 68, 68, 0.2);
+    --glow-color: rgba(239, 68, 68, 0.5);
+}
+
+/* Inferno: Yellow / Orange / Red */
+[data-theme="fire"] {
+    --bg-dark: #532600;
+    /* Deep Dark Orange */
+    --bg-darker: #0f0200;
+    --primary: #facc15;
+    /* Yellow */
+    --secondary: #f97316;
+    /* Orange */
+    --accent: #ef4444;
+    /* Red */
+    --glass-bg: rgba(50, 20, 0, 0.6);
+    --glass-border: rgba(250, 204, 21, 0.2);
+    --glow-color: rgba(249, 115, 22, 0.5);
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Kanit', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    margin: 0;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* --- Animated Background --- */
+.cyber-grid-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background:
+        linear-gradient(to bottom, var(--bg-darker), var(--bg-dark)),
+        repeating-linear-gradient(90deg, var(--glass-border) 0px, var(--glass-border) 1px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(0deg, var(--glass-border) 0px, var(--glass-border) 1px, transparent 1px, transparent 40px);
+    pointer-events: none;
+}
+
+.cyber-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 50%, var(--glow-color), transparent 70%);
+    opacity: 0.15;
+    animation: pulseBg 10s infinite alternate;
+}
+
+@keyframes pulseBg {
+    0% {
+        transform: scale(1);
+        opacity: 0.1;
+    }
+
+    100% {
+        transform: scale(1.1);
+        opacity: 0.2;
+    }
+}
+
+/* --- Typography --- */
+h1,
+h2,
+h3,
+h4,
+.brand-font {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+}
+
+.text-neon {
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--glow-color);
+}
+
+/* --- Glass Components --- */
+.cyber-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.cyber-card:hover {
+    box-shadow: 0 0 20px var(--glow-color);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* --- Inputs --- */
+.cyber-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    padding: 12px 20px;
+    border-radius: 8px;
+    width: 100%;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+}
+
+.cyber-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 15px var(--glow-color);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* --- Buttons --- */
+.cyber-btn {
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cyber-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px var(--glow-color);
+}
+
+/* --- Navbar --- */
+.cyber-nav {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-link {
+    color: var(--text-muted);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary);
+    text-shadow: 0 0 10px var(--glow-color);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Utilities --- */
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}

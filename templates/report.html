@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}Report Threat{% endblock %}
+
+{% block content %}
+<div class="fade-in max-w-2xl mx-auto">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl text-red-400 font-bold mb-2"><i
+                class="fa-solid fa-triangle-exclamation mr-2"></i>แจ้งภัยคุกคาม</h1>
+        <p class="text-gray-400">พบเห็นเว็บไซต์ต้องสงสัยหรือได้รับ SMS หลอกลวง? แจ้งเราได้ทันที</p>
+    </div>
+
+    {% if success %}
+    <div class="bg-green-900/30 border border-green-500 text-green-300 p-4 rounded-lg mb-6 text-center">
+        <i class="fa-solid fa-check-circle mr-2"></i> {{ success }}
+    </div>
+    {% endif %}
+
+    <div class="cyber-card relative overflow-hidden">
+        <!-- Decoder deco -->
+        <div class="absolute top-0 left-0 w-2 h-full bg-red-500"></div>
+
+        <form action="/report" method="POST" id="reportForm" class="space-y-6">
+            <div>
+                <label class="block text-gray-300 mb-2 font-bold">อีเมลผู้แจ้ง (ต้องยืนยันตัวตน)</label>
+                <div class="flex flex-col gap-3">
+                    <div id="g_id_onload"
+                        data-client_id="928266966476-0lqqhphbafbsgegkeulj9s8jroja9ac0.apps.googleusercontent.com"
+                        data-callback="handleCredentialResponse"
+                        data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+                    
+                    <input type="email" name="email" id="verifiedEmail" readonly required
+                        class="cyber-input bg-[#0a0e17] text-gray-500 border-gray-700 cursor-not-allowed"
+                        placeholder="รอยืนยันด้วย Google...">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-300 mb-2 font-bold">ประเภทภัยคุกคาม</label>
+                <select name="type" class="cyber-input bg-[#0a0e17] text-white border-gray-700 focus:border-red-500">
+                    <option value="fake_web">เว็บไซต์ปลอม (Fake Website)</option>
+                    <option value="sms">SMS หลอกลวง (Smishing)</option>
+                    <option value="email">อีเมลหลอกลวง (Phishing Email)</option>
+                    <option value="other">อื่น ๆ</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-300 mb-2 font-bold">URL หรือ รายละเอียด</label>
+                <input type="text" name="url" required
+                    class="cyber-input bg-[#0a0e17] text-white border-gray-700 focus:border-red-500"
+                    placeholder="https://example-scam.com หรือ เบอร์โทรศัพท์">
+            </div>
+
+            <div>
+                <label class="block text-gray-300 mb-2 font-bold">รายละเอียดเพิ่มเติม</label>
+                <textarea name="description" rows="4"
+                    class="cyber-input bg-[#0a0e17] text-white border-gray-700 focus:border-red-500"
+                    placeholder="อธิบายลักษณะการหลอกลวง..."></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn" disabled
+                class="w-full bg-slate-700 text-gray-400 font-bold py-3 px-6 rounded-lg transition cursor-not-allowed opacity-50">
+                <i class="fa-solid fa-paper-plane mr-2"></i> กรุณายืนยันอีเมลก่อนส่ง
+            </button>
+        </form>
+
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <script>
+            function decodeJwtResponse(token) {
+                let base64Url = token.split('.')[1];
+                let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                let jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            }
+
+            function handleCredentialResponse(response) {
+                const responsePayload = decodeJwtResponse(response.credential);
+                const email = responsePayload.email;
+                
+                document.getElementById('verifiedEmail').value = email;
+                document.getElementById('verifiedEmail').classList.remove('text-gray-500');
+                document.getElementById('verifiedEmail').classList.add('text-green-400', 'border-green-500');
+                
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('bg-slate-700', 'text-gray-400', 'cursor-not-allowed', 'opacity-50');
+                submitBtn.classList.add('bg-red-600', 'hover:bg-red-500', 'text-white', 'shadow-[0_0_15px_rgba(220,38,38,0.5)]');
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i> ส่งรายงาน';
+            }
+        </script>
+    </div>
+</div>
+{% endblock %}

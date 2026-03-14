@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block title %}News - Email Phishing Analysis{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto pt-10 pb-20">
+    <!-- Back Button -->
+    <a href="/news" class="inline-flex items-center gap-2 text-slate-500 hover:text-orange-500 transition mb-10 group">
+        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition"></i> กลับไปหน้าข่าวสาร
+    </a>
+
+    <article class="animate__animated animate__fadeIn">
+        <header class="mb-12">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
+                Email Security Alert
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white font-['Kanit'] leading-tight mb-6">
+                จับผิด "อีเมลฟิชชิ่ง" กลโกงระดับองค์กรที่แนบเนียนที่สุด
+            </h1>
+            <div class="flex items-center gap-6 text-slate-500 text-sm font-mono">
+                <span><i class="fa-regular fa-calendar mr-2"></i> 24 ก.พ. 2024</span>
+                <span><i class="fa-regular fa-user mr-2"></i> Cyber Intelligence Team</span>
+            </div>
+        </header>
+
+        <div
+            class="aspect-video bg-slate-900 rounded-[2.5rem] mb-12 flex items-center justify-center border border-white/5 overflow-hidden relative">
+            <i class="fa-solid fa-envelope-open-text text-9xl text-slate-800 opacity-20"></i>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent"></div>
+            <div class="absolute bottom-10 left-10 right-10">
+                <p class="text-white text-xl font-['Kanit'] font-bold mb-2">Business Email Compromise (BEC)</p>
+                <p class="text-slate-400 text-sm">การเจาะระบบสื่อสารผ่านอีเมล</p>
+            </div>
+        </div>
+
+        <div class="prose prose-invert max-w-none text-slate-300 font-['Kanit'] space-y-8 leading-relaxed text-lg">
+            <p>
+                อีเมลยังคงเป็นช่องทางหลักที่มิจฉาชีพใช้เพื่อเข้าถึงข้อมูลสำคัญขององค์กรและบุคคล
+                โดยเฉพาะการปลอมแปลงเป็นผู้ให้บริการอย่าง PayPal, Netflix หรือแม้แต่ทีมไอทีของบริษัทคุณเอง
+            </p>
+
+            <div class="bg-orange-500/5 border-l-4 border-orange-500 p-8 rounded-r-2xl my-10">
+                <h3 class="text-orange-500 font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-signature"></i> วิธีสังเกตจุดพิรุธในอีเมล
+                </h3>
+                <ul class="space-y-4 list-none p-0">
+                    <li class="flex gap-3">
+                        <span class="text-orange-500 font-bold">1.</span>
+                        <span><b>ที่อยู่อีเมลผู้ส่ง:</b> สังเกตชื่อ Domain หลัง @ มักจะสะกดผิดเพี้ยนไปเพียงเล็กน้อย เช่น
+                            support@micros0ft.com</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-orange-500 font-bold">2.</span>
+                        <span><b>คำขึ้นต้นที่กว้างเกินไป:</b> แทนที่จะระบุชื่อคุณ กลับใช้คำว่า "Dear Valued Customer"
+                            หรือ "เรียนผู้ใช้อีเมล"</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-orange-500 font-bold">3.</span>
+                        <span><b>การสร้างความตื่นตระหนก:</b> มักจะบอกว่าบัญชีจะถูกระงับ หรือมีรายการใช้จ่ายผิดปกติ
+                            เพื่อให้คุณรีบคลิกโดยไม่ตรวจสอบ</span>
+                    </li>
+                </ul>
+            </div>
+
+            <h2 class="text-2xl font-bold text-white mt-12 mb-6">ข้อควรปฏิบัติเพื่อความปลอดภัย</h2>
+            <p>
+                อย่าคลิกลิงก์หรือปุ่มใดๆ ในอีเมลโดยตรง หากมีข้อความแจ้งเตือน ให้พิมพ์ URL ของเว็บไซต์นั้นๆ
+                ในเบราว์เซอร์ด้วยตนเอง หรือเข้าแอปพลิเคชันอย่างเป็นทางการเพื่อตรวจสอบสถานะบัญชี
+            </p>
+
+            <div class="p-8 bg-slate-900 rounded-3xl border border-white/5 mt-10">
+                <p class="font-bold text-orange-400 mb-4">Checklist ป้องกัน:</p>
+                <p>ห้ามดาวน์โหลดไฟล์แนบ (.zip, .pdf, .exe) จากอีเมลที่ไม่ได้นัดหมายไว้ล่วงหน้า
+                    และควรตั้งค่าการยืนยันตัวตนสองชั้น (2FA) ในทุกบัญชีอีเมลของคุณ</p>
+            </div>
+        </div>
+    </article>
+</div>
+{% endblock %}

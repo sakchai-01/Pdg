@@ -1,0 +1,276 @@
+{% extends "layout.html" %}
+
+{% block title %}Facebook Fake Page Detection{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto pt-10 pb-20">
+    <section class="text-center mb-12 animate__animated animate__fadeIn">
+        <h1 class="text-5xl font-extrabold mb-4 text-white font-['Orbitron']">
+            Facebook <span class="text-blue-500">Detector</span>
+        </h1>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto font-['Kanit']">
+            ตรวจสอบเพจปลอมหรือโพรไฟล์ที่น่าสงสัยบน Facebook ด้วยระบบ AI และการวิเคราะห์พฤติกรรม
+        </p>
+    </section>
+
+    <!-- Search Section -->
+    <div class="bg-slate-800/40 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl mb-12">
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1 relative">
+                <i class="fa-brands fa-facebook text-blue-500 absolute left-5 top-1/2 -translate-y-1/2 text-xl"></i>
+                <input id="fbUrlInput" type="text" placeholder="วางลิงก์เพจหรือโพรไฟล์ (เช่น facebook.com/pagename)"
+                    class="w-full bg-slate-900/50 border border-slate-700 text-white pl-14 pr-6 py-4 rounded-2xl focus:border-blue-500 outline-none transition-all font-['Kanit']">
+            </div>
+            <button id="detectBtn"
+                class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-10 py-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-500/20 font-['Kanit'] text-lg">
+                ตรวจสอบเพจ
+            </button>
+        </div>
+    </div>
+
+    <!-- Results Section (Hidden by default) -->
+    <div id="fbResultContainer" class="hidden animate__animated animate__fadeInUp">
+        <div
+            class="bg-slate-800/60 backdrop-blur-md border border-slate-700 rounded-[2.5rem] p-10 relative overflow-hidden">
+            <div id="fbScanLine" class="scan-line hidden"></div>
+
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <div id="fbRiskIcon"
+                    class="w-32 h-32 rounded-[2rem] flex items-center justify-center text-5xl shadow-2xl">
+                    <!-- Icon placeholder -->
+                </div>
+
+                <div class="flex-1 text-center md:text-left">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                        <div>
+                            <h2 id="fbRiskTitle" class="text-4xl font-bold font-['Orbitron']"></h2>
+                            <p id="fbUrlDisplay" class="text-slate-500 font-mono mt-1 text-xs break-all"></p>
+                        </div>
+                        <div id="fbRiskScoreBadge"
+                            class="px-5 py-2 rounded-full font-bold text-sm tracking-widest bg-slate-900 border border-slate-700">
+                            <!-- Score -->
+                        </div>
+                    </div>
+
+                    <p id="fbRiskDesc" class="text-slate-300 text-lg leading-relaxed font-['Kanit'] mb-6"></p>
+
+                    <div id="fbDetailsList"
+                        class="space-y-3 bg-slate-950/40 p-6 rounded-2xl border border-slate-800/50">
+                        <!-- Details -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Section -->
+    <div class="mt-16 text-center animate__animated animate__fadeIn">
+        <h3 class="text-2xl font-bold text-white mb-6 font-['Kanit']">พบเพจปลอมหลุดรอด? แจ้งเราได้ที่นี่</h3>
+        <button onclick="openReportModal()"
+            class="bg-slate-700/50 hover:bg-slate-700 border border-slate-600 text-white px-8 py-3 rounded-full transition-all font-['Kanit']">
+            แจ้งเพจปลอมตัวใหม่
+        </button>
+    </div>
+</div>
+
+<!-- Report Modal (Simple SweetAlert implementation) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    const detectBtn = document.getElementById('detectBtn');
+    const fbUrlInput = document.getElementById('fbUrlInput');
+    const fbResultContainer = document.getElementById('fbResultContainer');
+    const fbScanLine = document.getElementById('fbScanLine');
+    const fbRiskIcon = document.getElementById('fbRiskIcon');
+    const fbRiskTitle = document.getElementById('fbRiskTitle');
+    const fbUrlDisplay = document.getElementById('fbUrlDisplay');
+    const fbRiskScoreBadge = document.getElementById('fbRiskScoreBadge');
+    const fbRiskDesc = document.getElementById('fbRiskDesc');
+    const fbDetailsList = document.getElementById('fbDetailsList');
+
+    detectBtn.onclick = async () => {
+        const url = fbUrlInput.value.trim();
+        if (!url) return Swal.fire({ icon: 'warning', title: 'กรุณาใส่ URL', background: '#1e293b', color: '#fff' });
+
+        // Show loading
+        fbResultContainer.classList.remove('hidden');
+        fbScanLine.classList.remove('hidden');
+        fbRiskIcon.className = "w-32 h-32 bg-slate-700 animate-pulse rounded-[2rem] flex items-center justify-center";
+        fbRiskIcon.innerHTML = "...";
+        fbRiskTitle.textContent = "กำลังวิเคราะห์...";
+        fbRiskTitle.className = "text-4xl font-bold text-slate-500 font-['Orbitron']";
+        fbRiskDesc.textContent = "ระบบกำลังตรวจสอบรูปแบบการแอบอ้าง พฤติกรรม และประวัติการร้องเรียน...";
+        fbDetailsList.innerHTML = "";
+        fbUrlDisplay.textContent = url;
+        fbRiskScoreBadge.textContent = "SCANNIG...";
+
+        try {
+            const res = await fetch('/api/check_fb', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            const data = await res.json();
+
+            fbScanLine.classList.add('hidden');
+            fbRiskScoreBadge.textContent = `RISK SCORE: ${data.score}%`;
+
+            if (data.score > 70) {
+                fbRiskIcon.className = "w-32 h-32 bg-red-600 text-white rounded-[2rem] flex items-center justify-center shadow-[0_0_50px_rgba(220,38,38,0.4)] animate-pulse";
+                fbRiskIcon.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i>";
+                fbRiskTitle.textContent = "DANGEROUS";
+                fbRiskTitle.className = "text-4xl font-bold text-red-500 font-['Orbitron']";
+                fbRiskDesc.textContent = "พบความเสี่ยงสูงว่าเป็นเพจปลอมหรือมีการแอบอ้างเป็นบุคคลอื่น";
+            } else if (data.score > 30) {
+                fbRiskIcon.className = "w-32 h-32 bg-yellow-500 text-white rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(234,179,8,0.3)]";
+                fbRiskIcon.innerHTML = "<i class='fa-solid fa-circle-info'></i>";
+                fbRiskTitle.textContent = "SUSPICIOUS";
+                fbRiskTitle.className = "text-4xl font-bold text-yellow-500 font-['Orbitron']";
+                fbRiskDesc.textContent = "พบความน่าสงสัยบางประการ กรุณาตรวจสอบข้อมูลอย่างละเอียดก่อนทำรายการ";
+            } else {
+                fbRiskIcon.className = "w-32 h-32 bg-green-500 text-white rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(34,197,94,0.3)]";
+                fbRiskIcon.innerHTML = "<i class='fa-solid fa-shield-check'></i>";
+                fbRiskTitle.textContent = "VERIFIED";
+                fbRiskTitle.className = "text-4xl font-bold text-green-400 font-['Orbitron']";
+                fbRiskDesc.textContent = "ไม่พบความผิดปกติที่สำคัญในฐานข้อมูลและรูปแบบการตรวจสอบเบื้องต้น";
+            }
+
+            fbDetailsList.innerHTML = data.reasons.map(r => `
+                <div class="flex items-center gap-3 text-slate-400 text-sm">
+                    <span class="w-1.5 h-1.5 ${data.score > 70 ? 'bg-red-500' : (data.score > 30 ? 'bg-yellow-500' : 'bg-green-500')} rounded-full"></span>
+                    ${r}
+                </div>
+            `).join('');
+
+        } catch (e) {
+            Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: e.message, background: '#1e293b', color: '#fff' });
+        }
+    };
+
+    function openReportModal() {
+        Swal.fire({
+            title: 'แจ้งเบาะแสเพจปลอม',
+            html: `
+                <div class="space-y-4">
+                    <div id="g_id_onload"
+                        data-client_id="928266966476-0lqqhphbafbsgegkeulj9s8jroja9ac0.apps.googleusercontent.com"
+                        data-callback="handleModalCredential"
+                        data-auto_prompt="false">
+                    </div>
+                    <div class="flex justify-center mb-4">
+                        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+                    </div>
+                    
+                    <input id="swal-email" class="swal2-input" readonly placeholder="กรุณายืนยันอีเมลด้วย Google" style="background:#0f172a; color:#94a3b8; border:1px solid #334155; height:3.5em; border-radius:12px; margin-top:0;">
+                    <input id="swal-url" class="swal2-input" placeholder="ลิงก์เพจ/URL ที่ต้องการแจ้ง" style="background:#0f172a; color:#fff; border:1px solid #334155; height:3.5em; border-radius:12px;">
+                    <textarea id="swal-desc" class="swal2-textarea" placeholder="รายละเอียดเพิ่มเติม (เช่น แอบอ้างเป็นใคร หลอกเอาอะไร)" style="background:#0f172a; color:#fff; border:1px solid #334155; border-radius:12px;"></textarea>
+                </div>
+            `,
+            background: '#1a1f29',
+            color: '#fff',
+            showCancelButton: true,
+            confirmButtonText: 'ส่งรายงาน',
+            confirmButtonColor: '#3b82f6',
+            cancelButtonText: 'ยกเลิก',
+            didOpen: () => {
+                // Initialize Google Sign-in if script is loaded
+                if (window.google) {
+                    google.accounts.id.initialize({
+                        client_id: "928266966476-0lqqhphbafbsgegkeulj9s8jroja9ac0.apps.googleusercontent.com",
+                        callback: handleModalCredential
+                    });
+                    google.accounts.id.renderButton(
+                        document.querySelector(".g_id_signin"),
+                        { theme: "outline", size: "large" }
+                    );
+                }
+            },
+            preConfirm: () => {
+                const email = document.getElementById('swal-email').value;
+                const url = document.getElementById('swal-url').value;
+                if (!email || email.includes("กรุณายืนยัน")) {
+                    Swal.showValidationMessage('กรุณายืนยันอีเมลด้วย Google ก่อนส่งรายงาน');
+                    return false;
+                }
+                if (!url) {
+                    Swal.showValidationMessage('กรุณาใส่ URL');
+                    return false;
+                }
+                return {
+                    email: email,
+                    url: url,
+                    description: document.getElementById('swal-desc').value
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit to backend
+                fetch('/report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        'email': result.value.email,
+                        'url': result.value.url,
+                        'description': result.value.description,
+                        'type': 'fake_fb_page'
+                    })
+                }).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ขอบคุณสำหรับการแจ้งเบาะแส!',
+                        text: `ระบบทำการบันทึกข้อมูลของคุณ (${result.value.email}) เรียบร้อยแล้ว`,
+                        background: '#1a1f29',
+                        color: '#fff'
+                    });
+                });
+            }
+        });
+    }
+
+    function handleModalCredential(response) {
+        const base64Url = response.credential.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+        
+        const emailInput = document.getElementById('swal-email');
+        if (emailInput) {
+            emailInput.value = payload.email;
+            emailInput.style.color = '#4ade80';
+            emailInput.style.borderColor = '#22c55e';
+        }
+    }
+</script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+    .scan-line {
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        animation: scanMove 2s infinite linear;
+        z-index: 10;
+    }
+
+    @keyframes scanMove {
+        0% {
+            top: 0;
+            opacity: 0;
+        }
+
+        10% {
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        100% {
+            top: 100%;
+            opacity: 0;
+        }
+    }
+</style>
+{% endblock %}

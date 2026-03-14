@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}Contact Developer{% endblock %}
+
+{% block content %}
+<div class="fade-in max-w-5xl mx-auto py-12 px-4">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-white mb-4 tracking-widest font-['Orbitron']">CONTACT & <span
+                class="text-[#00f0ff]">SUPPORT</span></h1>
+        <p class="text-gray-400">How can we help you today?</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Developer -->
+        <a href="#" class="cyber-card p-8 text-center group hover:-translate-y-2 transition duration-300">
+            <div
+                class="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-green-500/20 transition border border-green-500/30">
+                <i class="fa-solid fa-code text-3xl text-green-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2 font-['Orbitron']">Developer</h3>
+            <p class="text-gray-400 mb-4">Contact the dev team for bug reports or inquiries.</p>
+            <span class="text-green-400 text-sm uppercase tracking-wider font-bold group-hover:underline">Contact Team
+                events &rarr;</span>
+        </a>
+
+        <!-- FAQ -->
+        <a href="#" class="cyber-card p-8 text-center group hover:-translate-y-2 transition duration-300">
+            <div
+                class="w-20 h-20 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-pink-500/20 transition border border-pink-500/30">
+                <i class="fa-solid fa-circle-question text-3xl text-pink-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2 font-['Orbitron']">FAQ</h3>
+            <p class="text-gray-400 mb-4">Frequently Asked Questions about PhishGuard.</p>
+            <span class="text-pink-400 text-sm uppercase tracking-wider font-bold group-hover:underline">View FAQ
+                &rarr;</span>
+        </a>
+
+        <!-- Q&A -->
+        <a href="#" class="cyber-card p-8 text-center group hover:-translate-y-2 transition duration-300">
+            <div
+                class="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-500/20 transition border border-purple-500/30">
+                <i class="fa-solid fa-comments text-3xl text-purple-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2 font-['Orbitron']">Q&A</h3>
+            <p class="text-gray-400 mb-4">Ask questions and get community answers.</p>
+            <span class="text-purple-400 text-sm uppercase tracking-wider font-bold group-hover:underline">Join
+                Community &rarr;</span>
+        </a>
+    </div>
+</div>
+{% endblock %}
