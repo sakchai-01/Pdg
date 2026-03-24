@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 from app.routes import router as api_router
 from app.core.database import init_db
 
+# Absolute path to the project root (safe for all environments including Vercel)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Only apply Windows patches when running locally on Windows
 if os.name == 'nt':
     try:
@@ -53,8 +56,9 @@ async def add_security_headers(request, call_next):
     response.headers["Content-Security-Policy"] = "default-src 'self' https://accounts.google.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://accounts.google.com https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://accounts.google.com"
     return response
 
-if os.path.exists("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+if os.path.exists(STATIC_DIR):
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 app.include_router(api_router)
 

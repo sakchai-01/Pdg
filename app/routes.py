@@ -10,7 +10,8 @@ from app.domain_checker import analyze_domain
 from app.brain import get_ai_response, extract_json
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+_BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+templates = Jinja2Templates(directory=os.path.join(_BASE, "templates"))
 
 @router.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
