@@ -111,7 +111,7 @@ async def scan_url(request: Request):
 # ==== CHATBOT ENDPOINTS ====
 @router.get("/chat", response_class=HTMLResponse)
 async def chat_page(request: Request):
-    return templates.TemplateResponse('chat.html', {"request": request})
+    return templates.TemplateResponse(request=request, name='chat.html')
 
 @router.post("/chat")
 async def chat_post(request: Request):
