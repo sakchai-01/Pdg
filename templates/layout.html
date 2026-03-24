@@ -220,10 +220,21 @@
         </div>
     </footer>
 
-    <!-- Global Janis Mascot Floating Action Button -->
-    <a id="global-mascot-fab" href="/chat" class="global-janis-btn group bottom-[10px] left-[10px] md:bottom-[20px] md:left-[20px]">
+    <!-- Global Janis Mascot Floating Action Button - Restrained and Fluid for all devices -->
+    <a id="global-mascot-fab" href="/chat" class="global-janis-btn group 
+        bottom-4 left-4
+        md:bottom-6 md:left-6
+        lg:bottom-8 lg:left-8">
         <!-- Mascot Image only (No Frame) -->
-        <div class="relative w-[20vw] md:w-[180px] lg:w-[280px] h-auto drop-shadow-[0_0_25px_rgba(186,230,253,0.8)] transform origin-bottom transition-transform duration-300 group-hover:scale-105" style="min-width:60px;max-width:90px;">
+        <!-- 
+            Breakpoints & Scaling Logic (Antidote Principles):
+            - Fluid sizing using clamp() to provide natural growth without breaking layouts.
+            - Max size restrained to 140px on Ultrawide to avoid dominating the screen.
+            - Purposeful drop shadow, smooth deceleration on hover.
+            - Seamlessly adapts to Smartphones, 16:10 Laptops, and 4K Desktops.
+        -->
+        <div class="relative h-auto drop-shadow-[0_10px_20px_rgba(186,230,253,0.3)] transform origin-bottom transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-2 group-hover:scale-105
+            w-[220px] sm:w-[260px] md:w-[300px] lg:w-[350px]">
             <img id="global-mascot-img" src="/static/images/janis/default.png" alt="Janis AI" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6134/6134346.png'" class="w-full h-auto object-contain">
         </div>
     </a>
