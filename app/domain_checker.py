@@ -1,9 +1,21 @@
 import socket
+import time
 from app.whois_utils import whois_features
 
 SUSPICIOUS_TLDS = [".tk",".ml",".ga",".cf",".gq"]
 
+# Simple in-memory cache
+ANALYSIS_CACHE = {}
+CACHE_TTL = 3600  # 1 hour
+
 def analyze_domain(domain):
+    current_time = time.time()
+    
+    if domain in ANALYSIS_CACHE:
+        cached = ANALYSIS_CACHE[domain]
+        if current_time < cached["expiry"]:
+            return cached["result"]
+
     score = 0
     details = []
 
@@ -28,10 +40,17 @@ def analyze_domain(domain):
     elif score >= 40:
         risk = "เสี่ยง ⚠️"
 
-    return {
+    result = {
         "domain": domain,
         "score": score,
         "risk": risk,
         "details": details,
         "whois": whois_data
     }
+    
+    ANALYSIS_CACHE[domain] = {
+        "result": result,
+        "expiry": current_time + CACHE_TTL
+    }
+    
+    return result

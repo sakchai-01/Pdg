@@ -1,31 +1,8 @@
-import sqlite3
+from app.core.database import get_sync_db_connection
 from datetime import datetime
 
-import os
-# User requested specific DB File: phishing_db.sqlite
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "phishing_db.sqlite")
-
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS phishing_urls (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            url TEXT,
-            domain TEXT,
-            risk_score INTEGER,
-            reason TEXT,
-            created_at TEXT
-        )
-    """)
-
-    conn.commit()
-    conn.close()
-
-
 def save_to_db(url, domain, risk_score, reason=""):
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_sync_db_connection()
     cur = conn.cursor()
 
     cur.execute("""

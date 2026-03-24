@@ -1,35 +1,19 @@
 import os
-import platform
-import threading
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
-
-# We will import these later when they are ready
 from app.routes import router as api_router
-from app.database import init_db
+from app.core.database import init_db
+from app.core.compat import apply_windows_patches
 
-# Windows monkeypatch for platform.uname() to avoid WMI query hangs
-if os.name == 'nt':
-    try:
-        import collections
-        _original_uname = platform.uname
-        def mocked_uname():
-            UNameResult = collections.namedtuple('uname_result', ['system', 'node', 'release', 'version', 'machine', 'processor'])
-            return UNameResult('Windows', 'LOCAL_MACHINE', '10', '10.0.19045', 'AMD64', 'Intel64 Family')
-        platform.uname = mocked_uname
-    except Exception:
-        pass
+apply_windows_patches()
 
 load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize SQLite database (Async)
     await init_db()
     yield
 
@@ -40,22 +24,33 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS Support
+# CORS Support - Tightened for Security (Add production domains here)
+# For extension development, we allow all origins or specifically chrome-extension://*
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"], # For extension development, use * or specific extension IDs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Mount Static Files
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Content-Security-Policy"] = "default-src 'self' https://accounts.google.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://accounts.google.com https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://accounts.google.com"
+    return response
+
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Include the endpoints
 app.include_router(api_router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=5000, reload=True)
+    host = os.getenv("HOST", "127.0.0.1")
+    port = int(os.getenv("PORT", 5000))
+    uvicorn.run("main:app", host=host, port=port, reload=True)

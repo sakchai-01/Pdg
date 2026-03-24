@@ -1,80 +1,149 @@
 {% extends "layout.html" %}
 
-{% block title %}Facebook Fake Page Detection{% endblock %}
+{% block title %}FB Scanner | social Intelligence Hub{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto pt-10 pb-20">
-    <section class="text-center mb-12 animate__animated animate__fadeIn">
-        <h1 class="text-5xl font-extrabold mb-4 text-white font-['Orbitron']">
-            Facebook <span class="text-blue-500">Detector</span>
-        </h1>
-        <p class="text-slate-400 text-lg max-w-2xl mx-auto font-['Kanit']">
-            ตรวจสอบเพจปลอมหรือโพรไฟล์ที่น่าสงสัยบน Facebook ด้วยระบบ AI และการวิเคราะห์พฤติกรรม
-        </p>
-    </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    <!-- Search Section -->
-    <div class="bg-slate-800/40 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl mb-12">
-        <div class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1 relative">
-                <i class="fa-brands fa-facebook text-blue-500 absolute left-5 top-1/2 -translate-y-1/2 text-xl"></i>
-                <input id="fbUrlInput" type="text" placeholder="วางลิงก์เพจหรือโพรไฟล์ (เช่น facebook.com/pagename)"
-                    class="w-full bg-slate-900/50 border border-slate-700 text-white pl-14 pr-6 py-4 rounded-2xl focus:border-blue-500 outline-none transition-all font-['Kanit']">
+<div class="max-w-6xl mx-auto pt-32 pb-20 px-4">
+    <!-- Header Section -->
+    <div class="text-center mb-24 animate__animated animate__fadeIn">
+        <div class="inline-flex items-center gap-4 px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-[11px] font-black uppercase tracking-[0.5em] mb-12 mx-auto shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+            <i class="fa-brands fa-facebook-f animate-pulse"></i> <span data-i18n="hdr_fb_badge">OSINT_DEEP_ANALYSIS_ENABLED</span>
+        </div>
+        <h1 class="font-black text-white tracking-tighter mb-10 uppercase italic font-['Orbitron']" style="font-size: var(--fs-header-title);" data-i18n="hdr_fb_title">
+            FB <span class="text-gradient">SCANNER.</span>
+        </h1>
+        <p class="text-slate-500 max-w-4xl mx-auto font-medium font-['Kanit'] leading-relaxed" style="font-size: var(--fs-header-desc);" data-i18n="fb_header_subtitle">
+            ระบบวิเคราะห์พฤติกรรมเชื่องโยง (Social Fingerprinting) เพื่อระบุตัวตนเพจปลอมและการแอบอ้างแบรนด์ขั้นสูง
+        </p>
+    </div>
+
+    <!-- Scanner Input: High-Tech Array -->
+    <div class="relative group max-w-4xl mx-auto animate__animated animate__fadeInUp">
+        <div class="absolute -inset-1.5 bg-gradient-to-r from-blue-700 to-indigo-600 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+        <div class="relative cyber-card p-4 md:p-6 border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.6)]">
+            <div class="flex flex-col md:flex-row gap-4 items-stretch mobile-stack">
+                <div class="flex-1 relative flex items-center bg-black/40 rounded-2xl border border-white/5 focus-within:border-blue-500/50 transition-all">
+                    <i class="fa-brands fa-facebook absolute left-8 text-blue-500 text-3xl"></i>
+                    <input id="fbUrlInput" 
+                        class="w-full bg-transparent px-20 py-8 outline-none text-white text-2xl placeholder:text-slate-700 font-bold font-['Rajdhani'] mobile-full"
+                        data-i18n-placeholder="fb_placeholder"
+                        placeholder="PASTE FACEBOOK PROFILE / PAGE URL...">
+                </div>
+                <button id="detectBtn" class="cyber-btn px-16 py-8 text-xl font-black group overflow-hidden mobile-full">
+                    <span class="relative z-10 flex items-center gap-3">
+                        <i class="fa-solid fa-radar text-2xl"></i>
+                        <span data-i18n="fb_probe_btn">DEPLOY_PROBE</span>
+                    </span>
+                </button>
             </div>
-            <button id="detectBtn"
-                class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-10 py-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-500/20 font-['Kanit'] text-lg">
-                ตรวจสอบเพจ
+        </div>
+    </div>
+
+    <!-- Results Display: Tactical Interface -->
+    <div id="fbResultContainer" class="hidden mt-24 space-y-16 animate__animated animate__fadeIn">
+        <div class="cyber-card p-12 md:p-20 border-blue-500/10 relative overflow-hidden bg-slate-950/40">
+            <!-- Animated Scan Line (Custom) -->
+            <div id="fbScanLine" class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-400 to-transparent shadow-[0_0_20px_#3b82f6] z-10 hidden"></div>
+            
+            <div class="flex flex-col md:flex-row gap-20 items-center md:items-start text-center md:text-left">
+                <!-- Status Visualization -->
+                <div id="fbRiskIcon" class="w-48 h-48 rounded-[3.5rem] bg-blue-600/10 flex items-center justify-center text-8xl shrink-0 border border-blue-500/20 shadow-2xl transition-all duration-700">
+                    <i class="fa-solid fa-microchip text-blue-500"></i>
+                </div>
+                
+                <div class="flex-1">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-10 pb-10 border-b border-white/5">
+                        <div>
+                            <h2 id="fbRiskTitle" class="text-6xl font-black text-white tracking-tighter mb-4 uppercase italic font-['Orbitron']" data-i18n="status_processing">ANALYZING...</h2>
+                            <p id="fbUrlDisplay" class="text-blue-400 font-mono text-xs tracking-widest break-all opacity-50"></p>
+                        </div>
+                        <div id="fbRiskScoreBadge" class="px-8 py-4 rounded-3xl bg-black/60 border border-white/10 text-blue-400 font-black tracking-[0.3em] text-sm shadow-2xl flex items-center gap-4">
+                            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                            PROBE_DATA: --%
+                        </div>
+                    </div>
+                    
+                    <p id="fbRiskDesc" class="text-slate-300 text-2xl mb-12 font-['Kanit'] leading-relaxed font-light"></p>
+
+                    <!-- Indicators Grid -->
+                    <div id="fbDetailsList" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Dynamic Reasons -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Report Call to Action: Premium Banner (Moved outside to be always visible) -->
+    <div class="mt-24 space-y-16 animate__animated animate__fadeIn">
+        <div class="cyber-card p-10 bg-red-950/5 border-red-500/10 flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-red-500/30 transition-all">
+            <div class="flex items-center gap-6 mobile-stack">
+                <div class="w-16 h-16 rounded-2xl bg-red-600/10 flex items-center justify-center text-3xl text-red-500 group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-flag"></i>
+                </div>
+                <div class="text-center md:text-left">
+                    <h4 class="text-xl font-black text-white uppercase tracking-tight" data-i18n="fb_feedback_title">Intelligence Feedback Needed?</h4>
+                    <p class="text-slate-500 text-sm font-['Kanit']" data-i18n="fb_feedback_desc">หากพบข้อมูลผิดพลาด หรือพบเพจใหม่ที่ยังไม่ถูกตรวจจับ สามารถส่งรายงานสกัดกั้นได้ทันที</p>
+                    
+                    <!-- Integrated Identity Authentication for Reporting -->
+                    <div class="mt-6 flex items-center gap-4 p-3 bg-black/40 rounded-xl border border-white/5 w-fit">
+                        <div id="g_id_onload_card"
+                            data-client_id="{{ google_client_id }}"
+                            data-callback="handleCardCredential"
+                            data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin" data-type="icon" data-shape="circle" data-theme="filled_black"></div>
+                        <div class="flex flex-col">
+                            <span class="text-[8px] font-black text-slate-600 uppercase tracking-widest" data-i18n="fb_id_status">IDENTITY_STATUS</span>
+                            <span id="card-auth-status" class="text-[10px] text-slate-500 font-mono italic" data-i18n="fb_waiting_auth">WAITING_FOR_AUTH...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="openReportModal()" class="cyber-btn px-10 py-5 text-xs font-black group overflow-hidden mobile-full">
+                <span class="relative z-10" data-i18n="fb_init_report">INITIATE_REPORT_SEQUENCE</span>
             </button>
         </div>
-    </div>
 
-    <!-- Results Section (Hidden by default) -->
-    <div id="fbResultContainer" class="hidden animate__animated animate__fadeInUp">
-        <div
-            class="bg-slate-800/60 backdrop-blur-md border border-slate-700 rounded-[2.5rem] p-10 relative overflow-hidden">
-            <div id="fbScanLine" class="scan-line hidden"></div>
-
-            <div class="flex flex-col md:flex-row items-center gap-10">
-                <div id="fbRiskIcon"
-                    class="w-32 h-32 rounded-[2rem] flex items-center justify-center text-5xl shadow-2xl">
-                    <!-- Icon placeholder -->
-                </div>
-
-                <div class="flex-1 text-center md:text-left">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                        <div>
-                            <h2 id="fbRiskTitle" class="text-4xl font-bold font-['Orbitron']"></h2>
-                            <p id="fbUrlDisplay" class="text-slate-500 font-mono mt-1 text-xs break-all"></p>
-                        </div>
-                        <div id="fbRiskScoreBadge"
-                            class="px-5 py-2 rounded-full font-bold text-sm tracking-widest bg-slate-900 border border-slate-700">
-                            <!-- Score -->
-                        </div>
-                    </div>
-
-                    <p id="fbRiskDesc" class="text-slate-300 text-lg leading-relaxed font-['Kanit'] mb-6"></p>
-
-                    <div id="fbDetailsList"
-                        class="space-y-3 bg-slate-950/40 p-6 rounded-2xl border border-slate-800/50">
-                        <!-- Details -->
-                    </div>
-                </div>
+        <!-- Tech Intel: UX Clarification -->
+        <div class="mt-40 border-t border-white/5 pt-24 grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div class="p-10 bg-white/[0.02] border border-white/5 rounded-3xl">
+                <h4 class="text-lg font-black text-white italic uppercase tracking-widest font-['Orbitron'] mb-6 flex items-center gap-3" data-i18n="fb_osint_core_title">
+                    <i class="fa-solid fa-network-wired text-blue-500"></i> SOCIAL_OSINT_CORE
+                </h4>
+                <p class="text-slate-500 font-['Kanit'] text-sm leading-relaxed font-light" data-i18n="fb_osint_core_desc">
+                    ระบบใช้เทคนิค Open-Source Intelligence (OSINT) เพื่อตรวจสอบความเชื่อมโยงของชื่อบัญชี, วันที่สร้าง, และพฤติกรรมการโพสต์ที่อาจมีความซ้ำซ้อนกับกลุ่มมิจฉาชีพที่เคยถูกแบนไปก่อนหน้า
+                </p>
+            </div>
+            <div class="p-10 bg-white/[0.02] border border-white/5 rounded-3xl">
+                <h4 class="text-lg font-black text-white italic uppercase tracking-widest font-['Orbitron'] mb-6 flex items-center gap-3" data-i18n="fb_entity_verify_title">
+                    <i class="fa-solid fa-fingerprint text-indigo-500"></i> ENTITY_VERIFICATION
+                </h4>
+                <p class="text-slate-500 font-['Kanit'] text-sm leading-relaxed font-light" data-i18n="fb_entity_verify_desc">
+                    การตรวจสอบจะรวมถึงการหา "Digital Fingerprint" ของเพจทางการเพื่อเปรียบเทียบกับเพจที่กำลังสแกน หากพบว่ามีการแอบอ้างแอปพลิเคชันหรือแบรนด์ดังโดยไม่มีสัญลักษณ์ยืนยัน ระบบจะให้คะแนนความเสี่ยงเพิ่มขึ้นทันที
+                </p>
             </div>
         </div>
-    </div>
-
-    <!-- Report Section -->
-    <div class="mt-16 text-center animate__animated animate__fadeIn">
-        <h3 class="text-2xl font-bold text-white mb-6 font-['Kanit']">พบเพจปลอมหลุดรอด? แจ้งเราได้ที่นี่</h3>
-        <button onclick="openReportModal()"
-            class="bg-slate-700/50 hover:bg-slate-700 border border-slate-600 text-white px-8 py-3 rounded-full transition-all font-['Kanit']">
-            แจ้งเพจปลอมตัวใหม่
-        </button>
     </div>
 </div>
 
-<!-- Report Modal (Simple SweetAlert implementation) -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+    #fbScanLine.active {
+        display: block;
+        animation: fbScanMove 2.5s infinite linear;
+    }
+    @keyframes fbScanMove {
+        0% { top: 0; opacity: 0; }
+        15% { opacity: 1; }
+        85% { opacity: 1; }
+        100% { top: 100%; opacity: 0; }
+    }
+</style>
+
 <script>
     const detectBtn = document.getElementById('detectBtn');
     const fbUrlInput = document.getElementById('fbUrlInput');
@@ -87,123 +156,188 @@
     const fbRiskDesc = document.getElementById('fbRiskDesc');
     const fbDetailsList = document.getElementById('fbDetailsList');
 
+    let userAuthenticatedEmail = "";
+
+    // Card Google Identity Callback
+    window.handleCardCredential = (response) => {
+        const base64Url = response.credential.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+        
+        userAuthenticatedEmail = payload.email;
+        const statusEl = document.getElementById('card-auth-status');
+        if (statusEl) {
+            statusEl.textContent = `VERIFIED: ${payload.email}`;
+            statusEl.style.color = '#10b981';
+        }
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'IDENTITY_CONFIRMED',
+            text: `Authenticating as ${payload.email} for reporting duties.`,
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            background: '#020617',
+            color: '#fff'
+        });
+    };
+
     detectBtn.onclick = async () => {
         const url = fbUrlInput.value.trim();
-        if (!url) return Swal.fire({ icon: 'warning', title: 'กรุณาใส่ URL', background: '#1e293b', color: '#fff' });
 
-        // Show loading
+        if (!url) return Swal.fire({ 
+            icon: 'warning', 
+            title: 'URL_REQUIRED', 
+            text: 'กรุณากรอกลิงก์โปรไฟล์หรือเพจที่ต้องการตรวจสอบข้อมูลทางไซเบอร์',
+            background: '#020617', 
+            color: '#fff',
+            customClass: { popup: 'cyber-card border-blue-500/20' }
+        });
+
+        // UI Initialization
         fbResultContainer.classList.remove('hidden');
-        fbScanLine.classList.remove('hidden');
-        fbRiskIcon.className = "w-32 h-32 bg-slate-700 animate-pulse rounded-[2rem] flex items-center justify-center";
-        fbRiskIcon.innerHTML = "...";
-        fbRiskTitle.textContent = "กำลังวิเคราะห์...";
-        fbRiskTitle.className = "text-4xl font-bold text-slate-500 font-['Orbitron']";
-        fbRiskDesc.textContent = "ระบบกำลังตรวจสอบรูปแบบการแอบอ้าง พฤติกรรม และประวัติการร้องเรียน...";
+        fbScanLine.classList.add('active');
+        fbRiskIcon.className = "w-48 h-48 rounded-[3.5rem] bg-slate-900 animate-pulse flex items-center justify-center text-8xl border border-white/5 shadow-2xl";
+        fbRiskIcon.innerHTML = `<i class="fa-solid fa-satellite animate-spin text-blue-500/50"></i>`;
+        fbRiskTitle.textContent = translations[currentLang]['status_processing'];
+        fbRiskTitle.className = "text-6xl font-black text-slate-800 tracking-tighter mb-4 uppercase italic font-['Orbitron']";
         fbDetailsList.innerHTML = "";
-        fbUrlDisplay.textContent = url;
-        fbRiskScoreBadge.textContent = "SCANNIG...";
+        fbUrlDisplay.textContent = `TARGET_ID: ${url}`;
+        fbRiskScoreBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span> PROBING_DATA...`;
+        
+        fbResultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         try {
-            const res = await fetch('/api/check_fb', {
+            const res = await fetch('/check', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url })
             });
             const data = await res.json();
 
-            fbScanLine.classList.add('hidden');
-            fbRiskScoreBadge.textContent = `RISK SCORE: ${data.score}%`;
+            // Tactical Delay
+            setTimeout(() => {
+                fbScanLine.classList.remove('active');
+                fbRiskScoreBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-500"></span> PROBE_DATA: ${data.score}%`;
 
-            if (data.score > 70) {
-                fbRiskIcon.className = "w-32 h-32 bg-red-600 text-white rounded-[2rem] flex items-center justify-center shadow-[0_0_50px_rgba(220,38,38,0.4)] animate-pulse";
-                fbRiskIcon.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i>";
-                fbRiskTitle.textContent = "DANGEROUS";
-                fbRiskTitle.className = "text-4xl font-bold text-red-500 font-['Orbitron']";
-                fbRiskDesc.textContent = "พบความเสี่ยงสูงว่าเป็นเพจปลอมหรือมีการแอบอ้างเป็นบุคคลอื่น";
-            } else if (data.score > 30) {
-                fbRiskIcon.className = "w-32 h-32 bg-yellow-500 text-white rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(234,179,8,0.3)]";
-                fbRiskIcon.innerHTML = "<i class='fa-solid fa-circle-info'></i>";
-                fbRiskTitle.textContent = "SUSPICIOUS";
-                fbRiskTitle.className = "text-4xl font-bold text-yellow-500 font-['Orbitron']";
-                fbRiskDesc.textContent = "พบความน่าสงสัยบางประการ กรุณาตรวจสอบข้อมูลอย่างละเอียดก่อนทำรายการ";
-            } else {
-                fbRiskIcon.className = "w-32 h-32 bg-green-500 text-white rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(34,197,94,0.3)]";
-                fbRiskIcon.innerHTML = "<i class='fa-solid fa-shield-check'></i>";
-                fbRiskTitle.textContent = "VERIFIED";
-                fbRiskTitle.className = "text-4xl font-bold text-green-400 font-['Orbitron']";
-                fbRiskDesc.textContent = "ไม่พบความผิดปกติที่สำคัญในฐานข้อมูลและรูปแบบการตรวจสอบเบื้องต้น";
-            }
+                if (data.score > 70) {
+                    fbRiskIcon.className = "w-48 h-48 rounded-[3.5rem] bg-rose-600 text-white flex items-center justify-center text-8xl shadow-[0_0_80px_rgba(225,29,72,0.4)] border-none animate__animated animate__shakeX";
+                    fbRiskIcon.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i>";
+                    fbRiskTitle.textContent = translations[currentLang]['status_threat'];
+                    fbRiskTitle.className = "text-6xl font-black text-rose-500 tracking-tighter mb-4 uppercase italic font-['Orbitron']";
+                    fbRiskDesc.textContent = translations[currentLang]['fb_status_threat_desc'];
+                } else if (data.score > 30) {
+                    fbRiskIcon.className = "w-48 h-48 rounded-[3.5rem] bg-amber-500 text-white flex items-center justify-center text-8xl shadow-[0_0_60px_rgba(245,158,11,0.3)] border-none";
+                    fbRiskIcon.innerHTML = "<i class='fa-solid fa-shield-halved'></i>";
+                    fbRiskTitle.textContent = translations[currentLang]['fb_status_suspicious'];
+                    fbRiskTitle.className = "text-6xl font-black text-amber-500 tracking-tighter mb-4 uppercase italic font-['Orbitron']";
+                    fbRiskDesc.textContent = translations[currentLang]['fb_status_suspicious_desc'];
+                } else {
+                    fbRiskIcon.className = "w-48 h-48 rounded-[3.5rem] bg-emerald-500 text-white flex items-center justify-center text-8xl shadow-[0_0_60px_rgba(16,185,129,0.3)] border-none";
+                    fbRiskIcon.innerHTML = "<i class='fa-solid fa-check-circle'></i>";
+                    fbRiskTitle.textContent = translations[currentLang]['status_secure'];
+                    fbRiskTitle.className = "text-6xl font-black text-emerald-400 tracking-tighter mb-4 uppercase italic font-['Orbitron']";
+                    fbRiskDesc.textContent = translations[currentLang]['fb_status_secure_desc'];
+                }
 
-            fbDetailsList.innerHTML = data.reasons.map(r => `
-                <div class="flex items-center gap-3 text-slate-400 text-sm">
-                    <span class="w-1.5 h-1.5 ${data.score > 70 ? 'bg-red-500' : (data.score > 30 ? 'bg-yellow-500' : 'bg-green-500')} rounded-full"></span>
-                    ${r}
-                </div>
-            `).join('');
+                const reasonsList = data.details || [];
+                fbDetailsList.innerHTML = reasonsList.map(r => `
+                    <div class="p-8 bg-black/40 border border-white/5 rounded-[2rem] flex items-start gap-5 hover:border-blue-500/30 transition-all group">
+                        <div class="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0 border border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </div>
+                        <p class="text-[15px] text-slate-400 font-['Kanit'] leading-relaxed group-hover:text-white transition-colors font-light">${r}</p>
+                    </div>
+                `).join('');
+            }, 1000);
 
         } catch (e) {
-            Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: e.message, background: '#1e293b', color: '#fff' });
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'PROBE_FAILED', 
+                text: 'ไม่สามารถเชื่อมต่อศูนย์วิเคราะห์ Social Intelligence ได้: ' + e.message,
+                background: '#020617',
+                color: '#fff',
+                customClass: { popup: 'cyber-card border-red-500/20' }
+            });
         }
     };
 
+    // Modal Logic stays similar but with improved UI classes
     function openReportModal() {
         Swal.fire({
-            title: 'แจ้งเบาะแสเพจปลอม',
+            title: translations[currentLang]['fb_modal_title'],
             html: `
-                <div class="space-y-4">
-                    <div id="g_id_onload"
-                        data-client_id="928266966476-0lqqhphbafbsgegkeulj9s8jroja9ac0.apps.googleusercontent.com"
-                        data-callback="handleModalCredential"
-                        data-auto_prompt="false">
-                    </div>
-                    <div class="flex justify-center mb-4">
-                        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+                <div class="space-y-6 pt-6 overflow-hidden">
+                    <div class="p-6 bg-white/5 border border-white/5 rounded-3xl mb-4 ${userAuthenticatedEmail ? 'hidden' : ''}">
+                        <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-4">${translations[currentLang]['fb_modal_auth_req']}</p>
+                        <div id="g_id_onload_modal"
+                            data-client_id="{{ google_client_id }}"
+                            data-callback="handleModalCredential"
+                            data-auto_prompt="false">
+                        </div>
+                        <div class="flex justify-center">
+                            <div class="g_id_signin_modal" data-type="standard" data-shape="pill" data-theme="filled_black" data-text="continue_with" data-size="large"></div>
+                        </div>
                     </div>
                     
-                    <input id="swal-email" class="swal2-input" readonly placeholder="กรุณายืนยันอีเมลด้วย Google" style="background:#0f172a; color:#94a3b8; border:1px solid #334155; height:3.5em; border-radius:12px; margin-top:0;">
-                    <input id="swal-url" class="swal2-input" placeholder="ลิงก์เพจ/URL ที่ต้องการแจ้ง" style="background:#0f172a; color:#fff; border:1px solid #334155; height:3.5em; border-radius:12px;">
-                    <textarea id="swal-desc" class="swal2-textarea" placeholder="รายละเอียดเพิ่มเติม (เช่น แอบอ้างเป็นใคร หลอกเอาอะไร)" style="background:#0f172a; color:#fff; border:1px solid #334155; border-radius:12px;"></textarea>
+                    <div class="relative group">
+                        <i class="fa-solid fa-user-shield absolute left-6 top-1/2 -translate-y-1/2 text-slate-700"></i>
+                        <input id="swal-email" class="w-full bg-slate-950 border border-white/10 p-5 pl-16 rounded-2xl text-slate-600 font-mono text-xs outline-none shadow-inner" 
+                            readonly value="${userAuthenticatedEmail}" placeholder="${translations[currentLang]['fb_waiting_auth']}">
+                    </div>
+                    
+                    <div class="relative">
+                        <i class="fa-solid fa-link absolute left-6 top-1/2 -translate-y-1/2 text-blue-500/50"></i>
+                        <input id="swal-url" class="w-full bg-slate-900 border border-white/10 p-5 pl-16 rounded-2xl text-white outline-none focus:border-blue-500/50 transition font-mono text-sm" placeholder="TARGET_ID_URL">
+                    </div>
+
+                    <div class="relative">
+                        <i class="fa-solid fa-comment-dots absolute left-6 top-6 text-slate-700"></i>
+                        <textarea id="swal-desc" class="w-full bg-slate-900 border border-white/10 p-5 pl-16 rounded-2xl text-white h-32 outline-none focus:border-blue-500/50 transition font-['Kanit'] text-sm" placeholder="OBSERVED_BEHAVIORS_DATA..."></textarea>
+                    </div>
                 </div>
             `,
-            background: '#1a1f29',
+            background: '#020617',
             color: '#fff',
             showCancelButton: true,
-            confirmButtonText: 'ส่งรายงาน',
-            confirmButtonColor: '#3b82f6',
-            cancelButtonText: 'ยกเลิก',
+            confirmButtonText: translations[currentLang]['fb_modal_transmit'],
+            confirmButtonColor: '#2562eb',
+            cancelButtonText: translations[currentLang]['fb_modal_abort'],
+            customClass: { popup: 'cyber-card border-white/10 rounded-[3rem]' },
             didOpen: () => {
-                // Initialize Google Sign-in if script is loaded
-                if (window.google) {
+                if (!userAuthenticatedEmail && window.google) {
                     google.accounts.id.initialize({
-                        client_id: "928266966476-0lqqhphbafbsgegkeulj9s8jroja9ac0.apps.googleusercontent.com",
+                        client_id: "{{ google_client_id }}",
                         callback: handleModalCredential
                     });
                     google.accounts.id.renderButton(
-                        document.querySelector(".g_id_signin"),
-                        { theme: "outline", size: "large" }
+                        document.querySelector(".g_id_signin_modal"),
+                        { theme: "filled_black", size: "large", shape: "pill" }
                     );
                 }
             },
             preConfirm: () => {
                 const email = document.getElementById('swal-email').value;
                 const url = document.getElementById('swal-url').value;
-                if (!email || email.includes("กรุณายืนยัน")) {
-                    Swal.showValidationMessage('กรุณายืนยันอีเมลด้วย Google ก่อนส่งรายงาน');
+                if (!email || email.includes("WAITING")) {
+                    Swal.showValidationMessage('IDENTITY_AUTH_ERROR: Google validation missing');
                     return false;
                 }
                 if (!url) {
-                    Swal.showValidationMessage('กรุณาใส่ URL');
+                    Swal.showValidationMessage('TARGET_ID_MISSING');
                     return false;
                 }
                 return {
-                    email: email,
-                    url: url,
+                    email,
+                    url,
                     description: document.getElementById('swal-desc').value
                 }
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Submit to backend
                 fetch('/report', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -216,10 +350,11 @@
                 }).then(() => {
                     Swal.fire({
                         icon: 'success',
-                        title: 'ขอบคุณสำหรับการแจ้งเบาะแส!',
-                        text: `ระบบทำการบันทึกข้อมูลของคุณ (${result.value.email}) เรียบร้อยแล้ว`,
-                        background: '#1a1f29',
-                        color: '#fff'
+                        title: 'INTEL_RECORDED',
+                        text: `Data transmission from ${result.value.email} completed successfully.`,
+                        background: '#020617',
+                        color: '#fff',
+                        customClass: { popup: 'cyber-card border-green-500/20' }
                     });
                 });
             }
@@ -231,46 +366,23 @@
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const payload = JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
         
+        userAuthenticatedEmail = payload.email;
+        
         const emailInput = document.getElementById('swal-email');
         if (emailInput) {
             emailInput.value = payload.email;
-            emailInput.style.color = '#4ade80';
-            emailInput.style.borderColor = '#22c55e';
+            emailInput.style.color = '#10b981';
         }
+
+        const statusEl = document.getElementById('card-auth-status');
+        if (statusEl) {
+            statusEl.textContent = `VERIFIED: ${payload.email}`;
+            statusEl.style.color = '#10b981';
+        }
+
+        // Hide login section in modal if visible
+        const loginSec = document.querySelector('.p-6.bg-white\\/5');
+        if (loginSec) loginSec.classList.add('hidden');
     }
 </script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-
-<style>
-    .scan-line {
-        height: 3px;
-        background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-        position: absolute;
-        width: 100%;
-        top: 0;
-        left: 0;
-        animation: scanMove 2s infinite linear;
-        z-index: 10;
-    }
-
-    @keyframes scanMove {
-        0% {
-            top: 0;
-            opacity: 0;
-        }
-
-        10% {
-            opacity: 1;
-        }
-
-        90% {
-            opacity: 1;
-        }
-
-        100% {
-            top: 100%;
-            opacity: 0;
-        }
-    }
-</style>
 {% endblock %}

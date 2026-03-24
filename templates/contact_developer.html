@@ -1,50 +1,82 @@
 {% extends "layout.html" %}
 
-{% block title %}Contact Developer{% endblock %}
+{% block title %}Developer Support | Technical Inquiries{% endblock %}
 
 {% block content %}
-<div class="fade-in max-w-5xl mx-auto py-12 px-4">
-    <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-white mb-4 tracking-widest font-['Orbitron']">CONTACT & <span
-                class="text-[#00f0ff]">SUPPORT</span></h1>
-        <p class="text-gray-400">How can we help you today?</p>
+<div class="max-w-4xl mx-auto pt-20 pb-20 px-4">
+    <!-- Back Button -->
+    <div class="mb-12 animate__animated animate__fadeIn">
+        <a href="/contact" class="inline-flex items-center gap-2 text-slate-500 hover:text-green-400 transition-colors group">
+            <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+            <span class="text-xs font-black uppercase tracking-widest">Back to Support Hub</span>
+        </a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Developer -->
-        <a href="#" class="cyber-card p-8 text-center group hover:-translate-y-2 transition duration-300">
-            <div
-                class="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-green-500/20 transition border border-green-500/30">
-                <i class="fa-solid fa-code text-3xl text-green-400"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-white mb-2 font-['Orbitron']">Developer</h3>
-            <p class="text-gray-400 mb-4">Contact the dev team for bug reports or inquiries.</p>
-            <span class="text-green-400 text-sm uppercase tracking-wider font-bold group-hover:underline">Contact Team
-                events &rarr;</span>
-        </a>
+    <!-- Header Section -->
+    <div class="mb-24 animate__animated animate__fadeIn">
+        <div class="inline-flex items-center gap-4 px-8 py-3 rounded-full border border-green-500/30 bg-green-500/10 text-green-400 text-[11px] font-black uppercase tracking-[0.5em] mb-12 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
+            <i class="fa-solid fa-code animate-pulse"></i> TECHNICAL_ALLIANCE_PROTOCOL
+        </div>
+        <h1 class="font-black text-white tracking-tighter mb-10 uppercase italic font-['Orbitron']" style="font-size: var(--fs-header-title);">
+            DEV <span class="text-gradient">INTEL.</span>
+        </h1>
+        <p class="text-slate-500 max-w-4xl font-medium font-['Kanit'] leading-relaxed" style="font-size: var(--fs-header-desc);">
+            ติดต่อทีมพัฒนาเพื่อร่วมมือทางเทคนิค แจ้งบัล หรือสอบถามเกี่ยวกับสถาปัตยกรรมระบบขั้นสูง
+        </p>
+    </div>
 
-        <!-- FAQ -->
-        <a href="#" class="cyber-card p-8 text-center group hover:-translate-y-2 transition duration-300">
-            <div
-                class="w-20 h-20 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-pink-500/20 transition border border-pink-500/30">
-                <i class="fa-solid fa-circle-question text-3xl text-pink-400"></i>
+    <!-- Dev Contact Form -->
+    <div class="cyber-card p-8 md:p-12 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-green-500/5 blur-[80px] -mr-32 -mt-32"></div>
+        
+        <form class="space-y-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Developer Name</label>
+                    <input type="text" class="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-white outline-none focus:border-green-500/50 transition shadow-inner font-['Kanit']" placeholder="ชื่อของคุณ หรือ ชื่อทีม">
+                </div>
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Contact Email</label>
+                    <input type="email" class="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-white outline-none focus:border-green-500/50 transition shadow-inner font-mono" placeholder="dev@yourdomain.com">
+                </div>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2 font-['Orbitron']">FAQ</h3>
-            <p class="text-gray-400 mb-4">Frequently Asked Questions about PhishGuard.</p>
-            <span class="text-pink-400 text-sm uppercase tracking-wider font-bold group-hover:underline">View FAQ
-                &rarr;</span>
-        </a>
 
-        <!-- Q&A -->
-        <a href="#" class="cyber-card p-8 text-center group hover:-translate-y-2 transition duration-300">
-            <div
-                class="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-500/20 transition border border-purple-500/30">
-                <i class="fa-solid fa-comments text-3xl text-purple-400"></i>
+            <div class="space-y-3">
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Inquiry Type</label>
+                <select class="w-full bg-slate-900 border border-white/5 p-4 rounded-xl text-white outline-none focus:border-green-500/50 transition shadow-inner font-['Kanit']">
+                    <option>แจ้งจุดบกพร่อง (Bug Report)</option>
+                    <option>เสนอแนะฟีเจอร์ (Feature Request)</option>
+                    <option>สอบถามด้าน API (API Inquiry)</option>
+                    <option>ความร่วมมือทางเทคนิค (Partnership)</option>
+                </select>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2 font-['Orbitron']">Q&A</h3>
-            <p class="text-gray-400 mb-4">Ask questions and get community answers.</p>
-            <span class="text-purple-400 text-sm uppercase tracking-wider font-bold group-hover:underline">Join
-                Community &rarr;</span>
+
+            <div class="space-y-3">
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Technical Details</label>
+                <textarea class="w-full bg-slate-900 border border-white/5 p-4 rounded-xl text-white h-40 outline-none focus:border-green-500/50 transition shadow-inner font-mono text-sm placeholder:text-slate-700 font-['Kanit']" placeholder="อธิบายรายละเอียด คำร้องของคุณ หรือแนบ Stack Trace หากเป็นการแจ้งบัค..."></textarea>
+            </div>
+
+            <button type="button" class="cyber-btn w-full py-5 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-black uppercase tracking-widest shadow-lg shadow-green-500/20">
+                Execute Request
+            </button>
+        </form>
+    </div>
+
+    <!-- Dev Links -->
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <a href="https://github.com" target="_blank" class="p-6 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-between group hover:border-white/20 transition-all">
+            <div class="flex items-center gap-4">
+                <i class="fa-brands fa-github text-3xl text-slate-500 group-hover:text-white transition-colors"></i>
+                <span class="text-xs font-black text-slate-500 group-hover:text-white uppercase tracking-widest">Main Repository</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-700 group-hover:text-green-500"></i>
+        </a>
+        <a href="#" class="p-6 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-between group hover:border-white/20 transition-all">
+            <div class="flex items-center gap-4">
+                <i class="fa-solid fa-book text-2xl text-slate-500 group-hover:text-white transition-colors"></i>
+                <span class="text-xs font-black text-slate-500 group-hover:text-white uppercase tracking-widest">API Documentation</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-700 group-hover:text-green-500"></i>
         </a>
     </div>
 </div>

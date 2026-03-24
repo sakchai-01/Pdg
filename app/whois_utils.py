@@ -1,7 +1,12 @@
 import whois
 from datetime import datetime
+from app.utils.network import is_safe_url
 
 def whois_features(domain):
+    # SSRF Protection: Ensure domain doesn't resolve to internal IP
+    if not is_safe_url(f"http://{domain}"):
+        return {"domain_age_days": 0, "registrar": "Blocked (Internal IP) 🚫"}
+
     try:
         w = whois.whois(domain)
         creation = w.creation_date

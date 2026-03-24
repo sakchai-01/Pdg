@@ -1,79 +1,108 @@
 {% extends "layout.html" %}
 
-{% block title %}News - Web Phishing Analysis{% endblock %}
+{% block title %}Analysis | Web Phishing Intelligence{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto pt-10 pb-20">
-    <!-- Back Button -->
-    <a href="/news" class="inline-flex items-center gap-2 text-slate-500 hover:text-cyan-500 transition mb-10 group">
-        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition"></i> กลับไปหน้าข่าวสาร
-    </a>
+<div class="max-w-5xl mx-auto pt-32 pb-32 px-4 relative">
+    <!-- Breadcrumb -->
+    <div class="mb-16 animate__animated animate__fadeIn">
+        <a href="/news" class="inline-flex items-center gap-4 text-slate-500 hover:text-cyan-400 transition-all group font-black uppercase tracking-[0.2em] text-[10px]">
+            <i class="fa-solid fa-chevron-left group-hover:-translate-x-2 transition-transform"></i>
+            RETURN_TO_INTELLIGENCE_FEED
+        </a>
+    </div>
 
-    <article class="animate__animated animate__fadeIn">
-        <header class="mb-12">
-            <div
-                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-6">
-                Web Protection Alert
+    <!-- Article Header: Premium Tactical Header -->
+    <header class="mb-24 animate__animated animate__fadeInUp">
+        <div class="inline-flex items-center gap-4 px-8 py-3 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-[11px] font-black uppercase tracking-[0.5em] mb-12 shadow-[0_0_30px_rgba(6,182,212,0.2)]">
+            <i class="fa-solid fa-globe animate-pulse"></i> DOMAIN_INTEGRITY_ALERT
+        </div>
+        <h1 class="font-black text-white tracking-tighter mb-10 uppercase italic font-['Orbitron']" style="font-size: var(--fs-header-title);">
+            WEB <span class="text-gradient">THREATS.</span>
+        </h1>
+        <p class="text-slate-500 max-w-4xl font-medium font-['Kanit'] leading-relaxed" style="font-size: var(--fs-header-desc);">
+            เทคนิคการเลียนแบบโดเมน (Typosquatting) และการสร้างเว็บไซต์ปลอมที่ดูแนบเนียนเพื่อดักจับข้อมูลบัตรเครดิต
+        </p>
+    </header>
+        
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 py-10 border-y border-white/5 mt-16">
+            <div class="space-y-2">
+                <p class="text-[9px] text-slate-600 font-black uppercase tracking-widest">TRANSMISSION_DATE</p>
+                <p class="text-white font-mono text-sm tracking-tight italic">12_FEB_2026</p>
             </div>
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white font-['Kanit'] leading-tight mb-6">
-                เปิดโปง "เว็บฟิชชิ่ง" การเลียนแบบหน้าเว็บที่เหมือนจนแยกไม่ออก
-            </h1>
-            <div class="flex items-center gap-6 text-slate-500 text-sm font-mono">
-                <span><i class="fa-regular fa-calendar mr-2"></i> 24 ก.พ. 2024</span>
-                <span><i class="fa-regular fa-user mr-2"></i> Cyber Intelligence Team</span>
+            <div class="space-y-2">
+                <p class="text-[9px] text-slate-600 font-black uppercase tracking-widest">INTEL_SOURCE</p>
+                <p class="text-cyan-400 font-mono text-sm tracking-tight italic">DNS_SCANNER_JANIS</p>
             </div>
-        </header>
+            <div class="space-y-2">
+                <p class="text-[9px] text-slate-600 font-black uppercase tracking-widest">READ_TIME</p>
+                <p class="text-white font-mono text-sm tracking-tight italic">05:00_MIN</p>
+            </div>
+            <div class="space-y-2 text-right">
+                <p class="text-[9px] text-slate-600 font-black uppercase tracking-widest">THREAT_LEVEL</p>
+                <span class="px-3 py-1 bg-cyan-500/20 text-cyan-500 border border-cyan-500/40 text-[10px] font-black rounded uppercase tracking-widest animate-pulse">Standard</span>
+            </div>
+        </div>
+    </header>
 
-        <div
-            class="aspect-video bg-slate-900 rounded-[2.5rem] mb-12 flex items-center justify-center border border-white/5 overflow-hidden relative">
-            <i class="fa-solid fa-globe text-9xl text-slate-800 opacity-20"></i>
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent"></div>
-            <div class="absolute bottom-10 left-10 right-10">
-                <p class="text-white text-xl font-['Kanit'] font-bold mb-2">Look-alike Domains & Typosquatting</p>
-                <p class="text-slate-400 text-sm">การสวมรอยผ่านเว็บไซต์ปลอม</p>
+    <!-- Visual Artifact -->
+    <div class="cyber-card p-4 border-white/10 mb-24 overflow-hidden animate__animated animate__fadeInUp bg-slate-950/40 backdrop-blur-3xl shadow-[0_0_80px_rgba(0,0,0,0.8)]">
+        <div class="aspect-video bg-slate-900 rounded-[2.5rem] relative flex items-center justify-center overflow-hidden border border-white/5">
+            <div class="absolute inset-0 bg-cyan-600/5 mix-blend-overlay"></div>
+            <i class="fa-solid fa-globe text-[18rem] text-slate-800 opacity-20 rotate-12 transition-all"></i>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+            <div class="absolute bottom-16 left-16 p-10 border-l-4 border-cyan-600 bg-black/40 backdrop-blur-md rounded-r-3xl">
+                <p class="text-white text-3xl font-black uppercase italic tracking-tighter mb-2 font-['Orbitron']">WEB_ARRAY_VECTOR</p>
+                <p class="text-cyan-500 text-[10px] font-black tracking-[0.5em] uppercase opacity-60">Sub-ID: Typosquatting_Analysis</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Content -->
+    <article class="prose prose-invert max-w-none text-slate-400 font-['Kanit'] leading-relaxed text-xl animate__animated animate__fadeInUp font-light">
+        <p class="text-2xl text-white font-bold mb-12 border-b border-white/5 pb-12 italic">
+            เว็บเลียนแบบที่เหมือนจนแยกไม่ออก! <b class="text-cyan-500">Web Phishing</b> การจดโดเมนเนมที่คล้ายกับแบรนด์ดังเพื่อดักจับข้อมูลบัตรเครดิตและรหัสผ่าน
+        </p>
+
+        <p class="mb-12">
+            เทคนิค <b class="text-white">"Typosquatting"</b> เป็นอาวุธหลักที่มิจฉาชีพใช้ โดยการจดชื่อโดเมนที่ผิดไปเพียงหนึ่งตัวอักษร เช่น facebook.co หรือ faceb0ok.com เพื่อหลอกให้เหยื่อเข้าใช้งานและกรอกข้อมูลลงในฟอร์มที่เตรียมไว้
+        </p>
+
+        <!-- Red Flags -->
+        <div class="cyber-card p-12 md:p-20 border-cyan-500/10 bg-cyan-500/[0.03] my-24 relative overflow-hidden backdrop-blur-3xl shadow-inner">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 blur-[120px] pointer-events-none"></div>
+            <h3 class="text-cyan-500 font-black uppercase tracking-[0.5em] text-xs mb-12 flex items-center gap-4 font-['Orbitron']">
+                <i class="fa-solid fa-fingerprint animate-pulse"></i> IDENTIFIED_RED_FLAGS
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                 <div class="flex gap-8 group">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-600/10 border border-cyan-500/30 flex items-center justify-center text-cyan-500 font-black shrink-0 text-xs shadow-lg group-hover:bg-cyan-600 group-hover:text-white transition-all">01</div>
+                    <div>
+                        <b class="text-white text-xl block mb-3 uppercase italic tracking-tight font-['Orbitron']">URL_ANOMALIES</b>
+                        <p class="text-base text-slate-500 font-light leading-relaxed">การใช้ตัวอักษร "i" และ "l" สลับกัน หรือใช้ตัวเลข "0" แทน "o" รวมถึงโดเมนแปลกๆ เช่น .net .org แทนที่จะเป็น .com ของจริง</p>
+                    </div>
+                </div>
+                 <div class="flex gap-8 group">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-600/10 border border-cyan-500/30 flex items-center justify-center text-cyan-500 font-black shrink-0 text-xs shadow-lg group-hover:bg-cyan-600 group-hover:text-white transition-all">02</div>
+                    <div>
+                        <b class="text-white text-xl block mb-3 uppercase italic tracking-tight font-['Orbitron']">SSL_VALIDATION</b>
+                        <p class="text-base text-slate-500 font-light leading-relaxed">แม้จะมีแม่กุญแจ (HTTPS) แต่หากชื่อโดเมนไม่ถูกต้อง ใบรับรอง SSL นั้นก็ไม่ได้พิสูจน์ว่าเป็นเว็บไซต์ของเจ้าของแบรนด์ตัวจริง</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="prose prose-invert max-w-none text-slate-300 font-['Kanit'] space-y-8 leading-relaxed text-lg">
-            <p>
-                มิจฉาชีพสร้างเว็บไซต์ที่มีหน้าตาเหมือนกับหน้าลงชื่อเข้าใช้ (Login) ของธนาคารหรือโซเชียลมีเดีย
-                เพื่อหลอกให้เหยื่อกรอกชื่อผู้ใช้และรหัสผ่าน โดยใช้เทคนิคการตั้งชื่อโดเมนที่ใกล้เคียงกับของจริง
+        <h2 class="text-4xl font-black text-white italic uppercase tracking-tighter mt-32 mb-10 font-['Orbitron']">Tactical <span class="text-cyan-500">Neutralization</span></h2>
+        <p class="mb-12">
+            ก่อนกรอกข้อมูลสำคัญ ให้ตรวจสอบ <b class="text-cyan-500">"Address Bar"</b> เสมอ และหากไม่มั่นใจ ให้ใช้ระบบสแกน URLs อัจฉริยะของ PhishGuard เพื่อวิเคราะห์ความเสี่ยงทันที
+        </p>
+
+        <div class="p-12 bg-black/60 border border-white/5 rounded-[3rem] mt-24 shadow-2xl relative overflow-hidden backdrop-blur-3xl">
+            <p class="font-black text-cyan-500 uppercase tracking-[0.5em] text-xs mb-6 font-['Orbitron']">COMMAND_SUMMARY:</p>
+            <p class="text-white font-['Kanit'] italic text-xl leading-relaxed font-light relative z-10">
+                "ระมัดระวังหน้าเว็บที่มีดีไซน์ล้าสมัยหรือทำงานผิดปกติ และที่สำคัญที่สุดคือห้ามเชื่อใจเว็บไซต์เพียงเพราะมีรูปแม่กุญแจเท่านั้น"
             </p>
-
-            <div class="bg-cyan-500/5 border-l-4 border-cyan-500 p-8 rounded-r-2xl my-10">
-                <h3 class="text-cyan-500 font-bold mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-desktop"></i> ลักษณะของหน้าเว็บอันตราย
-                </h3>
-                <ul class="space-y-4 list-none p-0">
-                    <li class="flex gap-3">
-                        <span class="text-cyan-500 font-bold">1.</span>
-                        <span><b>Domain พิเศษ:</b> การใช้ตัวอักษรที่ดูคล้ายกัน เช่น g00gle.com แทน google.com
-                            หรือการเพิ่มคำต่อท้าย เช่น kbank-verify.com</span>
-                    </li>
-                    <li class="flex gap-3">
-                        <span class="text-cyan-500 font-bold">2.</span>
-                        <span><b>ไม่มี SSL หรือมีใบรับรองปลอม:</b> สังเกตไอคอนกุญแจ หากขึ้นว่า "Not Secure"
-                            ให้รีบปิดหน้าเว็บทันที</span>
-                    </li>
-                    <li class="flex gap-3">
-                        <span class="text-cyan-500 font-bold">3.</span>
-                        <span><b>คุณภาพของงานออกแบบ:</b> ฟอนต์ที่ดูแปลกตา รูปภาพที่แตก หรือปุ่มอื่นๆ
-                            บนหน้าเว็บที่ไม่สามารถกดได้จริง</span>
-                    </li>
-                </ul>
-            </div>
-
-            <h2 class="text-2xl font-bold text-white mt-12 mb-6">วิธีตรวจสอบให้มั่นใจ</h2>
-            <p>
-                ให้สังเกตแถบที่อยู่เว็บ (Address Bar) เสมอ และตรวจสอบว่า HTTPS นั้นเป็นของบริษัทจริงหรือไม่ หากไม่แน่ใจ
-                ให้เข้ากูเกิลแล้วพิมพ์ชื่อบริษัทเพื่อหาลิงก์ทางการแทนการกดจากลิงก์ที่ถูกส่งมาทาง SMS หรือ Social Media
-            </p>
-
-            <div class="p-8 bg-slate-900 rounded-3xl border border-white/5 mt-10">
-                <p class="font-bold text-cyan-400 mb-4">Pro Tip:</p>
-                <p>ใช้ตัวขยาย (Extension) ของเบราว์เซอร์ที่ช่วยตรวจจับเว็บฟิชชิ่ง หรือใช้ระบบ PhishGuard ของเราในการสแกน
-                    URL ก่อนเข้าใช้งานทุกครั้ง</p>
-            </div>
         </div>
     </article>
 </div>

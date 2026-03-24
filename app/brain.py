@@ -2,9 +2,10 @@ import os
 import json
 import re
 from dotenv import load_dotenv
+from typing import List, Optional, Dict, Any
 
 try:
-    from google import genai
+    import google.generativeai as genai
 except ImportError:
     genai = None
 
@@ -13,7 +14,14 @@ GEMINI_KEY = os.getenv("GEMINI_API_KEY")
 
 if genai and GEMINI_KEY:
     try:
-        client = genai.Client(api_key=GEMINI_KEY)
+        genai.configure(api_key=GEMINI_KEY)
+        client = genai.GenerativeModel(
+            model_name='gemini-2.5-flash',
+            system_instruction="""You are 'JANIS AI', a high-level AI Cybersecurity Specialist. 
+            You are female, professional, and helpful. Always use polite female particles like 'ค่ะ' or 'นะคะ' in Thai.
+            Your mission is to analyze messages, links, or files for phishing, scams, and cyber threats."""
+        )
+        print("DEBUG: Gemini (google-generativeai) initialized successfully")
     except Exception as e:
         print(f"❌ Gemini init error: {e}")
         client = None
@@ -21,7 +29,9 @@ else:
     client = None
 
 # System prompt for a helpful but critical Cybersecurity Expert
-SYSTEM_PROMPT = """You are 'SECURITY_EXPERT', a high-level AI Cybersecurity Specialist.
+SYSTEM_PROMPT = """You are 'JANIS_AI', a high-level AI Cybersecurity Specialist.
+You are female, professional, and helpful. Always use polite female Thai particles like 'ค่ะ' or 'นะคะ'. 
+Avoid using male pronouns like 'ผม' and use 'ดิฉัน' or simply omit pronouns where appropriate.
 Your mission is to analyze messages, links, or files for phishing, scams, and cyber threats.
 
 GUIDELINES:
@@ -44,38 +54,40 @@ When you detect a threat or are asked to analyze something, include this JSON st
 IMPORTANT: Even if you provide a natural explanation, the JSON block must be present if there's any risk assessment involved. Keep the JSON clean and valid.
 """
 
-def get_ai_response(message: str, history: list = None) -> str:
+# Re-initializing model with proper variable exposure
+if genai and GEMINI_KEY:
+    try:
+        model = genai.GenerativeModel(
+            model_name='gemini-2.5-flash',
+            system_instruction=SYSTEM_PROMPT
+        )
+    except:
+        model = None
+else:
+    model = None
+
+def get_ai_response(message: str, history: Optional[List[Dict[str, Any]]] = None) -> str:
     """
-    Generates a response using Gemini AI, considering conversation history.
-    history: List of dictionaries with 'role' and 'parts' keys.
+    Generates a response using Gemini AI (google-generativeai SDK).
+    history: List of dictionaries with 'role' (user/model) and 'parts' (list of strings).
     """
-    if not client:
+    if not model:
         return json.dumps({
             "error": "Gemini AI provider not configured.",
-            "details": "Check GEMINI_API_KEY in .env or pip install google-genai"
+            "details": "Checking if GEMINI_API_KEY is in .env and google-generativeai is installed."
         })
 
     try:
-        # Use a more capable/stable model name
-        
-        # We prepend the system prompt if history is empty to set the persona
-        # The new SDK doesn't natively expose 'start_chat' exactly like the old one without explicit history parsing
-        # For simplicity, we implement a naive history concatenation.
-        
-        contents = []
+        # Convert history format for google-generativeai
+        # Expected: [{'role': 'user', 'parts': ['...']}, {'role': 'model', 'parts': ['...']}]
+        chat_history = []
         if history:
-            for msg in history:
-                contents.append(f"{msg['role'].capitalize()}: {msg['parts'][0]}")
-        else:
-            contents.append(f"System: {SYSTEM_PROMPT}")
+            for h in history:
+                role = "user" if h['role'].lower() == "user" else "model"
+                chat_history.append({"role": role, "parts": h['parts']})
 
-        contents.append(f"User: {message}")
-        prompt = "\n\n".join(contents)
-                
-        response = client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=prompt,
-        )
+        chat = model.start_chat(history=chat_history)
+        response = chat.send_message(message)
         return response.text
 
     except Exception as e:
@@ -85,7 +97,7 @@ def get_ai_response(message: str, history: list = None) -> str:
             "details": str(e)
         })
 
-def extract_json(response_text: str) -> dict:
+def extract_json(response_text: str) -> Optional[Dict[Any, Any]]:
     """
     Utility to extract JSON from AI response if it's wrapped in text or markdown.
     """
@@ -97,7 +109,8 @@ def extract_json(response_text: str) -> dict:
         match = re.search(r'\{.*\}', response_text, re.DOTALL)
         if match:
             try:
-                return json.loads(match.group())
+                json_str = match.group().strip()
+                return json.loads(json_str)
             except:
                 pass
     return None

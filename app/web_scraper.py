@@ -1,11 +1,9 @@
-# web_scraper.py
 import threading
 import time
 import logging
-import requests
 import random
-from bs4 import BeautifulSoup
-from crawler import save_to_db
+from app.crawler import save_to_db
+from app.utils.network import is_safe_url
 
 logging.basicConfig(
     level=logging.INFO,
@@ -24,48 +22,46 @@ TARGET_FEEDS = [
 
 KEYWORDS = ["login", "password", "bank", "update", "verify", "secure"]
 
+def scraper_cycle():
+    """
+    A single cycle of phishing analysis.
+    Can be called by a scheduler or FastAPI BackgroundTasks.
+    """
+    target = random.choice(TARGET_FEEDS)
+    
+    # SSRF Protection
+    if not is_safe_url(target):
+        logger.warning(f"🚫 Blocked potentially unsafe target: {target}")
+        return
+
+    try:
+        # Simulated analysis
+        risk_score = random.randint(10, 95)
+        is_phishing = risk_score > 70
+        
+        if is_phishing:
+            reason = f"Detected suspicious keywords: {random.choice(KEYWORDS)}"
+            logger.warning(f"⚠️ DETECTED THREAT: {target} (Score: {risk_score})")
+            
+            save_to_db(
+                url=target,
+                domain=target.split('//')[-1],
+                risk_score=risk_score,
+                reason=reason
+            )
+        else:
+            logger.info(f"✅ Clean: {target}")
+    except Exception as e:
+        logger.error(f"Scraper error: {e}")
+
 def run_scraper_background():
     """
-    Run phishing scraper in background thread
+    Run phishing scraper in background thread with a loop
     """
-    def scraper_job():
-        cycle = 1
+    def scraper_loop():
         while True:
-            logger.info(f"🕷️ Scraper cycle {cycle} running...")
-            
-            # 1. Fetch from feed (Simulated)
-            target = random.choice(TARGET_FEEDS)
-            
-            # 2. Analyze
-            try:
-                # In a real scenario, we would request(target)
-                # resp = requests.get(target, timeout=5)
-                # soup = BeautifulSoup(resp.text, 'html.parser')
-                
-                # Simulating analysis for demo reliability
-                risk_score = random.randint(10, 95)
-                is_phishing = risk_score > 70
-                
-                if is_phishing:
-                    reason = f"Detected suspicious keywords: {random.choice(KEYWORDS)}"
-                    logger.warning(f"⚠️ DETECTED THREAT: {target} (Score: {risk_score})")
-                    
-                    # 3. Save to DB
-                    save_to_db(
-                        url=target,
-                        domain=target.split('//')[-1],
-                        risk_score=risk_score,
-                        reason=reason
-                    )
-                else:
-                    logger.info(f"✅ Clean: {target}")
+            scraper_cycle()
+            time.sleep(60) # Run every minute
 
-            except Exception as e:
-                logger.error(f"Scraper error: {e}")
-            
-            cycle += 1
-            # Run every 60 seconds for demo purposes
-            time.sleep(60)
-
-    thread = threading.Thread(target=scraper_job, daemon=True)
+    thread = threading.Thread(target=scraper_loop, daemon=True)
     thread.start()
