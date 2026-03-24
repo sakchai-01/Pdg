@@ -14,53 +14,47 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
-    return templates.TemplateResponse("index.html", {
-        "request": request
-    })
+    return templates.TemplateResponse(request=request, name="index.html")
 
 # ==== STATIC PAGES (NEWS / INFO) ====
 @router.get("/news", response_class=HTMLResponse)
-async def news(request: Request): return templates.TemplateResponse("news.html", {"request": request})
+async def news(request: Request): return templates.TemplateResponse(request=request, name="news.html")
 
 @router.get("/about", response_class=HTMLResponse)
-async def about(request: Request): return templates.TemplateResponse("about.html", {"request": request})
+async def about(request: Request): return templates.TemplateResponse(request=request, name="about.html")
 
 @router.get("/news/{category}", response_class=HTMLResponse)
 async def news_category(request: Request, category: str): 
-    return templates.TemplateResponse(f"news_{category}.html", {"request": request})
+    return templates.TemplateResponse(request=request, name=f"news_{category}.html")
 
 @router.get("/tools/{tool_name}", response_class=HTMLResponse)
 async def tools_page(request: Request, tool_name: str):
-    return templates.TemplateResponse(f"{tool_name}.html", {"request": request})
+    return templates.TemplateResponse(request=request, name=f"{tool_name}.html")
 
 @router.get("/contact", response_class=HTMLResponse)
-async def contact(request: Request): return templates.TemplateResponse("contact.html", {"request": request})
+async def contact(request: Request): return templates.TemplateResponse(request=request, name="contact.html")
 
 @router.get("/contact/{sub_page}", response_class=HTMLResponse)
 async def contact_sub(request: Request, sub_page: str): 
-    return templates.TemplateResponse(f"contact_{sub_page}.html", {"request": request})
+    return templates.TemplateResponse(request=request, name=f"contact_{sub_page}.html")
 
 @router.get("/report", response_class=HTMLResponse)
 async def report_get(request: Request):
-    return templates.TemplateResponse("report.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="report.html", context={
         "google_client_id": os.getenv("GOOGLE_CLIENT_ID")
     })
 
 @router.post("/report", response_class=HTMLResponse)
 async def report_post(request: Request, email: str = Form(...), url: str = Form(None), description: str = Form(None), type: str = Form(None)):
-    # In a real app, you'd save this to a 'reports' table in the DB
     print(f"REPORT RECEIVED: Email={email}, Type={type}, URL={url}")
-    return templates.TemplateResponse("report.html", {
-        "request": request, 
+    return templates.TemplateResponse(request=request, name="report.html", context={
         "success": f"ขอบคุณสำหรับการแจ้งเบาะแสคุณ {email}! เราจะตรวจสอบโดยเร็วที่สุด",
         "google_client_id": os.getenv("GOOGLE_CLIENT_ID")
     })
 
 @router.get("/detect/fb", response_class=HTMLResponse)
 async def detect_fb(request: Request):
-    return templates.TemplateResponse("detect_fb.html", {
-        "request": request,
+    return templates.TemplateResponse(request=request, name="detect_fb.html", context={
         "google_client_id": os.getenv("GOOGLE_CLIENT_ID")
     })
 
