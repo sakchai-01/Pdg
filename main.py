@@ -6,15 +6,24 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from app.routes import router as api_router
 from app.core.database import init_db
-from app.core.compat import apply_windows_patches
 
-apply_windows_patches()
+# Only apply Windows patches when running locally on Windows
+if os.name == 'nt':
+    try:
+        from app.core.compat import apply_windows_patches
+        apply_windows_patches()
+    except Exception:
+        pass
 
 load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await init_db()
+    # Database init: skip gracefully if filesystem is read-only (e.g., Vercel)
+    try:
+        await init_db()
+    except Exception as e:
+        print(f"⚠️ DB init skipped: {e}")
     yield
 
 app = FastAPI(
