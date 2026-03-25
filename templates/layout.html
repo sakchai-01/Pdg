@@ -18,11 +18,6 @@
             50% { transform: translateY(-12px); }
         }
         
-        @keyframes pulse-aura {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(1.2); opacity: 0.6; }
-        }
-        
         .global-janis-btn {
             position: fixed;
             bottom: 20px;
@@ -237,12 +232,10 @@
             - Purposeful drop shadow, smooth deceleration on hover.
             - Seamlessly adapts to Smartphones, 16:10 Laptops, and 4K Desktops.
         -->
-        <div class="relative inline-block h-auto drop-shadow-[0_10px_20px_rgba(186,230,253,0.3)] transform origin-bottom transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-2 group-hover:scale-105
+        <div class="relative h-auto drop-shadow-[0_10px_20px_rgba(186,230,253,0.3)] transform origin-bottom transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-2 group-hover:scale-105
             w-[180px] sm:w-[260px] md:w-[300px] lg:w-[350px]">
-            <!-- Radial Pulse Aura -->
-            <div class="absolute inset-0 z-0" style="background: radial-gradient(circle, #22d3ee 0%, transparent 70%); opacity: 0.4; filter: blur(15px); animation: pulse-aura 2s infinite;"></div>
             
-            <img id="global-mascot-img" src="/static/images/janis/default.png" alt="Janis AI" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6134/6134346.png'" class="relative z-10 w-full h-auto object-contain block">
+            <img id="global-mascot-img" src="/static/images/janis/default.png" alt="Janis AI" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6134/6134346.png'" class="w-full h-auto object-contain block">
         </div>
     </a>
 
