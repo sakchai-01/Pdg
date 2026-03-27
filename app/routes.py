@@ -231,9 +231,18 @@ async def get_current_admin(request: Request):
 
 @router.get("/admin/login", response_class=HTMLResponse)
 async def admin_login_get(request: Request):
-    return templates.TemplateResponse(request=request, name="admin_login.html", context={
+    # If already logged in, redirect to dashboard
+    admin = await get_current_admin(request)
+    if admin:
+        return RedirectResponse(url="/admin/dashboard")
+
+    response = templates.TemplateResponse(request=request, name="admin_login.html", context={
         "google_client_id": os.getenv("GOOGLE_CLIENT_ID")
     })
+    # Security: Ensure login page is never cached
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 @router.post("/admin/login")
 async def admin_login_post(request: Request, response: Response):
@@ -268,11 +277,15 @@ async def admin_dashboard(request: Request):
     if admin['role'] == 'super_admin':
         admins = await list_admins()
 
-    return templates.TemplateResponse(request=request, name="admin_dashboard.html", context={
+    response = templates.TemplateResponse(request=request, name="admin_dashboard.html", context={
         "admin": admin,
         "reports": pending,
         "admins": admins
     })
+    # Security: Prevent browser caching to avoid back-button access after logout
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 @router.post("/admin/review")
 async def admin_review(request: Request):
@@ -289,8 +302,22 @@ async def admin_review(request: Request):
     if not report:
         return JSONResponse({"error": "Report not found"}, status_code=404)
 
-    if action == "approve":
-        # Move to live threat database
+    if action == "approve_safe":
+        # Manually approved as Safe
+        url = report.get('url')
+        domain = urlparse(url).netloc or url
+        await add_safe_url(url, domain, category="Approved by Admin", source=f"admin:{admin['username']}")
+        await update_report_status(report_id, "resolved", reviewer_note="Manually Approved as SAFE")
+        
+    elif action == "approve_phishing":
+        # Manually approved as Phishing
+        url = report.get('url')
+        domain = urlparse(url).netloc or url
+        await add_phishing_url(url, domain, threat_level="high", source=f"admin:{admin['username']}")
+        await update_report_status(report_id, "resolved", reviewer_note="Manually Approved as PHISHING")
+
+    elif action == "approve":
+        # Legacy/Automatic behavior
         url = report.get('url')
         type = report.get('type')
         domain = urlparse(url).netloc or url

@@ -9,31 +9,31 @@
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row justify-between items-end gap-8 mb-16 animate__animated animate__fadeIn">
         <div>
-            <div class="inline-flex items-center gap-4 px-6 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-[9px] font-black uppercase tracking-[0.4em] mb-8">
+            <div data-i18n="admin_dash_badge" class="inline-flex items-center gap-4 px-6 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-[9px] font-black uppercase tracking-[0.4em] mb-8">
                 <i class="fa-solid fa-tower-broadcast"></i> NEURAL_COMMAND_CENTER :: ACTIVE
             </div>
-            <h1 class="text-5xl font-black text-white tracking-tighter uppercase italic font-['Orbitron']">
+            <h1 data-i18n="admin_dash_title" class="text-5xl font-black text-white tracking-tighter uppercase italic font-['Orbitron']">
                 ADMIN <span class="text-gradient">DASHBOARD.</span>
             </h1>
             <p class="text-slate-500 font-mono text-xs mt-4 uppercase tracking-[0.3em]">
-                OPERATOR: <span class="text-white">{{ admin.username }}</span> | 
-                LEVEL: <span class="text-cyan-400 font-black">{{ admin.role | upper }}</span>
+                <span data-i18n="admin_operator">OPERATOR</span>: <span class="text-white">{{ admin.username }}</span> | 
+                <span data-i18n="admin_level">LEVEL</span>: <span class="text-cyan-400 font-black">{{ admin.role | upper }}</span>
             </p>
         </div>
         <div class="flex gap-4">
-            <a href="/admin/logout" class="px-8 py-4 bg-red-600/10 border border-red-500/30 text-red-500 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">
+            <button onclick="logoutAdmin()" data-i18n="admin_terminate_session" class="px-8 py-4 bg-red-600/10 border border-red-500/30 text-red-500 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">
                 TERMINATE_SESSION
-            </a>
+            </button>
         </div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="flex gap-4 mb-12 border-b border-white/5 pb-6">
-        <button onclick="switchTab('moderation')" id="tab-moderation" class="tab-btn active px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">
+        <button onclick="switchTab('moderation')" id="tab-moderation" data-i18n="admin_tab_moderation" class="tab-btn active px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">
             <i class="fa-solid fa-list-check mr-2"></i> REPORT_MODERATION
         </button>
         {% if admin.role == 'super_admin' %}
-        <button onclick="switchTab('management')" id="tab-management" class="tab-btn px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">
+        <button onclick="switchTab('management')" id="tab-management" data-i18n="admin_tab_management" class="tab-btn px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">
             <i class="fa-solid fa-users-gear mr-2"></i> ADMIN_MANAGEMENT
         </button>
         {% endif %}
@@ -44,20 +44,20 @@
         <div class="grid grid-cols-1 gap-8">
             <div class="cyber-card p-10 bg-black/40 border-white/5">
                 <header class="flex justify-between items-center mb-10 pb-6 border-b border-white/5">
-                    <h3 class="text-xl font-black text-white uppercase tracking-tight italic">Pending_Threat_Reports</h3>
-                    <span class="text-[10px] text-slate-500 font-mono uppercase tracking-widest">Awaiting_Neural_Verification</span>
+                    <h3 data-i18n="admin_pending_reports" class="text-xl font-black text-white uppercase tracking-tight italic">Pending_Threat_Reports</h3>
+                    <span data-i18n="admin_awaiting_verify" class="text-[10px] text-slate-500 font-mono uppercase tracking-widest">Awaiting_Neural_Verification</span>
                 </header>
                 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead class="text-[10px] text-slate-600 uppercase tracking-widest font-black border-b border-white/5">
                             <tr>
-                                <th class="pb-6 px-4">TIMESTAMP</th>
-                                <th class="pb-6 px-4">TARGET_URL</th>
-                                <th class="pb-6 px-4">TYPE</th>
-                                <th class="pb-6 px-4">SUBMITTER</th>
-                                <th class="pb-6 px-4">STATUS</th>
-                                <th class="pb-6 px-4 text-right">ACTIONS</th>
+                                <th data-i18n="admin_table_timestamp" class="pb-6 px-4">TIMESTAMP</th>
+                                <th data-i18n="admin_table_url" class="pb-6 px-4">TARGET_URL</th>
+                                <th data-i18n="admin_table_type" class="pb-6 px-4">TYPE</th>
+                                <th data-i18n="admin_table_submitter" class="pb-6 px-4">SUBMITTER</th>
+                                <th data-i18n="admin_table_status" class="pb-6 px-4">STATUS</th>
+                                <th data-i18n="admin_table_actions" class="pb-6 px-4 text-right">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody id="report-table-body" class="divide-y divide-white/5">
@@ -76,11 +76,17 @@
                                 </td>
                                 <td class="py-6 px-4 text-right">
                                     <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button onclick="reviewReport('{{ r._id }}', 'approve')" class="p-2 bg-emerald-600/20 text-emerald-500 border border-emerald-500/30 rounded-lg hover:bg-emerald-500 hover:text-white transition-all">
-                                            <i class="fa-solid fa-check"></i>
+                                        <!-- Approve as Safe -->
+                                        <button onclick="reviewReport('{{ r._id }}', 'approve_safe')" data-i18n-title="admin_btn_safe" title="APPROVE_AS_SAFE" class="p-2 bg-emerald-600/20 text-emerald-500 border border-emerald-500/30 rounded-lg hover:bg-emerald-500 hover:text-white transition-all">
+                                            <i class="fa-solid fa-shield-check"></i>
                                         </button>
-                                        <button onclick="reviewReport('{{ r._id }}', 'reject')" class="p-2 bg-rose-600/20 text-rose-500 border border-rose-500/30 rounded-lg hover:bg-rose-500 hover:text-white transition-all">
-                                            <i class="fa-solid fa-xmark"></i>
+                                        <!-- Approve as Phishing -->
+                                        <button onclick="reviewReport('{{ r._id }}', 'approve_phishing')" data-i18n-title="admin_btn_phish" title="APPROVE_AS_PHISHING" class="p-2 bg-orange-600/20 text-orange-500 border border-orange-500/30 rounded-lg hover:bg-orange-500 hover:text-white transition-all">
+                                            <i class="fa-solid fa-skull-crossbones"></i>
+                                        </button>
+                                        <!-- Reject -->
+                                        <button onclick="reviewReport('{{ r._id }}', 'reject')" data-i18n-title="admin_btn_reject" title="REJECT_REPORT" class="p-2 bg-rose-600/20 text-rose-500 border border-rose-500/30 rounded-lg hover:bg-rose-500 hover:text-white transition-all">
+                                            <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -88,7 +94,7 @@
                             {% endfor %}
                             {% if not reports %}
                             <tr>
-                                <td colspan="6" class="py-20 text-center text-slate-600 font-mono italic text-sm">NO_PENDING_THREADS_DETECTED</td>
+                                <td colspan="6" data-i18n="admin_no_reports" class="py-20 text-center text-slate-600 font-mono italic text-sm">NO_PENDING_THREADS_DETECTED</td>
                             </tr>
                             {% endif %}
                         </tbody>
@@ -104,24 +110,24 @@
             <!-- Add New Admin -->
             <div class="cyber-card p-10 bg-black/40 border-white/10 lg:col-span-1">
                 <header class="mb-10">
-                    <h3 class="text-xl font-black text-white uppercase tracking-tight italic mb-2">Initialize_New_Admin</h3>
-                    <p class="text-xs text-slate-500">Add an operative to the command sequence.</p>
+                    <h3 data-i18n="admin_init_new" class="text-xl font-black text-white uppercase tracking-tight italic mb-2">Initialize_New_Admin</h3>
+                    <p data-i18n="admin_init_new_desc" class="text-xs text-slate-500">Add an operative to the command sequence.</p>
                 </header>
                 
                 <form id="addAdminForm" class="space-y-6">
                     <div class="space-y-2">
-                        <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">USERNAME</label>
+                        <label data-i18n="admin_add_username" class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">USERNAME</label>
                         <input type="text" name="new_username" required class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-white text-sm outline-none focus:border-cyan-500/50 transition">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">GOOGLEE_EMAIL</label>
+                        <label data-i18n="admin_add_email" class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">GOOGLEE_EMAIL</label>
                         <input type="email" name="new_email" required class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-white text-sm outline-none focus:border-cyan-500/50 transition">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">SYSTEM_PASSWORD</label>
+                        <label data-i18n="admin_add_password" class="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">SYSTEM_PASSWORD</label>
                         <input type="password" name="new_password" required class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-white text-sm outline-none focus:border-cyan-500/50 transition">
                     </div>
-                    <button type="submit" class="cyber-btn w-full py-5 text-xs font-black uppercase tracking-widest mt-4">
+                    <button type="submit" data-i18n="admin_add_btn" class="cyber-btn w-full py-5 text-xs font-black uppercase tracking-widest mt-4">
                         LINK_ADMIN_IDENTITY
                     </button>
                 </form>
@@ -130,17 +136,17 @@
             <!-- Admin List -->
             <div class="cyber-card p-10 bg-black/40 border-white/5 lg:col-span-2">
                 <header class="mb-10 pb-6 border-b border-white/5">
-                    <h3 class="text-xl font-black text-white uppercase tracking-tight italic">Authorized_Operatives</h3>
+                    <h3 data-i18n="admin_authorized_ops" class="text-xl font-black text-white uppercase tracking-tight italic">Authorized_Operatives</h3>
                 </header>
                 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead class="text-[10px] text-slate-600 uppercase tracking-widest font-black border-b border-white/5">
                             <tr>
-                                <th class="pb-6 px-4">USERNAME</th>
-                                <th class="pb-6 px-4">EMAIL</th>
-                                <th class="pb-6 px-4">ROLE</th>
-                                <th class="pb-6 px-4 text-right">MODERATE</th>
+                                <th data-i18n="admin_add_username" class="pb-6 px-4">USERNAME</th>
+                                <th data-i18n="admin_add_email" class="pb-6 px-4">EMAIL</th>
+                                <th data-i18n="admin_level" class="pb-6 px-4">ROLE</th>
+                                <th data-i18n="admin_table_actions" class="pb-6 px-4 text-right">MODERATE</th>
                             </tr>
                         </thead>
                         <tbody id="admin-table-body" class="divide-y divide-white/5">
@@ -198,13 +204,17 @@
         document.getElementById('tab-' + tabId).classList.add('active');
     }
 
+    function logoutAdmin() {
+        window.location.replace('/admin/logout');
+    }
+
     async function reviewReport(reportId, action) {
         let note = "";
         if (action === 'reject') {
             const { value: text } = await Swal.fire({
-                title: 'REJECTION_FEEDBACK',
+                title: t('admin_msg_rejection_title'),
                 input: 'textarea',
-                inputPlaceholder: 'Reason for rejection...',
+                inputPlaceholder: t('admin_msg_rejection_placeholder'),
                 background: '#020617',
                 color: '#fff',
                 showCancelButton: true
@@ -214,13 +224,38 @@
         }
 
         try {
+            let confirmMsg = t('admin_msg_confirm_action');
+            if (action === 'approve_safe') confirmMsg = t('admin_msg_confirm_safe');
+            if (action === 'approve_phishing') confirmMsg = t('admin_msg_confirm_phish');
+
+            const result = await Swal.fire({
+                title: 'NEURAL_CONFIRMATION',
+                text: confirmMsg,
+                icon: 'question',
+                showCancelButton: true,
+                background: '#020617',
+                color: '#fff'
+            });
+
+            if (!result.isConfirmed) return;
+
             const res = await fetch('/admin/review', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ report_id: reportId, action: action, note: note })
             });
+
             if (res.ok) {
-                location.reload();
+                Swal.fire({ 
+                    icon: 'success', 
+                    title: t('admin_msg_mod_success'), 
+                    background: '#020617', 
+                    color: '#fff', 
+                    timer: 1000, 
+                    showConfirmButton: false 
+                }).then(() => {
+                    location.reload();
+                });
             }
         } catch (e) {
             Swal.fire({ icon: 'error', title: 'Action Failed', text: e.message });
@@ -252,8 +287,8 @@
 
     async function deleteAdmin(email) {
         const result = await Swal.fire({
-            title: 'TERMINATE_IDENTITY?',
-            text: `Remove access for ${email}?`,
+            title: t('admin_msg_terminate_id'),
+            text: t('admin_msg_delete_admin') + email + "?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
