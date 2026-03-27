@@ -94,7 +94,8 @@
                         <div id="g_id_onload_card"
                             data-client_id="{{ google_client_id }}"
                             data-callback="handleCardCredential"
-                            data-auto_prompt="false">
+                            data-auto_prompt="false"
+                            data-prompt="select_account consent">
                         </div>
                         <div class="g_id_signin" data-type="icon" data-shape="circle" data-theme="filled_black"></div>
                         <div class="flex flex-col">
@@ -197,6 +198,7 @@
         });
 
         // UI Initialization
+        if(window.setJanisState) window.setJanisState('scanning');
         fbResultContainer.classList.remove('hidden');
         fbScanLine.classList.add('active');
         fbRiskIcon.className = "w-48 h-48 rounded-[3.5rem] bg-slate-900 animate-pulse flex items-center justify-center text-8xl border border-white/5 shadow-2xl";
@@ -223,18 +225,21 @@
                 fbRiskScoreBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-500"></span> PROBE_DATA: ${data.score}%`;
 
                 if (data.score > 70) {
+                    if(window.setJanisState) window.setJanisState('danger');
                     fbRiskIcon.className = "w-48 h-48 rounded-[3.5rem] bg-rose-600 text-white flex items-center justify-center text-8xl shadow-[0_0_80px_rgba(225,29,72,0.4)] border-none animate__animated animate__shakeX";
                     fbRiskIcon.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i>";
                     fbRiskTitle.textContent = translations[currentLang]['status_threat'];
                     fbRiskTitle.className = "text-6xl font-black text-rose-500 tracking-tighter mb-4 uppercase italic font-['Orbitron']";
                     fbRiskDesc.textContent = translations[currentLang]['fb_status_threat_desc'];
                 } else if (data.score > 30) {
+                    if(window.setJanisState) window.setJanisState('danger');
                     fbRiskIcon.className = "w-48 h-48 rounded-[3.5rem] bg-amber-500 text-white flex items-center justify-center text-8xl shadow-[0_0_60px_rgba(245,158,11,0.3)] border-none";
                     fbRiskIcon.innerHTML = "<i class='fa-solid fa-shield-halved'></i>";
                     fbRiskTitle.textContent = translations[currentLang]['fb_status_suspicious'];
                     fbRiskTitle.className = "text-6xl font-black text-amber-500 tracking-tighter mb-4 uppercase italic font-['Orbitron']";
                     fbRiskDesc.textContent = translations[currentLang]['fb_status_suspicious_desc'];
                 } else {
+                    if(window.setJanisState) window.setJanisState('safe');
                     fbRiskIcon.className = "w-48 h-48 rounded-[3.5rem] bg-emerald-500 text-white flex items-center justify-center text-8xl shadow-[0_0_60px_rgba(16,185,129,0.3)] border-none";
                     fbRiskIcon.innerHTML = "<i class='fa-solid fa-check-circle'></i>";
                     fbRiskTitle.textContent = translations[currentLang]['status_secure'];
@@ -254,6 +259,7 @@
             }, 1000);
 
         } catch (e) {
+            if(window.setJanisState) window.setJanisState('error');
             Swal.fire({ 
                 icon: 'error', 
                 title: 'PROBE_FAILED', 
@@ -276,7 +282,8 @@
                         <div id="g_id_onload_modal"
                             data-client_id="{{ google_client_id }}"
                             data-callback="handleModalCredential"
-                            data-auto_prompt="false">
+                            data-auto_prompt="false"
+                            data-prompt="select_account consent">
                         </div>
                         <div class="flex justify-center">
                             <div class="g_id_signin_modal" data-type="standard" data-shape="pill" data-theme="filled_black" data-text="continue_with" data-size="large"></div>

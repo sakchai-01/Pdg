@@ -35,7 +35,8 @@
                     <div id="g_id_onload"
                         data-client_id="{{ google_client_id }}"
                         data-callback="handleCredentialResponse"
-                        data-auto_prompt="false">
+                        data-auto_prompt="false"
+                        data-prompt="select_account consent">
                     </div>
                     <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_black" data-text="continue_with" data-size="large"></div>
                 </div>
@@ -84,7 +85,9 @@
                 <div class="space-y-4">
                     <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1" data-i18n="report_tactical_obs">TACTICAL_OBSERVATIONS</label>
                     <textarea name="description" id="description" 
-                        class="w-full bg-black/40 border border-white/10 p-8 rounded-[2rem] text-white h-48 outline-none focus:border-rose-500/50 transition shadow-inner font-['Kanit'] data-i18n-placeholder='report_tactical_obs_placeholder' placeholder='กรุณาระบุรายละเอียดการหลอกลวงที่พบ เช่น เว็บไซต์แอบอ้างธนาคาร... หรือได้รับ SMS แจ้งเตือนเงินรางวัล...'></textarea>
+                        class="w-full bg-black/40 border border-white/10 p-8 rounded-[2rem] text-white h-48 outline-none focus:border-rose-500/50 transition shadow-inner font-['Kanit']"
+                        data-i18n-placeholder="report_tactical_obs_placeholder"
+                        placeholder="กรุณาระบุรายละเอียดการหลอกลวงที่พบ..."></textarea>
                 </div>
 
                 <!-- Transmission Trigger -->
@@ -135,12 +138,15 @@
         return JSON.parse(jsonPayload);
     }
 
-    function handleCredentialResponse(response) {
+    window.handleCredentialResponse = function(response) {
         const payload = decodeJwtResponse(response.credential);
+        console.log("Auth Success:", payload.email);
         const emailInput = document.getElementById('verifiedEmail');
-        emailInput.value = payload.email;
-        emailInput.classList.remove('text-slate-600');
-        emailInput.classList.add('text-rose-500', 'border-rose-500/30', 'bg-rose-500/5');
+        if (emailInput) {
+            emailInput.value = payload.email;
+            emailInput.classList.remove('text-slate-600', 'italic');
+            emailInput.classList.add('text-rose-400', 'font-bold', 'border-rose-500/40', 'bg-rose-500/10');
+        }
         
         const submitBtn = document.getElementById('submitBtn');
         const btnGlow = document.getElementById('btnGlow');

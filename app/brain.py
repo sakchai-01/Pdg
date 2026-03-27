@@ -71,6 +71,10 @@ def get_ai_response(message: str, history: Optional[List[Dict[str, Any]]] = None
     Generates a response using Gemini AI (google-generativeai SDK).
     history: List of dictionaries with 'role' (user/model) and 'parts' (list of strings).
     """
+    message_clean = message.strip().lower()
+    if message_clean in ["admin", "แอดมิน"]:
+        return "พบความต้องการเข้าสู่ระบบบริหารจัดการ (Neural Command Center) ค่ะ ท่านสามารถเข้าสู่ระบบเพื่อปฏิบัติหน้าที่ได้ที่ลิงก์นี้เลยนะคะ: <a href='/admin/login' class='text-cyan-400 font-bold underline transition hover:text-cyan-300'>[Neural Command Access]</a>"
+
     if not model:
         return json.dumps({
             "error": "Gemini AI provider not configured.",

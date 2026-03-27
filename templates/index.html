@@ -163,6 +163,7 @@
         if (!url) return;
 
         // Visual Reset
+        if(window.setJanisState) window.setJanisState('scanning');
         resultCard.classList.remove('hidden');
         statusTitle.innerText = translations[currentLang]['status_processing'];
         statusTitle.className = "text-5xl font-black text-slate-700 tracking-widest italic";
@@ -185,6 +186,7 @@
                 siteNameDisplay.innerText = `[ DOMAIN_INTEL :: ${data.site_name || 'UNKNOWN'} ]`;
                 
                 if (data.status === 'safe') {
+                    if(window.setJanisState) window.setJanisState('safe');
                     statusIcon.className = "w-48 h-48 rounded-[3.5rem] bg-emerald-500 text-white flex items-center justify-center text-8xl shadow-[0_0_80px_rgba(16,185,129,0.3)] border-none";
                     statusIcon.innerHTML = `<i class='fa-solid fa-check-double animate__animated animate__bounceIn'></i>`;
                     statusTitle.innerText = translations[currentLang]['status_secure'];
@@ -192,6 +194,7 @@
                     statusDesc.innerText = translations[currentLang]['status_secure_desc'];
                     resultGlow.style.background = "radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)";
                 } else {
+                    if(window.setJanisState) window.setJanisState('danger');
                     riskBadge.classList.remove('hidden');
                     statusIcon.className = "w-48 h-48 rounded-[3.5rem] bg-rose-600 text-white flex items-center justify-center text-8xl shadow-[0_0_80px_rgba(225,29,72,0.4)] border-none animate__animated animate__shakeX";
                     statusIcon.innerHTML = `<i class='fa-solid fa-biohazard'></i>`;
@@ -233,6 +236,7 @@
             }, 1200);
 
         } catch (e) {
+            if(window.setJanisState) window.setJanisState('error');
             Swal.fire({ 
                 icon: 'error', 
                 title: 'SYSTEM_FAILURE', 

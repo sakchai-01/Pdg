@@ -2,6 +2,7 @@ import threading
 import time
 import logging
 import random
+import asyncio
 from app.crawler import save_to_db
 from app.utils.network import is_safe_url
 
@@ -43,12 +44,12 @@ def scraper_cycle():
             reason = f"Detected suspicious keywords: {random.choice(KEYWORDS)}"
             logger.warning(f"⚠️ DETECTED THREAT: {target} (Score: {risk_score})")
             
-            save_to_db(
+            asyncio.run(save_to_db(
                 url=target,
                 domain=target.split('//')[-1],
                 risk_score=risk_score,
                 reason=reason
-            )
+            ))
         else:
             logger.info(f"✅ Clean: {target}")
     except Exception as e:

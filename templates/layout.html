@@ -75,6 +75,11 @@
                     <a href="/report" class="nav-link px-4 py-2 border border-red-500/30 text-red-500 hover:bg-red-500/10 rounded-lg" data-i18n="nav_report">Report Threat</a>
                     
                     <div class="h-6 w-[1px] bg-white/10 mx-2"></div>
+
+                    <!-- Discreet Admin Entry -->
+                    <a href="/admin/login" class="text-[8px] font-mono text-white/10 hover:text-cyan-500/50 transition-all uppercase tracking-[0.2em] mr-4">
+                        [ADM]
+                    </a>
                     
                     <button onclick="toggleLanguage()" class="nav-link flex items-center gap-2 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/5">
                         <i class="fa-solid fa-globe text-xs"></i> <span id="lang-label" class="font-mono text-xs font-bold uppercase">EN</span>
@@ -233,9 +238,9 @@
             - Seamlessly adapts to Smartphones, 16:10 Laptops, and 4K Desktops.
         -->
         <div class="relative h-auto drop-shadow-[0_10px_20px_rgba(186,230,253,0.3)] transform origin-bottom transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-2 group-hover:scale-105
-            w-[180px] sm:w-[260px] md:w-[300px] lg:w-[350px]">
+            w-[90px] sm:w-[100px] md:w-[120px] lg:w-[120px]">
             
-            <img id="global-mascot-img" src="/static/images/janis/default.png" alt="Janis AI" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6134/6134346.png'" class="w-full h-auto object-contain block">
+            <img id="global-mascot-img" src="/static/images/janis/default.png" alt="Janis AI" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6134/6134346.png'" class="w-full h-auto object-contain block transition-all duration-300">
         </div>
     </a>
 
@@ -748,6 +753,30 @@
             if (langLabel && translations[currentLang]['nav_lang']) {
                 langLabel.innerText = translations[currentLang]['nav_lang'];
             }
+
+            // --- Janis Expression Control ---
+            window.setJanisState = function(state) {
+                const img = document.getElementById('global-mascot-img');
+                if(!img) return;
+                
+                img.classList.remove('animate-[bounce_0.5s_ease-in-out]', 'animate-[pulse_1s_ease-in-out_infinite]');
+                
+                if(state === 'scanning') {
+                    img.src = '/static/images/janis/thinking.png';
+                    img.classList.add('animate-[pulse_1s_ease-in-out_infinite]');
+                } else if(state === 'safe') {
+                    img.src = '/static/images/janis/safe.png';
+                    img.classList.add('animate-[bounce_0.5s_ease-in-out]');
+                } else if(state === 'danger') {
+                    img.src = '/static/images/janis/danger.png';
+                    img.classList.add('animate-[bounce_0.5s_ease-in-out]');
+                } else if(state === 'error') {
+                    img.src = '/static/images/janis/error.png';
+                } else {
+                    img.src = '/static/images/janis/default.png';
+                }
+            };
+            // --------------------------------
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
