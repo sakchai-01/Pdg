@@ -1,19 +1,15 @@
 
 from typing import Optional, Any
+import asyncio
+import os
+import aiosqlite
+import sqlite3
+import bcrypt
+from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import ASCENDING, DESCENDING, TEXT
 from dotenv import load_dotenv
 from bson import ObjectId
-
-load_dotenv()
-import os
-import aiosqlite
-import sqlite3
-from datetime import datetime, timezone
-from passlib.context import CryptContext
-
-# Password hashing setup
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 # Define Absolute Path for Database
@@ -86,25 +82,31 @@ async def init_db():
 from typing import Optional, Any
 from motor.motor_asyncio import AsyncIOMotorClient # type: ignore
 from pymongo import ASCENDING, DESCENDING, TEXT # type: ignore
-# from dotenv import load_dotenv # type: ignore
+load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
 
-# load_dotenv()
+def get_mongodb_uri() -> str:
+    uri = os.getenv("MONGODB_URI")
+    if uri and uri.strip():
+        return uri.strip()
+    return "mongodb+srv://sak_014:Sak2004@cluster0.yf4dp9h.mongodb.net/?appName=Cluster0"
 
-MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
 MONGODB_DB_NAME = os.getenv("MONGODB_DB_NAME", "pdg_db")
 
-# ---------------------------------------------------------------------------
-# Global client & db (initialised once in init_db / get_database)
-# ---------------------------------------------------------------------------
 _client: Optional[AsyncIOMotorClient] = None
 _db: Optional[Any] = None
-
+_loop: Optional[Any] = None
 
 def get_database():
-    """Return the shared Motor database instance."""
-    global _client, _db
-    if _db is None:
-        _client = AsyncIOMotorClient(MONGODB_URI)
+    """Return the shared Motor database instance (re-initialized if loop changed/closed)."""
+    global _client, _db, _loop
+    try:
+        current_loop = asyncio.get_running_loop()
+    except RuntimeError:
+        current_loop = None
+
+    if _db is None or _client is None or _loop is None or _loop.is_closed() or (_loop is not current_loop and current_loop is not None):
+        _loop = current_loop
+        _client = AsyncIOMotorClient(get_mongodb_uri())
         _db = _client[MONGODB_DB_NAME]
     return _db
 
@@ -409,10 +411,22 @@ async def get_sourcecode_reports(status: Optional[str] = None, limit: int = 50) 
 # ── 10. Admin Management & Moderation ──────────────────────────────────────
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    if not password:
+        return ""
+    pw_bytes = password.encode('utf-8')[:72]
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(pw_bytes, salt).decode('utf-8')
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        if not plain_password or not hashed_password:
+            return False
+        pw_bytes = plain_password.encode('utf-8')[:72]
+        hash_bytes = hashed_password.encode('utf-8')
+        return bcrypt.checkpw(pw_bytes, hash_bytes)
+    except Exception as e:
+        print(f"[Password Verify Error]: {e}")
+        return False
 
 async def get_admin_by_email(email: str) -> Optional[dict]:
     db = get_database()

@@ -107,7 +107,13 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ google_token: googleToken, password: password })
             });
-            const data = await res.json();
+            
+            let data = {};
+            try {
+                data = await res.json();
+            } catch (jsonErr) {
+                data = { error: 'เซิร์ฟเวอร์ตอบกลับไม่ถูกต้อง (' + res.status + ')' };
+            }
             
             if (res.ok) {
                 Swal.fire({
@@ -134,7 +140,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'CONNECTION_FAILED',
-                text: 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้',
+                text: 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ (โปรดตรวจสอบว่าเซิร์ฟเวอร์กำลังทำงานอยู่หรือไม่)',
                 background: '#ffffff',
                 color: '#0f172a'
             });

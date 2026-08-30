@@ -1,11 +1,14 @@
 import os
+import bcrypt
 from pymongo import MongoClient
 from dotenv import load_dotenv
-from passlib.context import CryptContext
-import sys
 
-# Setup password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+def hash_password(password: str) -> str:
+    if not password:
+        return ""
+    pw_bytes = password.encode('utf-8')[:72]
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(pw_bytes, salt).decode('utf-8')
 
 def seed_admin():
     load_dotenv()
@@ -16,8 +19,9 @@ def seed_admin():
 
     try:
         client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
-        # Force a connection check
         client.admin.command('ping')
+        print("MongoDB connection verified.")
+        
         db = client['pdg_db']
         admins = db.admins
 
@@ -29,7 +33,7 @@ def seed_admin():
                 {"email": "sakchai.te@psru.ac.th"},
                 {"$set": {
                     "username": "sakchai",
-                    "password": pwd_context.hash("sakchai2004"),
+                    "password": hash_password("sakchai2004"),
                     "role": "super_admin"
                 }}
             )
@@ -38,14 +42,14 @@ def seed_admin():
             admins.insert_one({
                 "email": "sakchai.te@psru.ac.th",
                 "username": "sakchai",
-                "password": pwd_context.hash("sakchai2004"),
+                "password": hash_password("sakchai2004"),
                 "role": "super_admin"
             })
         
-        print("Admin seeding completed.")
+        print("Admin seeding completed successfully.")
         client.close()
     except Exception as e:
-        print(f"ERROR: {e}")
+        print(f"Error during seeding: {e}")
 
 if __name__ == "__main__":
     seed_admin()

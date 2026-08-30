@@ -265,22 +265,29 @@ async def admin_login_get(request: Request):
 
 @router.post("/admin/login")
 async def admin_login_post(request: Request, response: Response):
-    data = await request.json()
-    google_token = data.get("google_token")
-    password = data.get("password")
+    try:
+        data = await request.json()
+        google_token = data.get("google_token")
+        password = data.get("password")
 
-    email = decode_google_email(google_token)
-    if not email:
-        return JSONResponse({"error": "Invalid Google Identity"}, status_code=401)
+        email = decode_google_email(google_token)
+        if not email:
+            return JSONResponse({"error": "ไม่พบบัญชี Google หรือ Token ไม่ถูกต้อง (Invalid Google Identity)"}, status_code=400)
 
-    admin = await get_admin_by_email(email)
-    if not admin or not verify_password(password, admin['password']):
-        return JSONResponse({"error": "Unauthorized: Invalid Email or Password"}, status_code=401)
+        admin = await get_admin_by_email(email)
+        if not admin:
+            return JSONResponse({"error": f"อีเมล {email} ไม่ได้รับสิทธิ์ผู้ดูแลระบบ (Admin Not Found)"}, status_code=403)
+            
+        if not verify_password(password, admin.get('password', '')):
+            return JSONResponse({"error": "รหัสผ่านผู้ดูแลระบบไม่ถูกต้อง (Invalid Password)"}, status_code=401)
 
-    # Set session cookie (simple version)
-    response = JSONResponse({"status": "ok"})
-    response.set_cookie(key="admin_session", value=email, httponly=True, max_age=3600*8)
-    return response
+        # Set session cookie (simple version)
+        res = JSONResponse({"status": "ok", "username": admin.get("username", "")})
+        res.set_cookie(key="admin_session", value=email, httponly=True, max_age=3600*8, samesite="lax")
+        return res
+    except Exception as e:
+        print(f"[Admin Login Error]: {e}")
+        return JSONResponse({"error": f"Database / Server Error: {str(e)}"}, status_code=500)
 
 @router.get("/admin/dashboard", response_class=HTMLResponse)
 async def admin_dashboard(request: Request):
