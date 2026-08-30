@@ -60,7 +60,7 @@ async def add_security_headers(request, call_next):
         "https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
         "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; "
         "img-src 'self' data: https:; "
-        "connect-src 'self' https://pdg-wheat.vercel.app; "
+        "connect-src 'self' https:; "
         "frame-src https://accounts.google.com; "
         "object-src 'none'; "
         "base-uri 'self';"
@@ -68,7 +68,8 @@ async def add_security_headers(request, call_next):
     return response
 
 # Static Files
-STATIC_DIR = os.path.join(settings.PROJECT_ROOT, "static")
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(_BASE_DIR, "static")
 if os.path.exists(STATIC_DIR):
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
