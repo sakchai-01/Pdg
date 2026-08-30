@@ -23,7 +23,7 @@ async def report_get(request: Request):
 async def report_post(
     request: Request,
     email: str = Form(...),
-    url: str = Form(...),
+    url: str = Form(""),
     description: str = Form(None),
     type: str = Form("other"),
     db: AsyncSession = Depends(get_db)

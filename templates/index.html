@@ -5,87 +5,86 @@
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<div class="max-w-7xl mx-auto pt-32 pb-20 px-4 relative">
-    <!-- Hero Section: The WOW Moment -->
-    <section class="text-center mb-32 animate__animated animate__fadeIn">
-        <div class="inline-flex items-center gap-4 px-8 py-3 rounded-full border border-green-500/30 bg-green-500/10 text-green-600 text-[11px] font-black uppercase tracking-[0.5em] mb-12 mx-auto shadow-[0_0_30px_rgba(22,163,74,0.2)]">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
+<div class="max-w-7xl mx-auto pt-24 pb-20 px-4 relative">
+    <!-- Hero Section -->
+    <section class="text-center mb-24 animate__animated animate__fadeIn">
+        <div class="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-green-500/30 bg-green-50 text-green-700 text-xs font-black uppercase tracking-[0.3em] mb-8 mx-auto shadow-sm">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-600"></span>
             </span>
             <span data-i18n="hdr_home_badge">LIVE_THREAT_SCANNER_PROTOCOL</span>
         </div>
         
-        <h1 class="font-black mb-12 text-gray-900 tracking-tighter leading-[0.85] font-['Orbitron']" style="font-size: var(--fs-hero);" data-i18n="hdr_home_title">
+        <h1 class="font-black mb-8 text-slate-950 tracking-tighter leading-tight font-['Orbitron']" style="font-size: var(--fs-hero);" data-i18n="hdr_home_title">
             PHISH<span class="text-green-600">GUARD</span><br>
-            <span class="text-gray-600 select-none">CYBER COMMAND.</span>
+            <span class="text-slate-500 select-none">CYBER COMMAND.</span>
         </h1>
         
-        <p class="text-gray-600 max-w-4xl mx-auto font-medium leading-relaxed mb-16" style="font-size: var(--fs-header-desc);" data-i18n="hero_desc">
-            ศูนย์บัญชาการต่อต้านการหลอกลวงระดับสูง ปกป้องทุกธุรกรรมดิจิทัลด้วยขุมพลังปัญญาประดิษฐ์วิเคราะห์แบบเรียลไทม์
+        <p class="text-slate-600 max-w-3xl mx-auto font-normal leading-relaxed mb-12" style="font-size: var(--fs-header-desc);" data-i18n="hero_desc">
+            ศูนย์บัญชาการต่อต้านการหลอกลวงระดับสูง ปกป้องทุกธุรกรรมดิจิทัลของคุณด้วยขุมพลังปัญญาประดิษฐ์วิเคราะห์แบบเรียลไทม์
         </p>
     </section>
 
-    <!-- Scanner Module: Premium High-Tech Interface -->
-    <div class="relative group animate__animated animate__fadeInUp animate__delay-1s max-w-5xl mx-auto">
-        <div class="absolute -inset-2 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-600 rounded-[3rem] blur-xl opacity-10 group-hover:opacity-20 transition duration-1000"></div>
-        <div class="relative cyber-card p-6 md:p-8 border-green-200 shadow-[0_0_20px_rgba(0,0,0,0.08)]">
-            <div class="flex flex-col md:flex-row gap-4 items-stretch mobile-stack">
-                <div class="flex-1 relative flex items-center bg-white rounded-2xl border-2 border-slate-950 focus-within:border-green-600 transition-all shadow-sm">
-                    <i class="fa-solid fa-magnifying-glass-chart absolute left-4 md:left-8 text-slate-950 text-xl md:text-2xl"></i>
+    <!-- Scanner Module -->
+    <div class="relative max-w-4xl mx-auto animate__animated animate__fadeInUp">
+        <div class="absolute -inset-1.5 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 rounded-[2.5rem] blur-xl opacity-15 transition duration-1000"></div>
+        <div class="relative cyber-card p-6 md:p-8 border-2 border-slate-300 bg-white shadow-xl rounded-3xl">
+            <div class="flex flex-col md:flex-row gap-3 items-stretch mobile-stack">
+                <div class="flex-1 relative flex items-center bg-slate-50 rounded-2xl border-2 border-slate-300 focus-within:border-green-600 focus-within:bg-white transition-all shadow-inner">
+                    <i class="fa-solid fa-magnifying-glass-chart absolute left-5 text-slate-400 text-xl"></i>
                     <input id="urlInput"
-                        class="w-full bg-transparent pl-12 pr-4 py-4 md:px-20 md:py-8 outline-none text-slate-950 text-base md:text-2xl placeholder:text-slate-400 md:placeholder:text-slate-500 font-bold font-['Rajdhani'] mobile-full"
+                        class="w-full bg-transparent pl-14 pr-4 py-4 md:py-5 outline-none text-slate-900 text-base md:text-lg placeholder:text-slate-400 font-medium font-['Rajdhani'] mobile-full"
                         data-i18n-placeholder="placeholder_url"
                         placeholder="ENTER SUSPICIOUS URL FOR DEEP ANALYSIS...">
                 </div>
 
                 <button id="scanBtn"
-                    class="cyber-btn px-6 py-4 md:px-16 md:py-8 text-sm md:text-xl font-black group overflow-hidden mobile-full">
-                    <span class="relative z-10 flex items-center gap-3">
-                        <i class="fa-solid fa-microscope text-2xl"></i>
+                    class="cyber-btn px-8 py-4 md:py-5 text-base md:text-lg font-black group whitespace-nowrap mobile-full">
+                    <span class="flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-microscope text-xl"></i>
                         <span data-i18n="btn_execute">EXECUTE_SCAN</span>
                     </span>
                 </button>
             </div>
             
             <!-- Quick Alert / Status within Scanner -->
-            <div id="scannerStatus" class="mt-6 flex justify-between items-center px-4">
-                <div class="flex gap-4">
-                    <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                    <span class="text-[9px] font-black text-slate-600 uppercase tracking-[0.3em]" data-i18n="scanner_neural_status">Neural Core: Operational</span>
+            <div id="scannerStatus" class="mt-5 flex justify-between items-center px-2 text-xs font-mono">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="font-bold text-slate-600 uppercase tracking-wider" data-i18n="scanner_neural_status">Neural Core: Operational</span>
                 </div>
-                <div class="flex gap-2">
-                    <span class="text-[9px] font-black text-slate-800 uppercase tracking-[0.3em]" data-i18n="scanner_waiting">Waiting for Input...</span>
+                <div>
+                    <span class="font-bold text-slate-500 uppercase tracking-wider" data-i18n="scanner_waiting">Waiting for Input...</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Live Analysis Dashboard (Result Card) -->
-    <div id="resultCard" class="mt-24 hidden animate__animated animate__fadeIn max-w-5xl mx-auto">
-        <div class="cyber-card p-12 md:p-20 relative overflow-visible">
+    <div id="resultCard" class="mt-16 hidden animate__animated animate__fadeIn max-w-4xl mx-auto">
+        <div class="cyber-card p-8 md:p-14 relative overflow-hidden bg-white border-2 border-slate-300 shadow-2xl rounded-3xl">
             <!-- Glow background for result -->
-            <div id="resultGlow" class="absolute inset-0 opacity-10 pointer-events-none transition-all duration-1000"></div>
+            <div id="resultGlow" class="absolute inset-0 opacity-15 pointer-events-none transition-all duration-1000"></div>
 
-            <div class="relative z-10 flex flex-col md:flex-row gap-20 items-center md:items-start text-center md:text-left">
-                <!-- Status Visualization -->
-                <div id="statusIcon" class="w-48 h-48 rounded-[3.5rem] flex items-center justify-center text-8xl shadow-2xl relative">
-                    <div class="absolute inset-0 rounded-[3.5rem] border-4 border-slate-200 opacity-20"></div>
+            <div class="relative z-10 flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start text-center md:text-left">
+                <!-- Status Visualization Icon -->
+                <div id="statusIcon" class="w-36 h-36 md:w-44 md:h-44 rounded-3xl flex items-center justify-center text-6xl md:text-7xl shadow-xl shrink-0 text-white">
                 </div>
 
-                <div class="flex-1">
-                    <div class="flex flex-col md:flex-row md:items-center gap-4 mb-6 justify-center md:justify-start">
-                        <h2 id="statusTitle" class="text-7xl font-black tracking-tighter uppercase italic"></h2>
-                        <div id="riskBadge" class="hidden px-5 py-2 bg-red-600/20 border border-red-500/40 text-red-500 rounded-full text-[10px] font-black uppercase tracking-widest animate-pulse h-fit self-center">
+                <div class="flex-1 min-w-0">
+                    <div class="flex flex-col md:flex-row md:items-center gap-3 mb-4 justify-center md:justify-start">
+                        <h2 id="statusTitle" class="text-4xl md:text-5xl font-black tracking-tight uppercase italic font-['Orbitron']"></h2>
+                        <div id="riskBadge" class="hidden px-4 py-1.5 bg-red-100 border border-red-300 text-red-700 rounded-full text-xs font-black uppercase tracking-widest animate-pulse h-fit self-center">
                             Critical Alert
                         </div>
                     </div>
                     
-                    <p id="siteNameDisplay" class="text-green-600 font-mono text-xs tracking-[0.5em] uppercase mb-10 opacity-70 border-b border-gray-300 pb-6"></p>
-                    <p id="statusDesc" class="text-gray-700 text-2xl font-['Kanit'] leading-relaxed font-light"></p>
+                    <p id="siteNameDisplay" class="text-green-700 font-mono text-xs tracking-wider uppercase mb-6 pb-4 border-b border-slate-200 font-bold"></p>
+                    <p id="statusDesc" class="text-slate-700 text-lg md:text-xl font-['Kanit'] leading-relaxed font-normal"></p>
 
                     <!-- Advanced Intelligence Data -->
-                    <div id="detailsBox" class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-10 p-12 bg-white rounded-[3rem] border border-slate-200 backdrop-blur-3xl hidden">
+                    <div id="detailsBox" class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 p-8 bg-slate-50 rounded-2xl border border-slate-200 hidden">
                     </div>
                 </div>
             </div>
@@ -94,44 +93,50 @@
 </div>
 
 <!-- Tactical Modules Grid: The Ecosystem -->
-<div class="max-w-7xl mx-auto py-40 px-4 border-t border-slate-200">
-    <div class="flex items-center gap-8 mb-24">
+<div class="max-w-7xl mx-auto py-24 px-4 border-t border-slate-200 relative z-10">
+    <div class="flex items-center gap-6 mb-16">
         <div class="shrink-0">
-            <h2 class="text-5xl font-black text-gray-900 uppercase italic tracking-tighter" data-i18n="tactical_title">Tactical <span class="text-green-600">Modules</span></h2>
-            <p class="text-slate-500 font-mono text-[10px] uppercase tracking-[0.5em] mt-2" data-i18n="tactical_sub">Janis Ecosystem Infrastructure</p>
+            <h2 class="text-3xl md:text-4xl font-black text-slate-900 uppercase italic tracking-tight font-['Orbitron']" data-i18n="tactical_title">Tactical <span class="text-green-600">Modules</span></h2>
+            <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-1" data-i18n="tactical_sub">Janis Ecosystem Infrastructure</p>
         </div>
-        <div class="h-[1px] flex-1 bg-white shadow-sm"></div>
+        <div class="h-[1px] flex-1 bg-slate-200"></div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Janis AI -->
-        <a href="/chat" class="cyber-card p-12 group">
-            <div class="w-20 h-20 rounded-3xl bg-white border-2 border-slate-950 flex items-center justify-center mb-10 group-hover:border-green-600 transition duration-500 shadow-md">
-                <i class="fa-solid fa-brain text-4xl text-slate-950 group-hover:text-green-600"></i>
+        <a href="/chat" class="cyber-card p-8 group interactive-hover text-decoration-none block">
+            <div class="w-16 h-16 rounded-2xl bg-violet-100 border border-violet-200 flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 shadow-sm">
+                <i class="fa-solid fa-brain text-3xl text-violet-600"></i>
             </div>
-            <h3 class="text-2xl font-black text-slate-950 mb-4 tracking-tight uppercase group-hover:text-green-600" data-i18n="nav_janis">JANIS AI CORE</h3>
-            <p class="text-slate-600 text-sm leading-relaxed font-['Kanit'] group-hover:text-green-700" data-i18n="card_janis_desc">ศูนย์กลางระบบนิวรอนเพื่อวิเคราะห์พฤติกรรมมิจฉาชีพเชิงลึกด้วย AI</p>
-            <div class="mt-8 text-green-600 text-[10px] font-black tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">INITIALIZE TERM _</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3 tracking-tight uppercase group-hover:text-green-600 transition-colors font-['Orbitron']" data-i18n="nav_janis">JANIS AI CORE</h3>
+            <p class="text-slate-600 text-sm leading-relaxed font-['Kanit']" data-i18n="card_janis_desc">ศูนย์กลางระบบนิวรอนเพื่อวิเคราะห์พฤติกรรมมิจฉาชีพเชิงลึกด้วย AI</p>
+            <div class="mt-6 flex items-center gap-2 text-green-600 text-xs font-bold font-mono uppercase tracking-wider">
+                <span>INITIALIZE TERM</span> <i class="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform"></i>
+            </div>
         </a>
 
-        <!-- Vision Module -->
-        <a href="/tools/ocr" class="cyber-card p-12 group">
-            <div class="w-20 h-20 rounded-3xl bg-white border-2 border-slate-950 flex items-center justify-center mb-10 group-hover:border-green-600 transition duration-500 shadow-md">
-                <i class="fa-solid fa-eye text-4xl text-slate-950 group-hover:text-green-600"></i>
+        <!-- Vision Module (OCR) -->
+        <a href="/tools/ocr" class="cyber-card p-8 group interactive-hover text-decoration-none block">
+            <div class="w-16 h-16 rounded-2xl bg-cyan-100 border border-cyan-200 flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 shadow-sm">
+                <i class="fa-solid fa-eye text-3xl text-cyan-600"></i>
             </div>
-            <h3 class="text-2xl font-black text-slate-950 mb-4 tracking-tight uppercase group-hover:text-green-600" data-i18n="card_ocr_title">OCR VISION</h3>
-            <p class="text-slate-600 text-sm leading-relaxed font-['Kanit'] group-hover:text-green-700" data-i18n="card_ocr_desc">ระบบวิเคราะห์ข้อความจากภาพสกรีนช็อต เพื่อจับกลโกงในข้อความแชท</p>
-            <div class="mt-8 text-green-600 text-[10px] font-black tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">OPTICAL CORE _</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3 tracking-tight uppercase group-hover:text-green-600 transition-colors font-['Orbitron']" data-i18n="card_ocr_title">OCR VISION</h3>
+            <p class="text-slate-600 text-sm leading-relaxed font-['Kanit']" data-i18n="card_ocr_desc">ระบบวิเคราะห์ข้อความจากภาพสกรีนช็อต เพื่อจับกลโกงในข้อความแชทและสลิป</p>
+            <div class="mt-6 flex items-center gap-2 text-cyan-600 text-xs font-bold font-mono uppercase tracking-wider">
+                <span>OPTICAL CORE</span> <i class="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform"></i>
+            </div>
         </a>
 
         <!-- Community Feed -->
-        <a href="/report" class="cyber-card p-12 group">
-            <div class="w-20 h-20 rounded-3xl bg-white border-2 border-slate-950 flex items-center justify-center mb-10 group-hover:border-green-600 transition duration-500 shadow-md">
-                <i class="fa-solid fa-bug text-4xl text-slate-950 group-hover:text-green-600"></i>
+        <a href="/report" class="cyber-card p-8 group interactive-hover text-decoration-none block">
+            <div class="w-16 h-16 rounded-2xl bg-rose-100 border border-rose-200 flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 shadow-sm">
+                <i class="fa-solid fa-triangle-exclamation text-3xl text-rose-600"></i>
             </div>
-            <h3 class="text-2xl font-black text-slate-950 mb-4 tracking-tight uppercase group-hover:text-green-600" data-i18n="nav_report">INTEL REPORT</h3>
-            <p class="text-slate-600 text-sm leading-relaxed font-['Kanit'] group-hover:text-green-700" data-i18n="card_report_desc">ร่วมสร้างฐานข้อมูลภัยคุกคามด้วยการแจ้งเบาะแสการหลอกลวงใหม่ๆ</p>
-            <div class="mt-8 text-green-600 text-[10px] font-black tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">SUBMIT INTEL _</div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3 tracking-tight uppercase group-hover:text-green-600 transition-colors font-['Orbitron']" data-i18n="nav_report">INTEL REPORT</h3>
+            <p class="text-slate-600 text-sm leading-relaxed font-['Kanit']" data-i18n="card_report_desc">ร่วมสร้างฐานข้อมูลภัยคุกคามด้วยการแจ้งเบาะแสการหลอกลวงใหม่ๆ</p>
+            <div class="mt-6 flex items-center gap-2 text-rose-600 text-xs font-bold font-mono uppercase tracking-wider">
+                <span>SUBMIT INTEL</span> <i class="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform"></i>
+            </div>
         </a>
     </div>
 </div>
@@ -150,15 +155,18 @@
 
     scanBtn.onclick = async () => {
         let url = urlInput.value.trim();
-        if (!url) return;
+        if (!url) {
+            urlInput.focus();
+            return;
+        }
 
         // Visual Reset
-        if(window.setJanisState) window.setJanisState('scanning');
+        if (window.setJanisState) window.setJanisState('scanning');
         resultCard.classList.remove('hidden');
         statusTitle.innerText = translations[currentLang]['status_processing'];
-        statusTitle.className = "text-5xl font-black text-slate-700 tracking-widest italic";
+        statusTitle.className = "text-3xl md:text-4xl font-black text-slate-700 tracking-wider italic font-['Orbitron']";
         statusIcon.innerHTML = `<i class='fa-solid fa-atom text-green-500 animate-spin'></i>`;
-        statusIcon.className = "w-48 h-48 rounded-[3.5rem] bg-slate-900 flex items-center justify-center text-6xl shadow-2xl pulse-border";
+        statusIcon.className = "w-36 h-36 md:w-44 md:h-44 rounded-3xl bg-slate-900 flex items-center justify-center text-6xl shadow-xl pulse-border text-white";
         detailsBox.classList.add('hidden');
         riskBadge.classList.add('hidden');
         resultGlow.style.background = "transparent";
@@ -171,72 +179,75 @@
             });
             const data = await res.json();
 
-            // Artificial delay for "Intelligence Gathering" feel
             setTimeout(() => {
                 siteNameDisplay.innerText = `[ DOMAIN_INTEL :: ${data.site_name || 'UNKNOWN'} ]`;
                 
                 if (data.status === 'safe') {
-                    if(window.setJanisState) window.setJanisState('safe');
-                    statusIcon.className = "w-48 h-48 rounded-[3.5rem] bg-emerald-500  flex items-center justify-center text-8xl shadow-[0_0_80px_rgba(16,185,129,0.3)] border-none";
+                    if (window.setJanisState) window.setJanisState('safe');
+                    statusIcon.className = "w-36 h-36 md:w-44 md:h-44 rounded-3xl bg-emerald-600 text-white flex items-center justify-center text-6xl md:text-7xl shadow-lg border-none";
                     statusIcon.innerHTML = `<i class='fa-solid fa-check-double animate__animated animate__bounceIn'></i>`;
                     statusTitle.innerText = translations[currentLang]['status_secure'];
-                    statusTitle.className = "text-7xl font-black text-emerald-500 tracking-tighter italic";
+                    statusTitle.className = "text-4xl md:text-5xl font-black text-emerald-600 tracking-tight italic font-['Orbitron']";
                     statusDesc.innerText = translations[currentLang]['status_secure_desc'];
-                    resultGlow.style.background = "radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)";
+                    resultGlow.style.background = "radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%)";
                 } else {
-                    if(window.setJanisState) window.setJanisState('danger');
+                    if (window.setJanisState) window.setJanisState('danger');
                     riskBadge.classList.remove('hidden');
-                    statusIcon.className = "w-48 h-48 rounded-[3.5rem] bg-rose-600  flex items-center justify-center text-8xl shadow-[0_0_80px_rgba(225,29,72,0.4)] border-none animate__animated animate__shakeX";
+                    statusIcon.className = "w-36 h-36 md:w-44 md:h-44 rounded-3xl bg-rose-600 text-white flex items-center justify-center text-6xl md:text-7xl shadow-lg border-none animate__animated animate__shakeX";
                     statusIcon.innerHTML = `<i class='fa-solid fa-biohazard'></i>`;
                     statusTitle.innerText = translations[currentLang]['status_threat'];
-                    statusTitle.className = "text-7xl font-black text-rose-500 tracking-tighter italic";
+                    statusTitle.className = "text-4xl md:text-5xl font-black text-rose-600 tracking-tight italic font-['Orbitron']";
                     statusDesc.innerText = data.message || translations[currentLang]['status_threat_desc'];
-                    resultGlow.style.background = "radial-gradient(circle, rgba(225,29,72,0.2) 0%, transparent 70%)";
+                    resultGlow.style.background = "radial-gradient(circle, rgba(225,29,72,0.15) 0%, transparent 70%)";
                     
                     detailsBox.classList.remove('hidden');
                     detailsBox.classList.add('grid');
                     
                     const reasons = (data.details.reasons || []).map(r => `
-                        <li class='flex items-start gap-3 text-red-400 font-['Kanit']'>
-                            <i class='fa-solid fa-circle-exclamation text-[8px] mt-1.5'></i>
+                        <li class='flex items-start gap-2.5 text-rose-700 font-[\'Kanit\']'>
+                            <i class='fa-solid fa-circle-exclamation text-xs mt-1 text-rose-500'></i>
                             <span>${r}</span>
                         </li>
                     `).join('');
                     
                     detailsBox.innerHTML = `
                         <div>
-                            <p class='text-[9px] text-slate-500 font-black uppercase tracking-widest mb-3'>${translations[currentLang]['risk_coefficient']}</p>
-                            <p class='text-5xl font-black text-rose-600'>${data.risk_score}<span class='text-sm opacity-50 ml-1'>%</span></p>
+                            <p class='text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-2 font-mono'>${translations[currentLang]['risk_coefficient']}</p>
+                            <p class='text-4xl font-black text-rose-600 font-mono'>${data.risk_score}<span class='text-sm opacity-60 ml-1'>%</span></p>
                         </div>
                         <div>
-                            <p class='text-[9px] text-slate-500 font-black uppercase tracking-widest mb-3'>${translations[currentLang]['entity_target']}</p>
-                            <p class='text-2xl font-black  italic'>${data.details.target_brand || 'Generic Breach'}</p>
+                            <p class='text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-2 font-mono'>${translations[currentLang]['entity_target']}</p>
+                            <p class='text-xl font-bold text-slate-900 italic'>${data.details.target_brand || 'Generic Breach'}</p>
                         </div>
-                        <div class='col-span-1 md:col-span-1'>
-                             <p class='text-[9px] text-slate-500 font-black uppercase tracking-widest mb-3'>${translations[currentLang]['protection_mode']}</p>
-                             <div class='px-3 py-1 bg-red-500/10 border border-red-500/50 text-red-500 rounded text-[9px] font-bold inline-block'>${translations[currentLang]['autoblock_rec']}</div>
+                        <div>
+                             <p class='text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-2 font-mono'>${translations[currentLang]['protection_mode']}</p>
+                             <div class='px-3 py-1 bg-red-100 border border-red-300 text-red-700 rounded-lg text-xs font-bold inline-block'>${translations[currentLang]['autoblock_rec']}</div>
                         </div>
-                        <div class='col-span-full border-t border-slate-200 pt-8 mt-4'>
-                            <p class='text-[9px] text-slate-500 font-black uppercase tracking-widest mb-6'>${translations[currentLang]['indicator_breakdown']}</p>
-                            <ul class='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-xs font-medium'>${reasons}</ul>
+                        <div class='col-span-full border-t border-slate-200 pt-6 mt-2'>
+                            <p class='text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-4 font-mono'>${translations[currentLang]['indicator_breakdown']}</p>
+                            <ul class='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-sm'>${reasons}</ul>
                         </div>
                     `;
                 }
                 resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 1200);
+            }, 800);
 
         } catch (e) {
-            if(window.setJanisState) window.setJanisState('error');
+            if (window.setJanisState) window.setJanisState('error');
             Swal.fire({ 
                 icon: 'error', 
                 title: 'SYSTEM_FAILURE', 
                 text: 'NEURAL CORE DISCONNECTED: ' + e.message,
-                background: '#020617',
-                color: '#fff',
-                customClass: { popup: 'cyber-card border-red-500/20' }
+                background: '#ffffff',
+                color: '#0f172a',
+                customClass: { popup: 'cyber-card border-red-500' }
             });
         }
     };
+
+    urlInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') scanBtn.click();
+    });
 
     window.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);

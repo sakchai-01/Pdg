@@ -3,105 +3,103 @@
 {% block title %}Analysis | Email Phishing Intelligence{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto pt-32 pb-32 px-4 relative">
+<div class="max-w-4xl mx-auto pt-24 pb-32 px-4 relative">
     <!-- Breadcrumb -->
-    <div class="mb-16 animate__animated animate__fadeIn">
-        <a href="/news" class="inline-flex items-center gap-4 text-slate-500 hover:text-amber-400 transition-all group font-black uppercase tracking-[0.2em] text-[10px]">
-            <i class="fa-solid fa-chevron-left group-hover:-translate-x-2 transition-transform"></i>
-            RETURN_TO_INTELLIGENCE_FEED
+    <div class="mb-10 animate__animated animate__fadeIn">
+        <a href="/news" class="inline-flex items-center gap-2 text-slate-500 hover:text-amber-600 transition-all font-bold uppercase tracking-wider text-xs">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>RETURN_TO_INTELLIGENCE_FEED</span>
         </a>
     </div>
 
-    <!-- Article Header: Premium Tactical Header -->
-    <header class="mb-24 animate__animated animate__fadeInUp">
-        <div class="inline-flex items-center gap-4 px-8 py-3 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-[11px] font-black uppercase tracking-[0.5em] mb-12 shadow-[0_0_30px_rgba(249,115,22,0.2)]">
-            <i class="fa-solid fa-envelope-open-text animate-pulse"></i> MAIL_PROTOCOL_MONITOR
+    <!-- Article Header -->
+    <header class="mb-12 animate__animated animate__fadeInUp">
+        <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-amber-500/30 bg-amber-50 text-amber-700 text-xs font-black uppercase tracking-[0.3em] mb-6 shadow-sm">
+            <i class="fa-solid fa-envelope-open-text"></i> MAIL_PROTOCOL_MONITOR
         </div>
-        <h1 class="font-black  tracking-tighter mb-10 uppercase italic font-['Orbitron']" style="font-size: var(--fs-header-title);">
+        <h1 class="font-black text-slate-900 tracking-tight mb-6 uppercase italic font-['Orbitron']" style="font-size: var(--fs-header-title);">
             EMAIL <span class="text-gradient">PHISHING_CORE.</span>
         </h1>
-        <p class="text-slate-500 max-w-4xl font-medium font-['Kanit'] leading-relaxed" style="font-size: var(--fs-header-desc);">
+        <p class="text-slate-600 max-w-3xl font-normal font-['Kanit'] leading-relaxed text-base md:text-lg mb-8">
             คู่มือสกัดกั้นอีเมลหลอกลวง พฤติกรรมการส่งลิงก์ปลอม และวิธีการระบุผู้ส่งที่ไม่ประสงค์ดีผ่าน SMTP Header
         </p>
-    </header>
-        
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 py-10 border-y border-slate-200 mt-16">
-            <div class="space-y-2">
-                <p class="text-[9px] text-slate-600 font-black uppercase tracking-widest">TRANSMISSION_DATE</p>
-                <p class=" font-mono text-sm tracking-tight italic">15_FEB_2026</p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 py-6 border-y border-slate-200">
+            <div>
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">TRANSMISSION_DATE</p>
+                <p class="font-mono text-sm text-slate-900 font-bold">15_FEB_2026</p>
             </div>
-            <div class="space-y-2">
-                <p class="text-[9px] text-slate-600 font-black uppercase tracking-widest">INTEL_SOURCE</p>
-                <p class="text-amber-400 font-mono text-sm tracking-tight italic">MAIL_SENTRY_JANIS</p>
+            <div>
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">INTEL_SOURCE</p>
+                <p class="text-amber-600 font-mono text-sm font-bold">MAIL_SENTRY_JANIS</p>
             </div>
-            <div class="space-y-2">
-                <p class="text-[9px] text-slate-600 font-black uppercase tracking-widest">READ_TIME</p>
-                <p class=" font-mono text-sm tracking-tight italic">06:00_MIN</p>
+            <div>
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">READ_TIME</p>
+                <p class="font-mono text-sm text-slate-900 font-bold">06:00_MIN</p>
             </div>
-            <div class="space-y-2 text-right">
-                <p class="text-[9px] text-slate-600 font-black uppercase tracking-widest">THREAT_LEVEL</p>
-                <span class="px-3 py-1 bg-amber-500/20 text-amber-500 border border-amber-500/40 text-[10px] font-black rounded uppercase tracking-widest animate-pulse">Elevated</span>
+            <div>
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">THREAT_LEVEL</p>
+                <span class="px-2.5 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold rounded-full uppercase tracking-wider inline-block">Elevated</span>
             </div>
         </div>
     </header>
 
-    <!-- Visual Artifact -->
-    <div class="cyber-card p-4 border-slate-200 mb-24 overflow-hidden animate__animated animate__fadeInUp bg-white backdrop-blur-3xl shadow-[0_0_80px_rgba(0,0,0,0.8)]">
-        <div class="aspect-video bg-slate-900 rounded-[2.5rem] relative flex items-center justify-center overflow-hidden border border-slate-200">
-            <div class="absolute inset-0 bg-amber-600/5 mix-blend-overlay"></div>
-            <i class="fa-solid fa-envelope-open-text text-[18rem] text-slate-800 opacity-20 rotate-12 transition-all"></i>
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
-            <div class="absolute bottom-16 left-16 p-10 border-l-4 border-amber-600 bg-white backdrop-blur-md rounded-r-3xl">
-                <p class=" text-3xl font-black uppercase italic tracking-tighter mb-2 font-['Orbitron']">SMTP_EXPLOIT_VECTOR</p>
-                <p class="text-amber-500 text-[10px] font-black tracking-[0.5em] uppercase opacity-60">Sub-ID: Business_Email_Compromise</p>
+    <!-- Visual Banner -->
+    <div class="cyber-card p-2 border-2 border-slate-200 mb-12 overflow-hidden bg-white shadow-lg rounded-3xl">
+        <div class="h-64 sm:h-80 bg-gradient-to-br from-amber-600 to-orange-700 rounded-2xl relative flex items-center justify-center overflow-hidden">
+            <i class="fa-solid fa-envelope-open-text text-[12rem] text-white/15 rotate-12"></i>
+            <div class="absolute bottom-6 left-6 p-6 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200 shadow-md">
+                <p class="text-slate-900 text-lg font-black uppercase italic font-['Orbitron']">SMTP_EXPLOIT_VECTOR</p>
+                <p class="text-amber-600 text-xs font-mono font-bold tracking-wider">Sub-ID: Business_Email_Compromise</p>
             </div>
         </div>
     </div>
 
     <!-- Article Content -->
-    <article class="prose prose-invert max-w-none text-slate-400 font-['Kanit'] leading-relaxed text-xl animate__animated animate__fadeInUp font-light">
-        <p class="text-2xl  font-bold mb-12 border-b border-slate-200 pb-12 italic">
-            กลโกงคลาสสิกที่ยังคงอันตราย! <b class="text-amber-500">Email Phishing</b> การส่งสารปลอมแนบลิงก์อันตรายเพื่อขโมยข้อมูลสำคัญระดับองค์กรและส่วนบุคคล
+    <article class="text-slate-800 font-['Kanit'] leading-relaxed text-base md:text-lg space-y-6">
+        <p class="text-xl md:text-2xl font-bold text-slate-900 border-l-4 border-amber-600 pl-4 py-1 italic">
+            การโจมตีผ่านอีเมลระดับองค์กร (BEC: Business Email Compromise) ยังคงสร้างความเสียหายทางการเงินสูงสุดในปัจจุบัน
         </p>
 
-        <p class="mb-12">
-            มิจฉาชีพหันมาใช้เทคนิค <b class="">"Spear Phishing"</b> มากขึ้น โดยทำการบ้านระบุพิกัดเป้าหมายอย่างแม่นยำ และสร้างเนื้อหาที่มีความเกี่ยวข้องเฉพาะตัวเพื่อลดความระมัดระวังของเหยื่อ เช่น แจ้งเตือนการเปลี่ยนรหัสผ่านเทียม หรือใบแจ้งหนี้ปลอมที่ดูแนบเนียน
+        <p>
+            ผู้โจมตีมักปลอมแปลงชื่อผู้ส่ง (Display Name Spoofing) เป็นผู้บริหาร หรือคู่ค้าทางธุรกิจ เพื่อส่งใบแจ้งหนี้ปลอม หรือแจ้งเปลี่ยนแปลงเลขที่บัญชีธนาคารสำหรับการชำระเงิน หากพนักงานไม่มีการตรวจสอบย้อนกลับ อาจทำให้เกิดการโอนเงินเข้าบัญชีมิจฉาชีพทันที
         </p>
 
-        <!-- Indicators -->
-        <div class="cyber-card p-12 md:p-20 border-amber-500/10 bg-amber-500/[0.03] my-24 relative overflow-hidden backdrop-blur-3xl shadow-inner">
-            <div class="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 blur-[120px] pointer-events-none"></div>
-            <h3 class="text-amber-500 font-black uppercase tracking-[0.5em] text-xs mb-12 flex items-center gap-4 font-['Orbitron']">
-                <i class="fa-solid fa-magnifying-glass-chart animate-pulse"></i> IDENTIFIED_RED_FLAGS
+        <!-- Red Flags Box -->
+        <div class="cyber-card p-6 md:p-8 bg-amber-50/50 border-2 border-amber-200 my-8 rounded-2xl">
+            <h3 class="text-amber-800 font-bold uppercase tracking-wider text-sm mb-6 flex items-center gap-2 font-['Orbitron']">
+                <i class="fa-solid fa-triangle-exclamation text-amber-600"></i> IDENTIFIED_RED_FLAGS
             </h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-                 <div class="flex gap-8 group">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-600/10 border border-amber-500/30 flex items-center justify-center text-amber-500 font-black shrink-0 text-xs shadow-lg group-hover:bg-amber-600 group-hover: transition-all">01</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 font-black shrink-0 text-xs shadow-sm font-mono">01</div>
                     <div>
-                        <b class=" text-xl block mb-3 uppercase italic tracking-tight font-['Orbitron']">SENDER_SPOOFING</b>
-                        <p class="text-base text-slate-500 font-light leading-relaxed">การใช้ชื่อผู้ส่งที่ดูเหมือนองค์กรจริง แต่โดเมนอีเมล @ หลังชื่อมีความผิดปกติหรือใช้ Gmail/Outlook แทนโดเมนบริษัท</p>
+                        <b class="text-slate-900 text-base block mb-1 font-bold">DOMAIN_DISCREPANCY</b>
+                        <p class="text-sm text-slate-600">ชื่อผู้ส่งแสดงเป็นชื่อผู้บริหาร แต่ที่อยู่อีเมลจริง (หลังเครื่องหมาย @) เป็นอีเมลฟรีหรือสะกดชื่อบริษัทผิดไป 1 ตัวอักษร</p>
                     </div>
                 </div>
-                 <div class="flex gap-8 group">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-600/10 border border-amber-500/30 flex items-center justify-center text-amber-500 font-black shrink-0 text-xs shadow-lg group-hover:bg-amber-600 group-hover: transition-all">02</div>
+                <div class="flex gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 font-black shrink-0 text-xs shadow-sm font-mono">02</div>
                     <div>
-                        <b class=" text-xl block mb-3 uppercase italic tracking-tight font-['Orbitron']">ANONYMOUS_LINK</b>
-                        <p class="text-base text-slate-500 font-light leading-relaxed">การบังคับให้กดปุ่มหรือลิงก์เพื่อเข้าสู่ระบบ โดยเมื่อเอาเมาส์ชี้จะพบ URL จริงที่ยาวและซับซ้อนและไม่ได้พาไปหาเว็บหลัก</p>
+                        <b class="text-slate-900 text-base block mb-1 font-bold">URGENT_CONFIDENTIALITY</b>
+                        <p class="text-sm text-slate-600">เนื้อหาในอีเมลสั่งให้ทำธุรกรรมอย่างลับๆ ห้ามบอกผู้อื่น หรือเร่งรัดให้เสร็จสิ้นภายในไม่กี่ชั่วโมง</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <h2 class="text-4xl font-black  italic uppercase tracking-tighter mt-32 mb-10 font-['Orbitron']">Tactical <span class="text-amber-500">Neutralization</span></h2>
-        <p class="mb-12">
-            ห้ามคลิกลิงก์ใดๆ จากอีเมลที่ไม่มั่นใจ ให้ใช้วิธี <b class="text-amber-500">"พิมพ์เอง"</b> บนหน้าเบราว์เซอร์เพื่อเข้าสู่ระบบ และใช้การตั้งค่า MFA (Multi-Factor Authentication) เป็นด่านป้องกันสุดท้ายที่ทรงประสิทธิภาพที่สุด
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900 italic uppercase tracking-tight mt-10 mb-4 font-['Orbitron']">
+            Tactical <span class="text-amber-600">Neutralization</span>
+        </h2>
+        <p>
+            ตรวจสอบการตั้งค่าความปลอดภัยอีเมลด้วยโปรโตคอล SPF, DKIM, DMARC และกำหนดนโยบายให้โทรศัพท์ยืนยันซ้ำแบบสองทาง (Two-person verification) ทุกครั้งที่มีการขอเปลี่ยนเลขบัญชีโอนเงิน
         </p>
 
-        <div class="p-12 bg-white border border-slate-200 rounded-[3rem] mt-24 shadow-2xl relative overflow-hidden backdrop-blur-3xl">
-            <p class="font-black text-amber-500 uppercase tracking-[0.5em] text-xs mb-6 font-['Orbitron']">COMMAND_SUMMARY:</p>
-            <p class=" font-['Kanit'] italic text-xl leading-relaxed font-light relative z-10">
-                "ตรวจสอบผู้ส่งก่อนลงมือทำ อย่าหลงกลความเร่งรีบที่ผิดปกติ และจำไว้ว่าบริการที่น่าเชื่อถือไม่มีวันขอรหัสผ่านผ่านทางอีเมล"
+        <div class="p-6 bg-slate-100 border border-slate-300 rounded-2xl mt-8">
+            <p class="font-bold text-amber-700 uppercase tracking-wider text-xs mb-2 font-['Orbitron']">COMMAND_SUMMARY:</p>
+            <p class="font-['Kanit'] italic text-base text-slate-800">
+                "ตรวจที่อยู่อีเมลหลังเครื่องหมาย @ ทุกครั้ง อย่าดูแค่ชื่อที่แสดง และโทรยืนยันก่อนโอนเงินก้อนใหญ่เสมอ"
             </p>
         </div>
     </article>

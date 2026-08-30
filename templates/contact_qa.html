@@ -3,47 +3,45 @@
 {% block title %}Q&A | Community Inquiries{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto pt-20 pb-20 px-4">
+<div class="max-w-4xl mx-auto pt-24 pb-32 px-4">
     <!-- Back Button -->
-    <div class="mb-12 animate__animated animate__fadeIn">
-        <a href="/contact" class="inline-flex items-center gap-2 text-slate-500 hover:text-violet-400 transition-colors group">
+    <div class="mb-10 animate__animated animate__fadeIn">
+        <a href="/contact" class="inline-flex items-center gap-2 text-slate-500 hover:text-violet-600 transition-colors group text-xs font-bold uppercase tracking-wider">
             <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
-            <span class="text-xs font-black uppercase tracking-widest">Back to Support Hub</span>
+            <span>Back to Support Hub</span>
         </a>
     </div>
 
-    <!-- Q&A Terminal -->
-    <div class="cyber-card p-10 md:p-16 relative overflow-hidden group animate__animated animate__zoomIn">
-        <div class="absolute inset-0 bg-gradient-to-br from-violet-600/5 to-transparent pointer-events-none"></div>
-        
-        <!-- Header Section -->
-    <div class="mb-24 animate__animated animate__fadeIn">
-        <div class="inline-flex items-center gap-4 px-8 py-3 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 text-[11px] font-black uppercase tracking-[0.5em] mb-12 shadow-[0_0_30px_rgba(99,102,241,0.2)]">
-            <i class="fa-solid fa-comments animate-pulse"></i> DIRECT_ADVISORY_CHANNEL
+    <!-- Header Section -->
+    <div class="mb-16 animate__animated animate__fadeIn">
+        <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-indigo-500/30 bg-indigo-50 text-indigo-700 text-xs font-black uppercase tracking-[0.3em] mb-6 shadow-sm">
+            <i class="fa-solid fa-comments"></i> DIRECT_ADVISORY_CHANNEL
         </div>
-        <h1 class="font-black  tracking-tighter mb-10 uppercase italic font-['Orbitron']" style="font-size: var(--fs-header-title);">
+        <h1 class="font-black text-slate-900 tracking-tight mb-6 uppercase italic font-['Orbitron']" style="font-size: var(--fs-header-title);">
             COMMUNITY <span class="text-gradient">QA.</span>
         </h1>
-        <p class="text-slate-500 max-w-4xl font-medium font-['Kanit'] leading-relaxed" style="font-size: var(--fs-header-desc);">
+        <p class="text-slate-600 max-w-3xl font-normal font-['Kanit'] leading-relaxed text-base md:text-lg">
             สอบถามข้อสงสัยโดยตรงจากทีมงาน หรือปรึกษาเกี่ยวกับสถานการณ์ที่น่าสงสัยที่คุณกำลังเผชิญ
         </p>
     </div>
 
-        <form class="space-y-8 relative z-10">
-            <div class="space-y-4">
-                <label class="text-xs font-black text-slate-950 uppercase tracking-widest ml-1">Your Question / Discussion Topic</label>
-                <textarea class="w-full bg-white border-2 border-slate-950 text-slate-950 p-6 rounded-2xl h-52 outline-none focus:border-green-600 transition font-['Kanit'] text-lg placeholder:text-slate-400 shadow-sm" 
+    <!-- Q&A Terminal -->
+    <div class="cyber-card p-8 md:p-12 relative overflow-hidden bg-white border-2 border-slate-300 shadow-xl rounded-3xl animate__animated animate__fadeInUp">
+        <form class="space-y-6 relative z-10" onsubmit="event.preventDefault(); Swal.fire({ icon: 'success', title: 'QUESTION_POSTED', text: 'คำถามของคุณถูกส่งเข้าสู่กระดานคอมมูนิตี้แล้ว', background: '#ffffff', color: '#0f172a' });">
+            <div class="space-y-3">
+                <label class="text-xs font-bold text-slate-900 uppercase tracking-wider ml-1">Your Question / Discussion Topic</label>
+                <textarea required class="w-full bg-slate-50 border-2 border-slate-300 text-slate-900 p-5 rounded-2xl h-44 outline-none focus:border-green-600 focus:bg-white transition font-['Kanit'] text-base placeholder:text-slate-400 shadow-inner" 
                     placeholder="พิมพ์คำถามหรือหัวข้อที่คุณต้องการปรึกษาที่นี่..."></textarea>
             </div>
 
-            <button type="button" class="cyber-btn w-full py-6 text-lg">
-                Submit Command
+            <button type="submit" class="cyber-btn w-full py-4 text-base font-bold">
+                Submit Question
             </button>
         </form>
 
-        <div class="mt-12 flex justify-center gap-8 text-[10px] font-black uppercase tracking-widest text-slate-600">
-            <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> System Connected</div>
-            <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-violet-500"></div> Community Active</div>
+        <div class="mt-8 flex justify-center gap-8 text-xs font-mono font-bold text-slate-500 border-t border-slate-100 pt-6">
+            <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-green-500"></div> System Connected</div>
+            <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-violet-500"></div> Community Active</div>
         </div>
     </div>
 </div>

@@ -5,118 +5,116 @@
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<div class="max-w-7xl mx-auto pt-32 pb-40 px-4">
+<div class="max-w-7xl mx-auto pt-20 pb-32 px-4">
     <!-- Header Section -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-12 animate__animated animate__fadeIn">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10 animate__animated animate__fadeIn">
         <div>
-            <div data-i18n="admin_dash_badge" class="inline-flex items-center gap-4 px-6 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-[10px] font-black uppercase tracking-[0.4em] mb-6">
+            <div data-i18n="admin_dash_badge" class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-50 text-cyan-700 text-xs font-black uppercase tracking-wider mb-4 shadow-sm">
                 <i class="fa-solid fa-tower-broadcast animate-pulse"></i> NEURAL_COMMAND_CENTER :: ACTIVE
             </div>
-            <h1 data-i18n="admin_dash_title" class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter uppercase italic font-['Orbitron']">
+            <h1 data-i18n="admin_dash_title" class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight uppercase italic font-['Orbitron']">
                 ADMIN <span class="text-gradient">DASHBOARD.</span>
             </h1>
-            <div class="flex items-center gap-3 text-slate-500 font-mono text-xs mt-3 uppercase tracking-[0.2em]">
+            <div class="flex items-center gap-3 text-slate-500 font-mono text-xs mt-2 uppercase tracking-wider">
                 <span><span data-i18n="admin_operator">OPERATOR</span>: <strong class="text-slate-900 font-bold">{{ admin.username }}</strong></span>
                 <span>•</span>
-                <span><span data-i18n="admin_level">LEVEL</span>: <span class="px-3 py-1 rounded-full text-[10px] font-black {% if admin.role == 'super_admin' %}bg-amber-500/10 text-amber-600 border border-amber-500/30{% else %}bg-cyan-500/10 text-cyan-600 border border-cyan-500/30{% endif %}">{{ admin.role | upper }}</span></span>
+                <span><span data-i18n="admin_level">LEVEL</span>: <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold {% if admin.role == 'super_admin' %}bg-amber-100 text-amber-800 border border-amber-300{% else %}bg-cyan-100 text-cyan-800 border border-cyan-300{% endif %}">{{ admin.role | upper }}</span></span>
             </div>
         </div>
         <div class="flex gap-4">
-            <button onclick="logoutAdmin()" data-i18n="admin_terminate_session" class="px-6 py-3 bg-rose-600/10 border border-rose-500/30 text-rose-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all shadow-sm flex items-center gap-2">
+            <button onclick="logoutAdmin()" data-i18n="admin_terminate_session" class="px-5 py-2.5 bg-rose-50 border border-rose-300 text-rose-700 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-rose-600 hover:text-white transition-all shadow-sm flex items-center gap-2 cursor-pointer">
                 <i class="fa-solid fa-power-off"></i> TERMINATE_SESSION
             </button>
         </div>
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="flex flex-wrap gap-4 mb-10 border-b border-slate-200 pb-4">
-        <button onclick="switchTab('moderation')" id="tab-moderation" class="tab-btn active px-6 py-3.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2.5">
+    <div class="flex flex-wrap gap-3 mb-8 border-b border-slate-200 pb-4">
+        <button onclick="switchTab('moderation')" id="tab-moderation" class="tab-btn active px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-shield-halved text-sm"></i>
             <span data-i18n="admin_tab_moderation">การจัดการรายงาน</span>
-            <span class="px-2 py-0.5 text-[10px] rounded-full bg-cyan-500/20 text-cyan-700 font-bold ml-1">{{ reports | length }}</span>
+            <span class="px-2 py-0.5 text-[10px] rounded-full bg-cyan-100 text-cyan-800 font-bold ml-1">{{ reports | length }}</span>
         </button>
         
         {% if admin.role == 'super_admin' %}
-        <button onclick="switchTab('management')" id="tab-management" class="tab-btn px-6 py-3.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2.5">
+        <button onclick="switchTab('management')" id="tab-management" class="tab-btn px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-users-gear text-sm"></i>
             <span data-i18n="admin_tab_management">การจัดการผู้ดูแลระบบ (ADMIN MANAGEMENT)</span>
-            <span class="px-2 py-0.5 text-[10px] rounded-full bg-amber-500/20 text-amber-700 font-bold ml-1">{{ admins | length }}</span>
+            <span class="px-2 py-0.5 text-[10px] rounded-full bg-amber-100 text-amber-800 font-bold ml-1">{{ admins | length }}</span>
         </button>
         {% endif %}
     </div>
 
     <!-- TAB 1: Report Moderation Pane -->
     <div id="moderation-pane" class="tab-pane active animate__animated animate__fadeIn">
-        <div class="grid grid-cols-1 gap-8">
-            <div class="cyber-card p-8 bg-white border border-slate-200 shadow-xl rounded-3xl">
-                <header class="flex justify-between items-center mb-8 pb-4 border-b border-slate-200">
-                    <div>
-                        <h3 data-i18n="admin_pending_reports" class="text-xl font-black text-slate-900 uppercase tracking-tight italic">Pending_Threat_Reports</h3>
-                        <p class="text-xs text-slate-500 mt-1">รายการแจ้งภัยคุกคามรอการตรวจสอบและอนุมัติลง Blacklist/Whitelist</p>
-                    </div>
-                    <span data-i18n="admin_awaiting_verify" class="text-[10px] text-slate-500 font-mono uppercase tracking-widest bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-                        <i class="fa-solid fa-clock mr-1 text-cyan-500"></i> Awaiting_Verification
-                    </span>
-                </header>
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="text-[10px] text-slate-500 uppercase tracking-widest font-black border-b border-slate-200">
-                            <tr>
-                                <th data-i18n="admin_table_timestamp" class="pb-4 px-4">TIMESTAMP</th>
-                                <th data-i18n="admin_table_url" class="pb-4 px-4">TARGET_URL</th>
-                                <th data-i18n="admin_table_type" class="pb-4 px-4">TYPE</th>
-                                <th data-i18n="admin_table_submitter" class="pb-4 px-4">SUBMITTER</th>
-                                <th data-i18n="admin_table_status" class="pb-4 px-4">STATUS</th>
-                                <th data-i18n="admin_table_actions" class="pb-4 px-4 text-right">ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody id="report-table-body" class="divide-y divide-slate-100">
-                            {% for r in reports %}
-                            <tr class="group hover:bg-slate-50/80 transition-colors">
-                                <td class="py-5 px-4 text-xs font-mono text-slate-500">
-                                    {% if r.reported_at and r.reported_at.strftime %}
-                                        {{ r.reported_at.strftime('%Y-%m-%d %H:%M') }}
-                                    {% else %}
-                                        {{ r.reported_at }}
-                                    {% endif %}
-                                </td>
-                                <td class="py-5 px-4 text-xs font-mono text-cyan-600 font-bold max-w-xs truncate" title="{{ r.url }}">{{ r.url }}</td>
-                                <td class="py-5 px-4">
-                                    <span class="px-3 py-1 rounded-md bg-slate-100 text-[9px] font-black uppercase text-slate-600 border border-slate-200">{{ r.type }}</span>
-                                </td>
-                                <td class="py-5 px-4 text-xs text-slate-700 font-medium">{{ r.email }}</td>
-                                <td class="py-5 px-4">
-                                    <span class="status-badge-{{ r.status }} px-3 py-1 rounded-md text-[9px] font-black uppercase">
-                                        {{ r.status }}
-                                    </span>
-                                </td>
-                                <td class="py-5 px-4 text-right">
-                                    <div class="flex justify-end gap-2">
-                                        <!-- Approve as Safe -->
-                                        <button onclick="reviewReport('{{ r._id }}', 'approve_safe')" data-i18n-title="admin_btn_safe" title="APPROVE_AS_SAFE" class="p-2 bg-emerald-500/10 text-emerald-600 border border-emerald-500/30 rounded-lg hover:bg-emerald-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1">
-                                            <i class="fa-solid fa-shield-check"></i> Safe
-                                        </button>
-                                        <!-- Approve as Phishing -->
-                                        <button onclick="reviewReport('{{ r._id }}', 'approve_phishing')" data-i18n-title="admin_btn_phish" title="APPROVE_AS_PHISHING" class="p-2 bg-orange-500/10 text-orange-600 border border-orange-500/30 rounded-lg hover:bg-orange-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1">
-                                            <i class="fa-solid fa-skull-crossbones"></i> Phish
-                                        </button>
-                                        <!-- Reject -->
-                                        <button onclick="reviewReport('{{ r._id }}', 'reject')" data-i18n-title="admin_btn_reject" title="REJECT_REPORT" class="p-2 bg-rose-500/10 text-rose-600 border border-rose-500/30 rounded-lg hover:bg-rose-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1">
-                                            <i class="fa-solid fa-trash-can"></i> Reject
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% if not reports %}
-                            <tr>
-                                <td colspan="6" data-i18n="admin_no_reports" class="py-16 text-center text-slate-500 font-mono italic text-sm">NO_PENDING_REPORTS_DETECTED</td>
-                            </tr>
-                            {% endif %}
-                        </tbody>
-                    </table>
+        <div class="cyber-card p-6 md:p-8 bg-white border border-slate-200 shadow-lg rounded-2xl">
+            <header class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6 pb-4 border-b border-slate-200">
+                <div>
+                    <h3 data-i18n="admin_pending_reports" class="text-lg font-bold text-slate-900 uppercase tracking-tight font-['Orbitron']">Pending_Threat_Reports</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">รายการแจ้งภัยคุกคามรอการตรวจสอบและอนุมัติลง Blacklist/Whitelist</p>
                 </div>
+                <span data-i18n="admin_awaiting_verify" class="text-xs text-slate-600 font-mono uppercase tracking-wider bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 self-start sm:self-auto">
+                    <i class="fa-solid fa-clock mr-1 text-cyan-600"></i> Awaiting_Verification
+                </span>
+            </header>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="text-[11px] text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200 bg-slate-50">
+                        <tr>
+                            <th data-i18n="admin_table_timestamp" class="py-3 px-4">TIMESTAMP</th>
+                            <th data-i18n="admin_table_url" class="py-3 px-4">TARGET_URL</th>
+                            <th data-i18n="admin_table_type" class="py-3 px-4">TYPE</th>
+                            <th data-i18n="admin_table_submitter" class="py-3 px-4">SUBMITTER</th>
+                            <th data-i18n="admin_table_status" class="py-3 px-4">STATUS</th>
+                            <th data-i18n="admin_table_actions" class="py-3 px-4 text-right">ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="report-table-body" class="divide-y divide-slate-100">
+                        {% for r in reports %}
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-4 text-xs font-mono text-slate-500">
+                                {% if r.reported_at and r.reported_at.strftime %}
+                                    {{ r.reported_at.strftime('%Y-%m-%d %H:%M') }}
+                                {% else %}
+                                    {{ r.reported_at }}
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-4 text-xs font-mono text-cyan-700 font-bold max-w-xs truncate" title="{{ r.url }}">{{ r.url }}</td>
+                            <td class="py-4 px-4">
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 text-[10px] font-bold uppercase text-slate-700 border border-slate-200">{{ r.type }}</span>
+                            </td>
+                            <td class="py-4 px-4 text-xs text-slate-700">{{ r.email }}</td>
+                            <td class="py-4 px-4">
+                                <span class="status-badge-{{ r.status }} px-2.5 py-1 rounded-md text-[10px] font-bold uppercase">
+                                    {{ r.status }}
+                                </span>
+                            </td>
+                            <td class="py-4 px-4 text-right">
+                                <div class="flex justify-end gap-1.5">
+                                    <!-- Approve as Safe -->
+                                    <button onclick="reviewReport('{{ r._id }}', 'approve_safe')" data-i18n-title="admin_btn_safe" title="APPROVE_AS_SAFE" class="px-2.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-300 rounded-lg hover:bg-emerald-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1 cursor-pointer">
+                                        <i class="fa-solid fa-shield-check"></i> Safe
+                                    </button>
+                                    <!-- Approve as Phishing -->
+                                    <button onclick="reviewReport('{{ r._id }}', 'approve_phishing')" data-i18n-title="admin_btn_phish" title="APPROVE_AS_PHISHING" class="px-2.5 py-1.5 bg-amber-50 text-amber-700 border border-amber-300 rounded-lg hover:bg-amber-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1 cursor-pointer">
+                                        <i class="fa-solid fa-triangle-exclamation"></i> Phish
+                                    </button>
+                                    <!-- Reject -->
+                                    <button onclick="reviewReport('{{ r._id }}', 'reject')" data-i18n-title="admin_btn_reject" title="REJECT_REPORT" class="px-2.5 py-1.5 bg-rose-50 text-rose-700 border border-rose-300 rounded-lg hover:bg-rose-600 hover:text-white transition-all text-xs font-bold flex items-center gap-1 cursor-pointer">
+                                        <i class="fa-solid fa-trash-can"></i> Reject
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% if not reports %}
+                        <tr>
+                            <td colspan="6" data-i18n="admin_no_reports" class="py-12 text-center text-slate-500 font-mono italic text-sm">NO_PENDING_REPORTS_DETECTED</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -124,110 +122,109 @@
     <!-- TAB 2: Admin Management Pane (Super Admin Only) -->
     {% if admin.role == 'super_admin' %}
     <div id="management-pane" class="tab-pane hidden animate__animated animate__fadeIn">
-        <!-- Banner Highlight for Super Admin -->
-        <div class="mb-8 p-6 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-transparent border border-amber-500/30 rounded-2xl flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-600 text-xl font-black">
+        <div class="mb-6 p-5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 text-lg font-bold">
                     <i class="fa-solid fa-user-shield"></i>
                 </div>
                 <div>
-                    <h2 class="text-lg font-black text-slate-900 uppercase tracking-tight italic">SUPER_ADMIN CONTROL PANEL</h2>
-                    <p class="text-xs text-slate-600 mt-0.5">ส่วนจัดการบัญชีผู้ดูแลระบบ (เพิ่ม / ลบ / กำหนดบทบาท Admin ในเครือข่าย)</p>
+                    <h2 class="text-base font-bold text-slate-900 uppercase tracking-tight">SUPER_ADMIN CONTROL PANEL</h2>
+                    <p class="text-xs text-slate-600">ส่วนจัดการบัญชีผู้ดูแลระบบ (เพิ่ม / ลบ / กำหนดบทบาท Admin)</p>
                 </div>
             </div>
-            <span class="px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-700 border border-amber-500/40 text-xs font-black uppercase tracking-widest hidden md:inline-block">
-                SUPER_ADMIN LEVEL PERMISSIONS
+            <span class="px-3 py-1 rounded-full bg-amber-200/80 text-amber-900 text-xs font-bold font-mono uppercase tracking-wider hidden md:inline-block">
+                SUPER_ADMIN ACCESS
             </span>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <!-- Add New Admin Form -->
-            <div class="cyber-card p-8 bg-white border border-slate-200 shadow-xl rounded-3xl lg:col-span-4">
-                <header class="mb-8 pb-4 border-b border-slate-200">
-                    <h3 data-i18n="admin_init_new" class="text-lg font-black text-slate-900 uppercase tracking-tight italic mb-1">Initialize_New_Admin</h3>
+            <div class="cyber-card p-6 md:p-8 bg-white border border-slate-200 shadow-lg rounded-2xl lg:col-span-4">
+                <header class="mb-6 pb-3 border-b border-slate-200">
+                    <h3 data-i18n="admin_init_new" class="text-base font-bold text-slate-900 uppercase tracking-tight font-['Orbitron'] mb-0.5">Initialize_New_Admin</h3>
                     <p data-i18n="admin_init_new_desc" class="text-xs text-slate-500">เพิ่มเจ้าหน้าที่ใหม่เข้าสู่ระบบควบคุม</p>
                 </header>
                 
-                <form id="addAdminForm" class="space-y-5">
-                    <div class="space-y-1.5">
-                        <label data-i18n="admin_add_username" class="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">USERNAME (ชื่อผู้ใช้)</label>
+                <form id="addAdminForm" class="space-y-4">
+                    <div class="space-y-1">
+                        <label data-i18n="admin_add_username" class="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-1">USERNAME (ชื่อผู้ใช้)</label>
                         <div class="relative">
-                            <input type="text" name="new_username" required placeholder="e.g. somchai" class="w-full bg-slate-50 border border-slate-200 pl-11 pr-4 py-3.5 rounded-xl text-slate-900 text-sm outline-none focus:border-cyan-500 focus:bg-white transition font-mono">
-                            <i class="fa-solid fa-user text-slate-400 absolute left-4 top-4 text-xs"></i>
+                            <input type="text" name="new_username" required placeholder="e.g. somchai" class="w-full bg-slate-50 border border-slate-300 pl-10 pr-3 py-3 rounded-xl text-slate-900 text-sm outline-none focus:border-cyan-600 focus:bg-white transition font-mono">
+                            <i class="fa-solid fa-user text-slate-400 absolute left-3.5 top-3.5 text-xs"></i>
                         </div>
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label data-i18n="admin_add_email" class="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">GOOGLE EMAIL (อีเมลประจำตัว)</label>
+                    <div class="space-y-1">
+                        <label data-i18n="admin_add_email" class="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-1">GOOGLE EMAIL (อีเมลประจำตัว)</label>
                         <div class="relative">
-                            <input type="email" name="new_email" required placeholder="admin@example.com" class="w-full bg-slate-50 border border-slate-200 pl-11 pr-4 py-3.5 rounded-xl text-slate-900 text-sm outline-none focus:border-cyan-500 focus:bg-white transition font-mono">
-                            <i class="fa-solid fa-envelope text-slate-400 absolute left-4 top-4 text-xs"></i>
+                            <input type="email" name="new_email" required placeholder="admin@example.com" class="w-full bg-slate-50 border border-slate-300 pl-10 pr-3 py-3 rounded-xl text-slate-900 text-sm outline-none focus:border-cyan-600 focus:bg-white transition font-mono">
+                            <i class="fa-solid fa-envelope text-slate-400 absolute left-3.5 top-3.5 text-xs"></i>
                         </div>
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label data-i18n="admin_add_password" class="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">PASSWORD (รหัสผ่านเข้าสู่ระบบ)</label>
+                    <div class="space-y-1">
+                        <label data-i18n="admin_add_password" class="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-1">PASSWORD (รหัสผ่าน)</label>
                         <div class="relative">
-                            <input type="password" id="new_password_input" name="new_password" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 pl-11 pr-11 py-3.5 rounded-xl text-slate-900 text-sm outline-none focus:border-cyan-500 focus:bg-white transition font-mono">
-                            <i class="fa-solid fa-key text-slate-400 absolute left-4 top-4 text-xs"></i>
-                            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-4 top-3.5 text-slate-400 hover:text-slate-600 text-xs">
+                            <input type="password" id="new_password_input" name="new_password" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-300 pl-10 pr-10 py-3 rounded-xl text-slate-900 text-sm outline-none focus:border-cyan-600 focus:bg-white transition font-mono">
+                            <i class="fa-solid fa-key text-slate-400 absolute left-3.5 top-3.5 text-xs"></i>
+                            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 text-xs">
                                 <i id="pass_toggle_icon" class="fa-solid fa-eye"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-1">ROLE PERMISSION (ยศ/สิทธิ์การใช้งาน)</label>
-                        <select name="new_role" class="w-full bg-slate-50 border border-slate-200 px-4 py-3.5 rounded-xl text-slate-900 text-sm outline-none focus:border-cyan-500 focus:bg-white transition font-medium">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-700 uppercase tracking-wider ml-1">ROLE PERMISSION (ยศ/สิทธิ์)</label>
+                        <select name="new_role" class="w-full bg-slate-50 border border-slate-300 px-3 py-3 rounded-xl text-slate-900 text-sm outline-none focus:border-cyan-600 focus:bg-white transition font-medium">
                             <option value="admin">Admin (ผู้ดูแลระบบทั่วไป)</option>
                             <option value="super_admin">Super Admin (ผู้ดูแลระบบสูงสุด)</option>
                         </select>
                     </div>
 
-                    <button type="submit" data-i18n="admin_add_btn" class="w-full py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 mt-4">
+                    <button type="submit" data-i18n="admin_add_btn" class="w-full py-3.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 mt-3 cursor-pointer">
                         <i class="fa-solid fa-user-plus"></i> LINK_ADMIN_IDENTITY
                     </button>
                 </form>
             </div>
 
             <!-- Admin List Table -->
-            <div class="cyber-card p-8 bg-white border border-slate-200 shadow-xl rounded-3xl lg:col-span-8">
-                <header class="flex justify-between items-center mb-8 pb-4 border-b border-slate-200">
+            <div class="cyber-card p-6 md:p-8 bg-white border border-slate-200 shadow-lg rounded-2xl lg:col-span-8">
+                <header class="flex justify-between items-center mb-6 pb-3 border-b border-slate-200">
                     <div>
-                        <h3 data-i18n="admin_authorized_ops" class="text-lg font-black text-slate-900 uppercase tracking-tight italic">Authorized_Operatives</h3>
-                        <p class="text-xs text-slate-500 mt-1">รายชื่อผู้ดูแลระบบทั้งหมดที่ได้รับอนุญาตในขณะนี้</p>
+                        <h3 data-i18n="admin_authorized_ops" class="text-base font-bold text-slate-900 uppercase tracking-tight font-['Orbitron']">Authorized_Operatives</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">รายชื่อผู้ดูแลระบบทั้งหมดที่ได้รับอนุญาตในขณะนี้</p>
                     </div>
-                    <span class="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">Total: {{ admins | length }}</span>
+                    <span class="text-xs font-mono font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-lg">Total: {{ admins | length }}</span>
                 </header>
                 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
-                        <thead class="text-[10px] text-slate-500 uppercase tracking-widest font-black border-b border-slate-200">
+                        <thead class="text-[11px] text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200 bg-slate-50">
                             <tr>
-                                <th data-i18n="admin_add_username" class="pb-4 px-4">USERNAME</th>
-                                <th data-i18n="admin_add_email" class="pb-4 px-4">EMAIL</th>
-                                <th data-i18n="admin_level" class="pb-4 px-4">ROLE</th>
-                                <th data-i18n="admin_table_actions" class="pb-4 px-4 text-right">ACTION</th>
+                                <th data-i18n="admin_add_username" class="py-3 px-4">USERNAME</th>
+                                <th data-i18n="admin_add_email" class="py-3 px-4">EMAIL</th>
+                                <th data-i18n="admin_level" class="py-3 px-4">ROLE</th>
+                                <th data-i18n="admin_table_actions" class="py-3 px-4 text-right">ACTION</th>
                             </tr>
                         </thead>
                         <tbody id="admin-table-body" class="divide-y divide-slate-100">
                             {% for a in admins %}
-                            <tr class="group hover:bg-slate-50/80 transition-colors">
-                                <td class="py-5 px-4 font-black text-slate-900 text-sm uppercase italic flex items-center gap-2">
-                                    <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center text-xs font-bold border border-slate-200">
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="py-4 px-4 font-bold text-slate-900 text-sm flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center text-xs font-bold border border-slate-200">
                                         <i class="fa-solid fa-user-gear"></i>
                                     </div>
                                     {{ a.username }}
                                 </td>
-                                <td class="py-5 px-4 text-xs font-mono text-slate-600">{{ a.email }}</td>
-                                <td class="py-5 px-4">
-                                    <span class="status-badge-{{ a.role }} px-3 py-1 rounded-full text-[10px] font-black uppercase border">
+                                <td class="py-4 px-4 text-xs font-mono text-slate-600">{{ a.email }}</td>
+                                <td class="py-4 px-4">
+                                    <span class="status-badge-{{ a.role }} px-2.5 py-1 rounded-full text-[10px] font-bold uppercase border">
                                         {{ a.role }}
                                     </span>
                                 </td>
-                                <td class="py-5 px-4 text-right">
+                                <td class="py-4 px-4 text-right">
                                     {% if a.role != 'super_admin' or a.email != admin.email %}
-                                    <button onclick="deleteAdmin('{{ a.email }}', '{{ a.username }}')" class="px-3 py-1.5 bg-rose-500/10 border border-rose-500/30 text-rose-600 rounded-lg text-xs font-bold hover:bg-rose-600 hover:text-white transition-all flex items-center gap-1 ml-auto">
+                                    <button onclick="deleteAdmin('{{ a.email }}', '{{ a.username }}')" class="px-3 py-1.5 bg-rose-50 border border-rose-300 text-rose-700 rounded-lg text-xs font-bold hover:bg-rose-600 hover:text-white transition-all flex items-center gap-1 ml-auto cursor-pointer">
                                         <i class="fa-solid fa-user-slash"></i> ลบแอดมิน
                                     </button>
                                     {% else %}
@@ -238,7 +235,7 @@
                             {% endfor %}
                             {% if not admins %}
                             <tr>
-                                <td colspan="4" class="py-12 text-center text-slate-500 font-mono italic text-sm">ไม่พบข้อมูลแอดมินในระบบ</td>
+                                <td colspan="4" class="py-8 text-center text-slate-500 font-mono italic text-sm">ไม่พบข้อมูลแอดมินในระบบ</td>
                             </tr>
                             {% endif %}
                         </tbody>
@@ -264,17 +261,16 @@
         background: #0f172a;
         border-color: #0f172a;
         color: #ffffff;
-        box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.2);
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
     }
-    .status-badge-new { background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.3); }
-    .status-badge-resolved { background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.3); }
-    .status-badge-rejected { background: rgba(244, 63, 94, 0.1); color: #e11d48; border-color: rgba(244, 63, 94, 0.3); }
-    .status-badge-super_admin { background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.3); }
-    .status-badge-admin { background: rgba(6, 182, 212, 0.1); color: #0891b2; border-color: rgba(6, 182, 212, 0.3); }
+    .status-badge-new, .status-badge-pending { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .status-badge-resolved { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .status-badge-rejected { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+    .status-badge-super_admin { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .status-badge-admin { background: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc; }
 </style>
 
 <script>
-    // Check URL query string for auto-selecting tab (e.g. ?tab=management)
     document.addEventListener("DOMContentLoaded", () => {
         const urlParams = new URLSearchParams(window.location.search);
         const tab = urlParams.get('tab');
@@ -321,8 +317,8 @@
                 title: 'เหตุผลการปฏิเสธ',
                 input: 'textarea',
                 inputPlaceholder: 'กรอกเหตุผลในการปฏิเสธรายงานนี้...',
-                background: '#0f172a',
-                color: '#fff',
+                background: '#ffffff',
+                color: '#0f172a',
                 showCancelButton: true
             });
             if (text === undefined) return;
@@ -341,8 +337,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#0284c7',
                 cancelButtonColor: '#64748b',
-                background: '#0f172a',
-                color: '#fff'
+                background: '#ffffff',
+                color: '#0f172a'
             });
 
             if (!result.isConfirmed) return;
@@ -357,8 +353,8 @@
                 Swal.fire({ 
                     icon: 'success', 
                     title: 'บันทึกรายการสำเร็จ', 
-                    background: '#0f172a', 
-                    color: '#fff', 
+                    background: '#ffffff', 
+                    color: '#0f172a', 
                     timer: 1200, 
                     showConfirmButton: false 
                 }).then(() => {
@@ -366,10 +362,10 @@
                 });
             } else {
                 const errData = await res.json();
-                Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: errData.error || 'Review failed' });
+                Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: errData.error || 'Review failed', background: '#ffffff', color: '#0f172a' });
             }
         } catch (e) {
-            Swal.fire({ icon: 'error', title: 'Action Failed', text: e.message });
+            Swal.fire({ icon: 'error', title: 'Action Failed', text: e.message, background: '#ffffff', color: '#0f172a' });
         }
     }
 
@@ -394,8 +390,8 @@
                         icon: 'success', 
                         title: 'เพิ่มแอดมินสำเร็จ!', 
                         text: 'สร้างบัญชีและสิทธิ์ผู้ดูแลระบบเรียบร้อยแล้ว',
-                        background: '#0f172a',
-                        color: '#fff'
+                        background: '#ffffff',
+                        color: '#0f172a'
                     }).then(() => {
                         window.location.href = '/admin/dashboard?tab=management';
                     });
@@ -404,8 +400,8 @@
                         icon: 'error', 
                         title: 'เพิ่มแอดมินไม่สำเร็จ', 
                         text: data.error || 'ไม่สามารถสร้างบัญชีแอดมินได้ (อาจมีอีเมลนี้อยู่แล้ว)',
-                        background: '#0f172a',
-                        color: '#fff'
+                        background: '#ffffff',
+                        color: '#0f172a'
                     });
                 }
             } catch (err) {
@@ -413,8 +409,8 @@
                     icon: 'error', 
                     title: 'การเชื่อมต่อผิดพลาด', 
                     text: err.message,
-                    background: '#0f172a',
-                    color: '#fff'
+                    background: '#ffffff',
+                    color: '#0f172a'
                 });
             }
         };
@@ -428,8 +424,8 @@
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
             cancelButtonColor: '#64748b',
-            background: '#0f172a',
-            color: '#fff',
+            background: '#ffffff',
+            color: '#0f172a',
             confirmButtonText: 'ลบบัญชีแอดมิน',
             cancelButtonText: 'ยกเลิก'
         });
@@ -448,8 +444,8 @@
                         icon: 'success', 
                         title: 'ลบแอดมินเรียบร้อย', 
                         text: 'ยกเลิกสิทธิ์การเข้าถึงระบบของบัญชีดังกล่าวแล้ว',
-                        background: '#0f172a',
-                        color: '#fff',
+                        background: '#ffffff',
+                        color: '#0f172a',
                         timer: 1500,
                         showConfirmButton: false
                     }).then(() => {
@@ -460,8 +456,8 @@
                         icon: 'error', 
                         title: 'ลบไม่สำเร็จ', 
                         text: data.error || 'ไม่สามารถลบบัญชีนี้ได้',
-                        background: '#0f172a',
-                        color: '#fff'
+                        background: '#ffffff',
+                        color: '#0f172a'
                     });
                 }
             } catch (err) {
@@ -469,8 +465,8 @@
                     icon: 'error', 
                     title: 'การเชื่อมต่อผิดพลาด', 
                     text: err.message,
-                    background: '#0f172a',
-                    color: '#fff'
+                    background: '#ffffff',
+                    color: '#0f172a'
                 });
             }
         }
