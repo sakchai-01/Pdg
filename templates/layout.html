@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PhishGuard Security{% endblock %}</title>
+
+    <!-- Essential Modern Tech Stack -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'never',
+            theme: {
+                extend: {}
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=lighttheme2024">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        /* Global Janis Mascot Animation */
+        @keyframes global-float-janis {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        
+        .global-janis-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 999;
+            /* Constraint: Unstoppable looping animation */
+            animation: global-float-janis 4s ease-in-out infinite !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .global-janis-btn:hover,
+        .global-janis-btn:active,
+        .global-janis-btn:focus {
+            /* Guarantee no pseudo-class overwrites the animation */
+            animation: global-float-janis 4s ease-in-out infinite !important;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-green-500 selection: !bg-white !text-gray-900" style="background-color: #ffffff !important; color: #0f172a !important;">
+
+    <!-- Design Foundation -->
+    <div class="cyber-grid-bg"></div>
+    <div class="cyber-particles"></div>
+
+    <!-- Smart Navigation Bar -->
+    <nav class="cyber-nav w-full sticky top-0 z-[100] border-b border-green-200 bg-white/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo with Micro-animation -->
+                <a href="/" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-600 to-emerald-600 rounded-xl flex items-center justify-center  shadow-lg group-hover:rotate-[10deg] transition-all duration-300">
+                        <i class="fa-solid fa-shield-halved text-2xl"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xl font-bold text-gray-900 tracking-widest uppercase">Phish<span class="text-green-600">Guard</span></span>
+                        <span class="text-[10px] text-gray-500 font-mono tracking-tighter">CYBER INTELLIGENCE</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu: Clean & Aesthetic -->
+                <div class="hidden lg:flex items-center space-x-2">
+                    <a href="/" class="nav-link" data-i18n="nav_home">Home</a>
+                    <a href="/about" class="nav-link" data-i18n="nav_about">About</a>
+                    <a href="/news" class="nav-link" data-i18n="nav_threats">Threats Feed</a>
+                    <a href="/chat" class="nav-link text-green-600 font-bold" data-i18n="nav_janis">Janis AI</a>
+                    <a href="/contact" class="nav-link" data-i18n="nav_contact">Support</a>
+                    <a href="/report" class="nav-link px-4 py-2 border border-red-500/30 text-red-500 hover:bg-red-500/10 rounded-lg" data-i18n="nav_report">Report Threat</a>
+                    
+                    <div class="h-6 w-[1px] bg-white/10 mx-2"></div>
+
+                    <!-- Discreet Admin Entry -->
+                    <a href="/admin/login" class="text-[8px] font-mono /10 hover:text-cyan-500/50 transition-all uppercase tracking-[0.2em] mr-4">
+                        [ADM]
+                    </a>
+                    
+                    <button onclick="toggleLanguage()" class="nav-link flex items-center gap-2 bg-white shadow-sm hover:bg-white/10 px-3 py-1.5 rounded-lg border border-slate-200">
+                        <i class="fa-solid fa-globe text-xs"></i> <span id="lang-label" class="font-mono text-xs font-bold uppercase">EN</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Header Trigger -->
+                <div class="lg:hidden">
+                    <button onclick="toggleMobileMenu()" class=" p-2">
+                        <i class="fa-solid fa-bars-staggered text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileMenu" class="lg:hidden fixed inset-0 z-[1001] bg-white/95 backdrop-blur-2xl translate-x-full transition-transform duration-300 font-['Kanit'] text-slate-950">
+        <div class="p-6 md:p-10 h-full overflow-y-auto flex flex-col relative max-w-lg mx-auto">
+            <!-- Branding/Close Header -->
+            <div class="flex justify-between items-center mb-8 relative z-10 pb-4 border-b-2 border-slate-950">
+                <div class="flex flex-col">
+                    <span class="text-slate-950 font-black uppercase tracking-widest text-sm md:text-base flex items-center gap-2" data-i18n="menu_title">
+                        <i class="fa-solid fa-bars text-green-600"></i> เมนูเข้าถึงด่วน
+                    </span>
+                    <span class="text-xs text-slate-600 font-medium mt-0.5" data-i18n="menu_sub">Direct Access Navigation</span>
+                </div>
+                <button onclick="toggleMobileMenu()" class="w-12 h-12 rounded-xl bg-white border-2 border-slate-950 flex items-center justify-center text-slate-950 hover:bg-green-600 hover:border-green-600 hover:text-white transition-all shadow-md">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links: Heroic Scale Button Blocks -->
+            <div class="flex flex-col gap-4 relative z-10">
+                <a href="/" class="p-5 rounded-2xl bg-white border-2 border-slate-950 hover:border-green-600 hover:bg-green-50 flex items-center justify-between group transition-all shadow-sm" onclick="toggleMobileMenu()">
+                    <div class="flex flex-col">
+                        <span class="text-xl md:text-2xl font-black text-slate-950 group-hover:text-green-600 transition-colors" data-i18n="menu_home">หน้าแรก</span>
+                        <span class="text-xs text-slate-600 group-hover:text-green-700 font-medium mt-0.5" data-i18n="menu_home_sub">กลับสู่หน้าหลัก</span>
+                    </div>
+                    <i class="fa-solid fa-house text-xl text-slate-950 group-hover:text-green-600 group-hover:scale-110 transition-all"></i>
+                </a>
+
+                <a href="/about" class="p-5 rounded-2xl bg-white border-2 border-slate-950 hover:border-green-600 hover:bg-green-50 flex items-center justify-between group transition-all shadow-sm" onclick="toggleMobileMenu()">
+                    <div class="flex flex-col">
+                        <span class="text-xl md:text-2xl font-black text-slate-950 group-hover:text-green-600 transition-colors" data-i18n="menu_about">เกี่ยวกับ</span>
+                        <span class="text-xs text-slate-600 group-hover:text-green-700 font-medium mt-0.5" data-i18n="menu_about_sub">พันธกิจด้านความปลอดภัย</span>
+                    </div>
+                    <i class="fa-solid fa-info-circle text-xl text-slate-950 group-hover:text-green-600 group-hover:scale-110 transition-all"></i>
+                </a>
+
+                <a href="/news" class="p-5 rounded-2xl bg-white border-2 border-slate-950 hover:border-green-600 hover:bg-green-50 flex items-center justify-between group transition-all shadow-sm" onclick="toggleMobileMenu()">
+                    <div class="flex flex-col">
+                        <span class="text-xl md:text-2xl font-black text-slate-950 group-hover:text-green-600 transition-colors" data-i18n="menu_threats">ข่าวภัยคุกคาม</span>
+                        <span class="text-xs text-slate-600 group-hover:text-green-700 font-medium mt-0.5" data-i18n="menu_threats_sub">อัปเดตข้อมูลภัยคุกคามล่าสุด</span>
+                    </div>
+                    <i class="fa-solid fa-satellite text-xl text-slate-950 group-hover:text-green-600 group-hover:scale-110 transition-all"></i>
+                </a>
+
+                <a href="/chat" class="p-5 rounded-2xl bg-white border-2 border-slate-950 hover:border-green-600 hover:bg-green-50 flex items-center justify-between group transition-all shadow-sm" onclick="toggleMobileMenu()">
+                    <div class="flex flex-col">
+                        <span class="text-xl md:text-2xl font-black text-slate-950 group-hover:text-green-600 transition-colors" data-i18n="menu_janis">JANIS AI</span>
+                        <span class="text-xs text-slate-600 group-hover:text-green-700 font-medium mt-0.5" data-i18n="menu_janis_sub">ผู้ช่วย AI ด้านความปลอดภัย</span>
+                    </div>
+                    <i class="fa-solid fa-brain text-xl text-slate-950 group-hover:text-green-600 group-hover:scale-110 transition-all"></i>
+                </a>
+
+                <a href="/contact" class="p-5 rounded-2xl bg-white border-2 border-slate-950 hover:border-green-600 hover:bg-green-50 flex items-center justify-between group transition-all shadow-sm" onclick="toggleMobileMenu()">
+                    <div class="flex flex-col">
+                        <span class="text-xl md:text-2xl font-black text-slate-950 group-hover:text-green-600 transition-colors" data-i18n="menu_contact">ศูนย์สนับสนุน</span>
+                        <span class="text-xs text-slate-600 group-hover:text-green-700 font-medium mt-0.5" data-i18n="menu_contact_sub">ความช่วยเหลือด้านเทคนิค</span>
+                    </div>
+                    <i class="fa-solid fa-headset text-xl text-slate-950 group-hover:text-green-600 group-hover:scale-110 transition-all"></i>
+                </a>
+
+                <a href="/report" class="p-5 rounded-2xl bg-white border-2 border-slate-950 hover:border-green-600 hover:bg-green-50 flex items-center justify-between group transition-all shadow-sm" onclick="toggleMobileMenu()">
+                    <div class="flex flex-col">
+                        <span class="text-xl md:text-2xl font-black text-slate-950 group-hover:text-green-600 transition-colors" data-i18n="menu_report">แจ้งภัยคุกคาม</span>
+                        <span class="text-xs text-slate-600 group-hover:text-green-700 font-medium mt-0.5" data-i18n="menu_report_sub">รายงานเบาะแสและภัยมิจฉาชีพ</span>
+                    </div>
+                    <i class="fa-solid fa-bolt text-xl text-slate-950 group-hover:text-green-600 group-hover:scale-110 transition-all"></i>
+                </a>
+            </div>
+
+            <!-- Footer/Settings: High Impact -->
+            <div class="mt-8 pt-6 border-t-2 border-slate-950 relative z-10">
+                 <button onclick="toggleLanguage(); toggleMobileMenu();" class="w-full py-4 rounded-xl border-2 border-slate-950 bg-white text-slate-950 hover:bg-green-600 hover:border-green-600 hover:text-white font-black text-sm uppercase tracking-wider flex items-center justify-center gap-3 transition-all shadow-md">
+                    <i class="fa-solid fa-globe text-lg"></i> <span data-i18n="menu_switch_lang">เปลี่ยนภาษา (SWITCH LANGUAGE)</span>
+                </button>
+                <div class="flex justify-between items-center mt-6 text-xs text-slate-600 font-mono font-bold">
+                    <span data-i18n="menu_node">Node: TH_BKK_01</span>
+                    <span data-i18n="menu_protocol">Protocol: V.2.0.4</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optimized Viewport Space -->
+    <main class="relative z-10 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Premium Footer Section -->
+    <footer class="mt-32 pt-16 pb-12 border-t border-gray-200 bg-gray-50/60 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center gap-2 mb-6">
+                    <i class="fa-solid fa-shield-halved text-cyan-400 text-xl"></i>
+                    <span class="text-lg font-bold " data-i18n="footer_brand">PHISHGUARD SECURITY</span>
+                </div>
+                <p class="text-gray-500 text-sm max-w-sm leading-relaxed" data-i18n="footer_desc">
+                    Leading the fight against online deception with advanced AI and community-driven intelligence.
+                </p>
+            </div>
+            <div>
+                <h4 class=" font-bold mb-4 text-sm uppercase tracking-widest" data-i18n="footer_solutions">Solutions</h4>
+                <ul class="text-gray-500 text-sm space-y-3">
+                    <li><a href="/chat" class="hover:text-cyan-400 transition" data-i18n="nav_janis">AI Consultant</a></li>
+                    <li><a href="/tools/ocr" class="hover:text-cyan-400 transition">OCR Analysis</a></li>
+                    <li><a href="/about" class="hover:text-cyan-400 transition" data-i18n="nav_about">About PhishGuard</a></li>
+                    <li><a href="/contact" class="hover:text-cyan-400 transition" data-i18n="nav_contact">Support Hub</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 text-center border-t border-slate-200 pt-8 text-[11px] text-gray-600 uppercase tracking-widest font-mono" data-i18n="footer_copy">
+            &copy; 2026 PHISHGUARD | BUILT BY SECURITY EXPERTS | ALL SYSTEMS OPERATIONAL <i class="fa-solid fa-circle text-[6px] text-green-500 animate-pulse ml-2"></i>
+        </div>
+    </footer>
+
+    <!-- Global Janis Mascot Floating Action Button - Restrained and Fluid for all devices -->
+    <a id="global-mascot-fab" href="/chat" class="global-janis-btn group 
+        bottom-4 left-4
+        md:bottom-6 md:left-6
+        lg:bottom-8 lg:left-8">
+        <!-- Mascot Image only (No Frame) -->
+        <!-- 
+            Breakpoints & Scaling Logic (Antidote Principles):
+            - Fluid sizing using clamp() to provide natural growth without breaking layouts.
+            - Max size restrained to 140px on Ultrawide to avoid dominating the screen.
+            - Purposeful drop shadow, smooth deceleration on hover.
+            - Seamlessly adapts to Smartphones, 16:10 Laptops, and 4K Desktops.
+        -->
+        <div class="relative h-auto drop-shadow-[0_10px_20px_rgba(186,230,253,0.3)] transform origin-bottom transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-2 group-hover:scale-105
+            w-[90px] sm:w-[100px] md:w-[120px] lg:w-[120px]">
+            
+            <img id="global-mascot-img" src="/static/images/janis/default.png" alt="Janis AI" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6134/6134346.png'" class="w-full h-auto object-contain block transition-all duration-300">
+        </div>
+    </a>
+
+    <script>
+       const translations = {
+    th: {
+        // Navigation & Mobile Menu
+        nav_home: "หน้าแรก",
+        nav_about: "เกี่ยวกับ",
+        nav_fb: "สแกนเฟซบุ๊ก",
+        nav_threats: "ข่าวภัยคุกคาม",
+        nav_janis: "Janis AI",
+        nav_contact: "ศูนย์สนับสนุน",
+        nav_report: "แจ้งภัยคุกคาม",
+        nav_lang: "TH",
+
+        menu_title: "เมนู",
+        menu_sub: "เมนูเข้าถึงด่วน",
+        menu_home: "หน้าแรก",
+        menu_home_sub: "กลับสู่หน้าหลัก",
+        menu_about: "เกี่ยวกับ",
+        menu_about_sub: "พันธกิจด้านความปลอดภัย",
+        menu_fb: "สแกนเฟซบุ๊ก",
+        menu_fb_sub: "ระบบวิเคราะห์ข้อมูลโซเชียล (OSINT)",
+        menu_threats: "ข่าวภัยคุกคาม",
+        menu_threats_sub: "อัปเดตข้อมูลภัยคุกคามล่าสุด",
+        menu_janis: "Janis AI",
+        menu_janis_sub: "ผู้ช่วย AI ด้านความปลอดภัย",
+        menu_contact: "ศูนย์สนับสนุน",
+        menu_contact_sub: "ความช่วยเหลือด้านเทคนิค",
+        menu_report: "แจ้งภัยคุกคาม",
+        menu_report_sub: "ช่องทางแจ้งเหตุฉุกเฉิน",
+        menu_switch_lang: "เปลี่ยนภาษา",
+        menu_node: "เซิร์ฟเวอร์: TH_BKK_01",
+        menu_protocol: "เวอร์ชันระบบ: 2.0.4",
+        // Footer
+        footer_brand: "PHISHGUARD SECURITY",
+        footer_desc: "ผู้นำด้านการต่อต้านการหลอกลวงออนไลน์ด้วย AI ขั้นสูงและข่าวกรองจากชุมชน",
+        footer_solutions: "บริการของเรา",
+        footer_copy: "&copy; 2026 PHISHGUARD | สร้างโดยนักศึกษาสาขาวิศวกรรมคอมพิวเตอร์ คณะเทคโนโลยีอุตสาหกรรม มหาวิทยาลัยราชภัฏพิบูลสงคราม | ระบบปกติดี",
+        // Shared Buttons / UI Elements
+        btn_execute: "เริ่มตรวจสอบ",
+        btn_scanning: "กำลังวิเคราะห์...",
+        placeholder_url: "ใส่ URL ที่น่าสงสัยเพื่อเริ่มตรวจสอบเชิงลึก...",
+        // Dashboard (index.html)
+        hero_title: `PHISH<span class="text-gradient">GUARD</span><br><span class="/20 select-none">CYBER COMMAND.</span>`,
+        hero_desc: "ระบบตรวจจับและป้องกันการหลอกลวงออนไลน์ ปกป้องทุกธุรกรรมดิจิทัลของคุณด้วยปัญญาประดิษฐ์วิเคราะห์แบบเรียลไทม์",
+        scanner_neural_active: "ระบบวิเคราะห์ AI พร้อมทำงาน",
+        scanner_neural_status: "สถานะระบบ: ปกติ",
+        scanner_waiting: "กำลังรอข้อมูล...",
+        tactical_title: `Tactical <span class="text-cyan-500">Modules</span>`,
+        tactical_sub: "องค์ประกอบของระบบ Janis",
+        card_janis_desc: "ผู้ช่วย AI สำหรับวิเคราะห์พฤติกรรมมิจฉาชีพเชิงลึก",
+        card_fb_desc: "ตรวจสอบเพจปลอม โปรไฟล์สวมรอย และพฤติกรรมผิดปกติบนโซเชียลมีเดีย",
+        card_ocr_desc: "วิเคราะห์ข้อความจากภาพสกรีนช็อต เพื่อจับกลโกงในข้อความแชท",
+        card_report_desc: "ร่วมสร้างฐานข้อมูลภัยคุกคามด้วยการแจ้งเบาะแสการหลอกลวงใหม่ๆ",
+
+        // Scanner Results
+        status_processing: "กำลังประมวลผล...",
+        status_secure: "ปลอดภัย",
+        status_secure_desc: "ผลการวิเคราะห์ตรงกับรูปแบบโดเมนที่ถูกต้อง ไม่พบพฤติกรรมที่เป็นอันตราย",
+        status_threat: "ภัยคุกคาม",
+        status_threat_desc: "ตรวจพบสัญญาณความเสี่ยงสูง มีแนวโน้มพยายามดักจับข้อมูลผู้ใช้",
+        risk_coefficient: "ระดับความเสี่ยง",
+        entity_target: "เป้าหมายการโจมตี",
+        protection_mode: "โหมดการป้องกัน",
+        indicator_breakdown: "รายละเอียดปัจจัยเสี่ยงที่ตรวจพบ",
+        autoblock_rec: "แนะนำให้บล็อกอัตโนมัติ",
+        // Scanner Results
+        // Janis AI (chat.html)
+        chat_encryption: "การเข้ารหัส: AES-4096-ECC",
+        chat_latency: "ความหน่วง",
+        chat_neural_load: "โหลดระบบประมวลผล",
+        chat_greeting: `ดิฉันคือ <b class="text-violet-400">Janis AI</b> พร้อมช่วยวิเคราะห์ข้อมูล ให้คำปรึกษาด้านความปลอดภัยไซเบอร์ หรือตรวจสอบเบาะแสที่น่าสงสัยได้ทันทีค่ะ`,
+        chat_intel_node: "โหนดข่าวกรอง: BK-01",
+        chat_ver: "เวอร์ชัน: 2.5.8-STABLE",
+        chat_syncing: "กำลังเชื่อมต่อระบบ...",
+        chat_placeholder: "ส่งข้อความหรือวางข้อมูลเพื่อวิเคราะห์...",
+        chat_neural_limits: "ข้อจำกัดของระบบ",
+        chat_neural_limits_desc: "Janis AI เป็นโมเดลภาษาที่ปรับแต่งเพื่อความปลอดภัยโดยเฉพาะ ข้อมูลบางอย่างอาจคลาดเคลื่อน โปรดตรวจสอบกับแหล่งข้อมูลทางการ",
+        chat_data_privacy: "ความเป็นส่วนตัว",
+        chat_data_privacy_desc: "บทสนทนาจะถูกนำไปใช้ปรับปรุงการตรวจจับโดยไม่ระบุตัวตน ข้อมูลส่วนบุคคลของคุณจะยังคงเป็นความลับ",
+        chat_global_intel: "ข่าวกรองระดับโลก",
+        chat_global_intel_desc: "เชื่อมต่อกับ Global Threat Feed เพื่ออัปเดตข้อมูลมิจฉาชีพแบบเรียลไทม์ แจ้งเตือนภัยใหม่ได้ทันที",
+        chat_history_purged: "ล้างประวัติการสนทนาแล้ว",
+        chat_label_analysis: "ผลการวิเคราะห์",
+        chat_indicator_breakdown: "ดัชนีชี้วัดที่ตรวจพบ",
+        // OCR Vision (ocr.html)
+        ocr_header_desc: "เทคโนโลยีสกัดข้อความจากภาพด้วย AI ขั้นสูง เพื่อวิเคราะห์ลิงก์และเนื้อหาแฝงในภาพหลักฐาน",
+        ocr_init_upload: "เลือกไฟล์เพื่ออัปโหลด",
+        ocr_max_payload: "ขนาดสูงสุด: 10MB // ฟอร์แมต: JPG, PNG, WEBP",
+        ocr_select_source: "เลือกแหล่งข้อมูล",
+        ocr_neural_decoder: "ระบบถอดข้อความกำลังทำงาน",
+        ocr_status_mapping: "กำลังประมวลผลข้อมูลภาพ...",
+        ocr_status_reading: "กำลังอ่านบัฟเฟอร์รูปภาพ...",
+        ocr_status_sharpening: "กำลังปรับความคมชัดด้วยอัลกอริทึม...",
+        ocr_status_recognition: "กำลังอ่านข้อความด้วย AI...",
+        ocr_status_cross_ref: "กำลังอ้างอิงข้อมูลข่าวกรอง...",
+        ocr_status_finalizing: "กำลังสรุปผลลัพธ์...",
+        ocr_terminal_title: "ผลลัพธ์การตรวจสอบ",
+        ocr_detection_complete: "ตรวจจับข้อมูลในภาพเสร็จสิ้น",
+        ocr_copy_trace: "คัดลอกผลลัพธ์",
+        ocr_how_it_works: "หลักการทำงาน",
+        ocr_how_it_works_desc: "ใช้ AI กลุ่ม CNN ร่วมกับ Tesseract-Engine เพื่อถอดรหัสข้อความจากพิกเซล แม้ภาพจะเบลอหรือเอียง ระบบจะปรับโครงสร้างใหม่เพื่อความแม่นยำสูง",
+        ocr_rapid_response: "การตอบสนองที่รวดเร็ว",
+        ocr_rapid_response_desc: "หากพบ URL หรือคีย์เวิร์ดที่ตรงกับรายชื่อภัยคุกคาม ข้อมูลจะถูกส่งเข้าระบบบล็อกกลางทันทีเพื่อป้องกันผู้ใช้รายอื่น",
+        // Report Center (report.html)
+        // Report Center (report.html)
+        report_header_desc: "ช่องทางแจ้งเบาะแสมิจฉาชีพเข้าสู่ฐานข้อมูลกลาง ทุกรายการจะถูกตรวจสอบโดย AI และทีมวิเคราะห์ความปลอดภัย",
+        report_id_auth: "การยืนยันตัวตน",
+        report_id_auth_desc: "ยืนยันตัวตนผู้รายงานด้วย Google เพื่อคัดกรองข้อมูลเท็จ",
+        report_submitter_id: "ไอดีผู้ส่ง",
+        report_waiting_auth: "กำลังรอการยืนยัน...",
+        report_threat_vector: "ช่องทางภัยคุกคาม",
+        report_fake_web: "หน้าเว็บปลอม",
+        report_sms: "SMS หลอกลวง",
+        report_email: "อีเมลมิจฉาชีพ",
+        report_other: "ภัยคุกคามอื่นๆ",
+        report_target_data: "ข้อมูลเป้าหมาย (URL / เบอร์ / ไอดี)",
+        report_tactical_obs: "รายละเอียดเพิ่มเติม",
+        report_tactical_obs_placeholder: "กรุณาระบุรายละเอียดการหลอกลวงที่พบ เช่น เว็บไซต์แอบอ้างธนาคาร หรือ SMS แจ้งรางวัล",
+        report_verify_before: "ต้องยืนยันตัวตนก่อนส่งข้อมูล",
+        report_transmit_btn: "ส่งรายงาน",
+        report_secure_id: "ไอดีปลอดภัย",
+        report_secure_id_desc: "ข้อมูลผู้แจ้งเบาะแสจะถูกเข้ารหัสและรักษาเป็นความลับสูงสุดตามมาตรฐานสากล",
+        report_ai_sync: "ซิงค์กับ AI",
+        report_ai_sync_desc: "ข้อมูลจะถูกประมวลผลทันทีโดย Janis AI เพื่อป้องกันผู้ใช้รายอื่น",
+        report_global_feed: "ฟีดระดับโลก",
+        report_global_feed_desc: "เบาะแสจะถูกอัปเดตเข้าสู่ฐานข้อมูลความปลอดภัยทันที",
+        // Threat Feed (news.html)
+        news_header_desc: "ศูนย์กลางข้อมูลการโจมตีทางไซเบอร์ เจาะลึกกลโกงล่าสุด และรายงานข้อมูลเสริมจาก Janis AI",
+        news_init_decode: "เริ่มการถอดรหัส",
+        news_title_1: "ระวัง! เพจปลอมระบาดหนัก แอบอ้างหน่วยงานรัฐ",
+        news_desc_1: "มิจฉาชีพสร้างเพจปลอมของหน่วยงานราชการและธนาคาร พยายามเข้าถึงข้อมูลพิกัดและบัญชีผ่านแอปดูดเงิน...",
+        news_title_2: "ภัยแฝง! กลโกง Line 'ยืมเงินเพื่อน' แบบแนบเนียน",
+        news_desc_2: "เตือนภัยสวมรอยบัญชี Line ทักแชทหลอกยืมเงินแบบเร่งด่วน หากได้รับคำขอโอนเงินโปรดยืนยันตัวตนก่อน...",
+        news_title_3: "คำเตือน AI! วิดีโอคอลปลอม (Deepfake) ขั้นสูง",
+        news_desc_3: "มิจฉาชีพยกระดับการหลอกลวงด้วย AI เพื่อเลียนแบบเสียงและใบหน้าอย่างสมจริง...",
+        news_title_4: "สกัดกลโกง 'อีเมลฟิชชิ่ง' องค์กร",
+        news_desc_4: "การเจาะระบบอีเมลธุรกิจเพื่อหลอกโอนเงินข้ามประเทศ...",
+        news_title_5: "Typosquatting: หน้าเว็บเลียนแบบ",
+        news_desc_5: "ตรวจสอบจุดบอดของ URL และโดเมนปลอมที่ใช้แอบอ้างแบรนด์หลัก...",
+        news_title_6: "ตรวจสอบข้อเท็จจริง: รับมือกระแสข่าวปลอม",
+        news_desc_6: "ข้อมูลเท็จและการปั่นกระแสข่าวเพื่อผลประโยชน์แอบแฝง...",
+        // About Phishing (about.html)
+        about_header_desc: "ทำความเข้าใจกลยุทธ์มิจฉาชีพทางไซเบอร์ และสร้างเกราะป้องกันตัวเองด้วยข้อมูลล่าสุดจากยุคดิจิทัล",
+        about_phishing_bold: "Phishing (ฟิชชิง)",
+        about_phishing_def: "คือกลยุทธ์หลอกลวงทางจิตวิทยาที่มิจฉาชีพใช้บ่อยที่สุด โดยปลอมแปลงตัวตนเป็นบุคคลหรือองค์กรที่น่าเชื่อถือ เพื่อหลอกล่อให้เหยื่อส่งมอบ 'กุญแจสำคัญ' เช่น รหัสผ่านหรือข้อมูลทางการเงิน",
+        about_scammer_rule: "'สร้างความกลัว เร่งให้ตัดสินใจ และลดการระมัดระวัง' คือกลยุทธ์หลักของสแกมเมอร์",
+        about_email_phishing_desc: "การส่งอีเมลปลอมที่แนบลิงก์อันตราย เพื่อหลอกล่อให้เหยื่อเข้าสู่หน้าเว็บดักข้อมูลที่เหมือนของจริงจนแยกไม่ออก",
+        about_web_phishing_desc: "การจดโดเมนที่ใกล้เคียงหรือใช้การพรางตัว URL เพื่อหลอกให้เหยื่อกรอกข้อมูลลงในฟอร์มของมิจฉาชีพโดยตรง",
+        about_smishing_desc: "ใช้ข้อความ SMS กระตุ้นความโลภหรือความกลัว เพื่อให้เหยื่อรีบเปิดลิงก์โดยไม่ทันคิด",
+        about_vishing_desc: "แก๊งคอลเซ็นเตอร์ที่อ้างเป็นเจ้าหน้าที่เพื่อข่มขู่หรือโน้มน้าวให้โอนเงินหรือให้รหัส OTP",
+        about_roadmap_1_title: "ตรวจสอบ URL",
+        about_roadmap_1_desc: "ตรวจสอบตัวสะกดของโดเมนเนมทุกตัวอักษร มิจฉาชีพมักใช้ตัวอักษรคล้ายกันเพื่อตบตา",
+        about_roadmap_2_title: "อย่าคลิกลิงก์ที่ไม่น่าไว้ใจ",
+        about_roadmap_2_desc: "หลีกเลี่ยงการเปิดลิงก์จากอีเมลหรือแชทที่ไม่รู้จัก ให้พิมพ์ชื่อเว็บไซต์เองโดยตรง",
+        about_roadmap_3_title: "ใช้การยืนยันตัวตนสองชั้น",
+        about_roadmap_3_desc: "เปิดใช้งาน MFA ทุกบัญชีสำคัญ เพื่อเป็นด่านสุดท้ายหากรหัสผ่านหลุดรอด",
+        about_roadmap_4_title: "ใช้เครื่องมือ AI ช่วยตรวจสอบ",
+        about_roadmap_4_desc: "ใช้เครื่องมือจาก PhishGuard เพื่อสแกนลิงก์ก่อนดำเนินการใดๆ เพื่อประเมินความเสี่ยง",
+        about_return_btn: "กลับสู่หน้าแรก",
+        // Support Hub (contact.html)
+        contact_header_desc: "ศูนย์กลางการสนับสนุน ปรึกษาผู้เชี่ยวชาญ และเข้าถึงฐานข้อมูลการแก้ปัญหาเชิงเทคนิคแบบครบวงจร",
+        contact_dev_title: "เจ้าหน้าที่พัฒนาระบบ",
+        contact_dev_desc: "ติดต่อทีมหลักเพื่อแจ้งช่องโหว่ หรือประสานงานด้าน API และโครงสร้างพื้นฐานข้ามแพลตฟอร์ม",
+        contact_dev_btn: "ติดต่อทีมพัฒนา",
+        contact_faq_title: "คำถามที่พบบ่อย",
+        contact_faq_desc: "คลังข้อมูลคำถามพบบ่อย คู่มือการใช้งาน และคำแนะนำการตั้งค่าความปลอดภัยเบื้องต้น",
+        contact_faq_btn: "ดูคำถามที่พบบ่อย",
+        contact_qa_title: "ชุมชนผู้ใช้งาน",
+        contact_qa_desc: "เครือข่ายแลกเปลี่ยนข้อมูลความปลอดภัยแบบเรียลไทม์ร่วมกับชุมชน เพื่อเฝ้าระวังภัย",
+        contact_qa_btn: "เข้าร่วมชุมชน",
+        contact_home_base: "กลับหน้าหลัก",
+        // Header Components (Badges & Titles)
+        hdr_home_badge: "LIVE_THREAT_SCANNER_PROTOCOL",
+        hdr_home_title: `PHISH<span class="text-gradient">GUARD</span><br><span class="/20 select-none">ตรวจจับภัยคุกคาม.</span>`,
+        hdr_fb_badge: "FACEBOOK_THREAT_DETECTION",
+        hdr_fb_title: `FACEBOOK <span class="text-gradient">DETECTOR.</span>`,
+        hdr_chat_badge: "JANIS_AI_INTELLIGENCE",
+        hdr_chat_title: `JANIS <span class="text-gradient">AI.</span>`,
+        hdr_ocr_badge: "COMPUTER_VISION_SUBSYSTEM",
+        hdr_ocr_title: `OCR <span class="text-gradient">VISION.</span>`,
+        hdr_zd_badge: "HEURISTIC_ANALYSIS_ACTIVE",
+        hdr_zd_title: `ZERO-DAY <span class="text-gradient">HEURISTIC.</span>`,
+        hdr_report_badge: "GLOBAL_THREAT_REPORTING",
+        hdr_report_title: `REPORT <span class="text-gradient">CENTER.</span>`,
+        hdr_news_badge: "LIVE_THREAT_INTELLIGENCE_STREAM",
+        hdr_news_title: `THREAT <span class="text-gradient">FEED.</span>`,
+        hdr_about_badge: "SECURE_LEARNING_PROTOCOL_ACTIVE",
+        hdr_about_title: `PHISHGUARD <span class="text-gradient">MISSION.</span>`,
+        hdr_contact_badge: "INTELLIGENCE_SUPPORT_ESTABLISHED",
+        hdr_contact_title: `SUPPORT <span class="text-gradient">HUB.</span>`,
+        // Admin System (admin_login.html & admin_dashboard.html)
+        admin_login_badge: "ADMIN_ACCESS_PROTOCOL",
+        admin_login_title: `NEURAL <span class="text-gradient">CORE.</span>`,
+        admin_step_1: "ขั้นตอนที่ 01: การยืนยันตัวตน",
+        admin_step_2: "ขั้นตอนที่ 02: รหัสผ่านผู้ดูแลระบบ",
+        admin_waiting_token: "กำลังรอรหัสยืนยันตัวตน...",
+        admin_enter_secret: "ป้อนรหัสผ่านผู้ดูแลระบบ",
+        admin_login_btn: "เข้าสู่ระบบ",
+        admin_dash_badge: "ศูนย์บัญชาการระบบ :: ใช้งานอยู่",
+        admin_dash_title: `แผงควบคุม <span class="text-gradient">ผู้ดูแลระบบ.</span>`,
+        admin_operator: "เจ้าหน้าที่",
+        admin_level: "ระดับสิทธิ์",
+        admin_terminate_session: "ออกจากระบบ",
+        admin_tab_moderation: "การจัดการรายงาน",
+        admin_tab_management: "การจัดการผู้ดูแลระบบ",
+        admin_pending_reports: "รายงานภัยคุกคามที่รอการตรวจสอบ",
+        admin_awaiting_verify: "รอการตรวจสอบยืนยัน",
+        admin_table_timestamp: "เวลา",
+        admin_table_url: "ลิงก์เป้าหมาย",
+        admin_table_type: "ประเภท",
+        admin_table_submitter: "ผู้ส่ง",
+        admin_table_status: "สถานะ",
+        admin_table_actions: "การดำเนินการ",
+        admin_no_reports: "ไม่พบภัยคุกคามที่ค้างอยู่",
+        admin_init_new: "เพิ่มผู้ดูแลระบบใหม่",
+        admin_init_new_desc: "เพิ่มเจ้าหน้าที่เข้าสู่ระบบการจัดการ",
+        admin_authorized_ops: "เจ้าหน้าที่ที่ได้รับอนุญาต",
+        admin_add_username: "ชื่อผู้ใช้งาน",
+        admin_add_email: "อีเมล Google",
+        admin_add_password: "รหัสผ่านระบบ",
+        admin_add_btn: "เพิ่มผู้ดูแลระบบ",
+
+        // JS Messages
+        admin_msg_token_accepted: "ยอมรับรหัสยืนยันแล้ว",
+        admin_msg_provide_key: "ยืนยันตัวตนสำเร็จ กรุณาป้อนรหัสผ่านระบบ",
+        admin_msg_identity_locked: "ยืนยันตัวตน: ",
+        admin_msg_access_granted: "อนุญาตการเข้าถึง",
+        admin_msg_sync_core: "กำลังเชื่อมต่อกับระบบ...",
+        admin_msg_access_denied: "ปฏิเสธการเข้าถึง",
+        admin_msg_comms_failure: "การเชื่อมต่อขัดข้อง",
+        admin_msg_reach_failed: "ไม่สามารถเชื่อมต่อกับระบบได้",
+        admin_msg_confirm_action: "ยืนยันการดำเนินการนี้หรือไม่?",
+        admin_msg_confirm_safe: "ยืนยันว่า URL นี้ปลอดภัย (SAFE) ใช่หรือไม่?",
+        admin_msg_confirm_phish: "ยืนยันว่า URL นี้เป็นอันตราย (PHISHING) ใช่หรือไม่?",
+        admin_msg_mod_success: "ดำเนินการสำเร็จ",
+        admin_msg_rejection_title: "เหตุผลการปฏิเสธ",
+        admin_msg_rejection_placeholder: "ระบุเหตุผลการปฏิเสธ...",
+        admin_msg_delete_admin: "ยกเลิกสิทธิ์เข้าใช้งานสำหรับ ",
+        admin_msg_terminate_id: "ยืนยันการยกเลิกสิทธิ์เจ้าหน้าที่คนนี้?",
+        admin_btn_safe: "ปลอดภัย",
+        admin_btn_phish: "อันตราย",
+        admin_btn_reject: "ปฏิเสธ",
+    },
+    en: {
+        // Navigation & Mobile Menu
+        nav_home: "Home",
+        nav_about: "About",
+        nav_fb: "FB Scanner",
+        nav_threats: "Threats Feed",
+        nav_janis: "Janis AI",
+        nav_contact: "Support",
+        nav_report: "Report Threat",
+        nav_lang: "EN",
+        menu_title: "COMMAND_MENU",
+        menu_sub: "Direct_Access_Terminal",
+        menu_home: "Home",
+        menu_home_sub: "Return_To_Base",
+        menu_about: "About",
+        menu_about_sub: "Mission_Intelligence",
+        menu_fb: "FB Scanner",
+        menu_fb_sub: "Social_OSINT_Array",
+        menu_threats: "Threats Feed",
+        menu_threats_sub: "Live_Satellite_Deep_Intel",
+        menu_janis: "Janis AI",
+        menu_janis_sub: "Neural_Core_Uplink",
+        menu_contact: "Support Hub",
+        menu_contact_sub: "Tactical_Intelligence_Assistance",
+        menu_report: "Report Threat",
+        menu_report_sub: "Emergency_Bypass_Switch",
+        menu_switch_lang: "SWITCH_LANGUAGE",
+        menu_node: "Node: TH_BKK_01",
+        menu_protocol: "Protocol: V.2.0.4",
+        // Footer
+        footer_brand: "PHISHGUARD SECURITY",
+        footer_desc: "Leading the fight against online deception with advanced AI and community-driven intelligence.",
+        footer_solutions: "Solutions",
+        footer_copy: "&copy; 2026 PHISHGUARD | BUILT BY SECURITY EXPERTS | ALL SYSTEMS OPERATIONAL",
+        // Shared Buttons / UI Elements
+        btn_execute: "EXECUTE_SCAN",
+        btn_scanning: "ANALYZING...",
+        placeholder_url: "ENTER SUSPICIOUS URL FOR DEEP ANALYSIS...",
+        // Dashboard (index.html)
+        hero_title: `PHISH<span class="text-gradient">GUARD</span><br><span class="/20 select-none">CYBER COMMAND.</span>`,
+        hero_desc: "Advanced Phishing Command Center. Protecting every digital transaction with real-time AI-powered analysis.",
+        scanner_neural_active: "NEURAL_NETWORK_ANALYSIS_ACTIVE",
+        scanner_neural_status: "Neural Core: Operational",
+        scanner_waiting: "Waiting for Input...",
+        tactical_title: `Tactical <span class="text-cyan-500">Modules</span>`,
+        tactical_sub: "Janis Ecosystem Infrastructure",
+        card_janis_desc: "Central neural hub for deep AI analysis of fraudulent patterns.",
+        card_fb_desc: "Detect fake pages, impersonation profiles, and social engineering behaviors.",
+        card_ocr_desc: "Analyze screenshot text to capture scams within chat messages.",
+        card_report_desc: "Contribute to the threat intelligence database with new reports.",
+        // Scanner Results
+        status_processing: "Processing...",
+        status_secure: "SECURE",
+        status_secure_desc: "Neural signatures match legitimate domain patterns. No malicious behavior detected.",
+        status_threat: "THREAT",
+        status_threat_desc: "High-risk neural fingerprints identified. User data redirection likely.",
+        risk_coefficient: "Risk Coefficient",
+        entity_target: "Entity Target",
+        protection_mode: "Protection Mode",
+        indicator_breakdown: "Indicator Breakdown",
+        autoblock_rec: "AUTOBLOCK_RECOMMENDED",
+        // Scanner Results
+        // Janis AI (chat.html)
+        chat_encryption: "Encryption: AES-4096-ECC",
+        chat_latency: "Latency",
+        chat_neural_load: "Neural_Load",
+        chat_greeting: `Janis <b class="text-violet-400">AI Core</b> online. I am ready to analyze data, consult on cybersecurity, or investigate suspicious leads immediately.`,
+        chat_intel_node: "Intelligence_node: BK-01",
+        chat_ver: "Ver: 2.5.8-STABLE",
+        chat_syncing: "SYNCING NEURAL PATHWAYS...",
+        chat_placeholder: "TRANSMIT MESSAGE OR PASTE DATA FOR ANALYSIS...",
+        chat_neural_limits: "NEURAL_LIMITS",
+        chat_neural_limits_desc: "Janis AI is a large language model fine-tuned for security. Some info may vary; please verify with official sources.",
+        chat_data_privacy: "DATA_PRIVACY",
+        chat_data_privacy_desc: "Conversations are used for anonymized threat detection improvements. Your personal data remains confidential.",
+        chat_global_intel: "GLOBAL_INTEL",
+        chat_global_intel_desc: "Connected to Global Threat Feed for real-time scam updates, enabling instant alerts for new threats.",
+        chat_history_purged: "HISTORY_BUFFER_PURGED",
+        chat_label_analysis: "COMPUTE_ANALYSIS_ARRAY",
+        chat_indicator_breakdown: "Detected Indicators",
+        // OCR Vision (ocr.html)
+        ocr_header_desc: "Advanced AI-powered OCR technology to extract text and analyze embedded links/content in evidence images.",
+        ocr_init_upload: "INITIALIZE_UPLOAD",
+        ocr_max_payload: "MAX_PAYLOAD: 10MB // FORMATS: JPG, PNG, WEBP",
+        ocr_select_source: "SELECT_DATA_SOURCE",
+        ocr_neural_decoder: "NEURAL_DECODER_ACTIVE",
+        ocr_status_mapping: "MAPPING_PIXEL_INTEL...",
+        ocr_status_reading: "READING_IMAGE_BUFFER...",
+        ocr_status_sharpening: "ALGORITHMIC_SHARPENING...",
+        ocr_status_recognition: "OCR_NEURAL_RECOGNITION...",
+        ocr_status_cross_ref: "CROSS_REFERENCING_INTEL...",
+        ocr_status_finalizing: "FINALIZING_DATA_MODEL...",
+        ocr_terminal_title: "INTELLIGENCE_OUTPUT_TERMINAL",
+        ocr_detection_complete: "IMAGE_DETECTION_SEQUENCE_COMPLETE",
+        ocr_copy_trace: "COPY_TRACE_LOG_DATA",
+        ocr_how_it_works: "HOW_IT_WORKS",
+        ocr_how_it_works_desc: "VISION utilizes AI models like Convolutional Neural Networks (CNN) with Tesseract-Engine to decode text from pixel differences. Even blurred or tilted images are reconstructed for maximum accuracy.",
+        ocr_rapid_response: "RAPID_RESPONSE",
+        ocr_rapid_response_desc: "If URLs or keywords matching the Threat-List monitored by Janis AI are detected, data is immediately sent to the central blocker to protect other PhishGuard users.",
+        // Report Center (report.html)
+        // Report Center (report.html)
+        report_header_desc: "High-level communication channel to transmit scam leads to the central database. All entries are reviewed by AI and security analysts.",
+        report_id_auth: "Identity Authentication",
+        report_id_auth_desc: "Verify submitter identity with Google for SPAM filtering.",
+        report_submitter_id: "SUBMITTER_ID",
+        report_waiting_auth: "WAITING_FOR_AUTH...",
+        report_threat_vector: "THREAT_VECTOR",
+        report_fake_web: "PHISHING_SITE",
+        report_sms: "SMISHING_SMS",
+        report_email: "EMAIL_SPOOF",
+        report_other: "UNSPECIFIED_BREACH",
+        report_target_data: "TARGET_DATA_STRING (URL / PHONE / ID)",
+        report_tactical_obs: "TACTICAL_OBSERVATIONS",
+        report_tactical_obs_placeholder: "Describe the scam details, e.g., bank impersonation site or award winning SMS...",
+        report_verify_before: "VERIFY_IDENTITY_BEFORE_TRANSMIT",
+        report_transmit_btn: "TRANSMIT_INTELLIGENCE_REPORT",
+        report_secure_id: "SECURE_ID",
+        report_secure_id_desc: "Submitter data is encrypted and kept under maximum confidentiality per international standards.",
+        report_ai_sync: "AI_SYNC",
+        report_ai_sync_desc: "Data sets are immediately processed by Janis AI to enhance protection for other users.",
+        report_global_feed: "GLOBAL_FEED",
+        report_global_feed_desc: "Verified leads are updated in the global security database instantly.",
+        // Threat Feed (news.html)
+        news_header_desc: "Hub for cyber attack data, deep dives into latest scams, and reports from the Janis AI security network.",
+        news_init_decode: "INITIATE_DECODING",
+        news_title_1: "Warning! Fake Pages Spreading, Impersonating Gov Agencies",
+        news_desc_1: "Scammers create clones of government and bank entities to access location and accounts via money-draining apps...",
+        news_title_2: "Hidden Threat! 'Borrowing from Friends' Line Scam",
+        news_desc_2: "Alert for hijacked Line accounts asking for urgent money. Verify identity before transferring to anyone...",
+        news_title_3: "AI WARNING! Advanced Deepfake Video Calls",
+        news_desc_3: "Scammers upgrade tricks using AI for realistic voice and face synthesis...",
+        news_title_4: "Blocking Corporate 'Email Phishing'",
+        news_desc_4: "Business email compromise for international money transfer fraud...",
+        news_title_5: "Typosquatting: Look-alike Websites",
+        news_desc_5: "Analyzing URL blind spots and fake domains used to mimic major brands...",
+        news_title_6: "FACT_CHECK: Dealing with Fake News Storms",
+        news_desc_6: "False info and news manipulation for hidden political and economic interests...",
+        // About Phishing (about.html)
+        about_header_desc: "Decode cyber scam strategies and build your defense with the latest digital intelligence.",
+        about_phishing_bold: "Phishing",
+        about_phishing_def: "is the ultimate psychological weapon for scammers, impersonating trusted entities to trick victims into handing over 'Master Keys' like passwords or financial data.",
+        about_scammer_rule: "'Exploit fear, rush decisions, and break down caution' - the scammer's golden rule.",
+        about_email_phishing_desc: "Sending fake messages with malicious links to lure victims into remarkably realistic data-trapping sites.",
+        about_web_phishing_desc: "Using look-alike domains (Typosquatting) or URL masking to trick victims into submitting data directly.",
+        about_smishing_desc: "Using SMS to trigger greed (prizes) or fear (locked accounts) so victims automatically open links.",
+        about_vishing_desc: "Call centers impersonating officials/banks to threaten or persuade victims into transferring funds or giving OTPs.",
+        about_roadmap_1_title: "IN-SPECT URL",
+        about_roadmap_1_desc: "Check domain spellings character by character. Scammers often swap 'l' for 'i' or '0' for 'o'.",
+        about_roadmap_2_title: "ZERO TRUST CLICK",
+        about_roadmap_2_desc: "Avoid opening unexpected links from email/chat. Type the website address manually in your browser.",
+        about_roadmap_3_title: "MFA ENFORCEMENT",
+        about_roadmap_3_desc: "Enable Multi-Factor Authentication (MFA) on all vital accounts as a final line of defense.",
+        about_roadmap_4_title: "AI PROBE SYNC",
+        about_roadmap_4_desc: "Use PhishGuard tools to scan links before engagement to assess risks with the AI database.",
+        about_return_btn: "RETURN_TO_COMMAND_CENTER",
+        // Support Hub (contact.html)
+        contact_header_desc: "High-level support hub. Consult experts and access an all-in-one technical troubleshooting database.",
+        contact_dev_title: "DEVELOPER",
+        contact_dev_desc: "Contact the core team for Bug Bounty reports or API and cross-platform infrastructure coordination.",
+        contact_dev_btn: "ACCESS_TERMINAL",
+        contact_faq_title: "DATABASE",
+        contact_faq_desc: "Knowledge base for FAQs, usage roadmaps, and basic security setup guides for individuals and organizations.",
+        contact_faq_btn: "QUERY_INTEL",
+        contact_qa_title: "NETWORK",
+        contact_qa_desc: "Real-time security data exchange network integrated with the community to monitor emerging threats.",
+        contact_qa_btn: "JOIN_COMMS",
+        contact_home_base: "HOME_BASE",
+        // Header Components (Badges & Titles)
+        hdr_home_badge: "LIVE_THREAT_SCANNER_PROTOCOL",
+        hdr_home_title: `PHISH<span class="text-gradient">GUARD</span><br><span class="/20 select-none">CYBER COMMAND.</span>`,
+        hdr_fb_badge: "FACEBOOK_THREAT_DETECTION",
+        hdr_fb_title: `FACEBOOK <span class="text-gradient">DETECTOR.</span>`,
+        hdr_chat_badge: "JANIS_AI_INTELLIGENCE",
+        hdr_chat_title: `NEURAL <span class="text-gradient">CHAT.</span>`,
+        hdr_ocr_badge: "COMPUTER_VISION_SUBSYSTEM",
+        hdr_ocr_title: `OCR <span class="text-gradient">VISION.</span>`,
+        hdr_zd_badge: "HEURISTIC_ANALYSIS_ACTIVE",
+        hdr_zd_title: `ZERO-DAY <span class="text-gradient">HEURISTIC.</span>`,
+        hdr_report_badge: "GLOBAL_THREAT_REPORTING",
+        hdr_report_title: `REPORT <span class="text-gradient">CENTER.</span>`,
+        hdr_news_badge: "LIVE_THREAT_INTELLIGENCE_STREAM",
+        hdr_news_title: `THREAT <span class="text-gradient">FEED.</span>`,
+        hdr_about_badge: "SECURE_LEARNING_PROTOCOL_ACTIVE",
+        hdr_about_title: `PHISHGUARD <span class="text-gradient">MISSION.</span>`,
+        hdr_contact_badge: "INTELLIGENCE_SUPPORT_ESTABLISHED",
+        hdr_contact_title: `SUPPORT <span class="text-gradient">HUB.</span>`,
+        // Admin System (admin_login.html & admin_dashboard.html)
+        admin_login_badge: "ADMIN_ACCESS_PROTOCOL",
+        admin_login_title: `NEURAL <span class="text-gradient">CORE.</span>`,
+        admin_step_1: "STEP_01: IDENTITY_VERIFY",
+        admin_step_2: "STEP_02: CRYPTO_KEY",
+        admin_waiting_token: "WAITING_FOR_TOKEN...",
+        admin_enter_secret: "ENTER_ADMIN_SECRET",
+        admin_login_btn: "INITIALIZE_LOGIN_SEQUENCE",
+        admin_dash_badge: "NEURAL_COMMAND_CENTER :: ACTIVE",
+        admin_dash_title: `ADMIN <span class="text-gradient">DASHBOARD.</span>`,
+        admin_operator: "OPERATOR",
+        admin_level: "LEVEL",
+        admin_terminate_session: "LOG_OUT",
+        admin_tab_moderation: "REPORT_MODERATION",
+        admin_tab_management: "ADMIN_MANAGEMENT",
+        admin_pending_reports: "Pending_Threat_Reports",
+        admin_awaiting_verify: "Awaiting_Neural_Verification",
+        admin_table_timestamp: "TIMESTAMP",
+        admin_table_url: "TARGET_URL",
+        admin_table_type: "TYPE",
+        admin_table_submitter: "SUBMITTER",
+        admin_table_status: "STATUS",
+        admin_table_actions: "ACTIONS",
+        admin_no_reports: "NO_PENDING_THREADS_DETECTED",
+        admin_init_new: "Initialize_New_Admin",
+        admin_init_new_desc: "Add an operative to the command sequence.",
+        admin_authorized_ops: "Authorized_Operatives",
+        admin_add_username: "USERNAME",
+        admin_add_email: "EMAIL",
+        admin_add_password: "PASSWORD",
+        admin_add_btn: "LINK_ADMIN_IDENTITY",
+        // JS Messages
+        admin_msg_token_accepted: "TOKEN_ACCEPTED",
+        admin_msg_provide_key: "Identity verified. Please provide encryption key.",
+        admin_msg_identity_locked: "IDENTITY_LOCKED: ",
+        admin_msg_access_granted: "ACCESS_GRANTED",
+        admin_msg_sync_core: "Synchronizing with Neural Core...",
+        admin_msg_access_denied: "ACCESS_DENIED",
+        admin_msg_comms_failure: "COMMS_FAILURE",
+        admin_msg_reach_failed: "Could not reach Neural Core.",
+        admin_msg_confirm_action: "Perform this moderation action?",
+        admin_msg_confirm_safe: "Confirm this URL as SAFE?",
+        admin_msg_confirm_phish: "Confirm this URL as PHISHING?",
+        admin_msg_mod_success: "MODERATION_SUCCESS",
+        admin_msg_rejection_title: "REJECTION_FEEDBACK",
+        admin_msg_rejection_placeholder: "Reason for rejection...",
+        admin_msg_delete_admin: "Remove access for ",
+        admin_msg_terminate_id: "TERMINATE_IDENTITY?",
+        admin_btn_safe: "SAFE",
+        admin_btn_phish: "PHISHING",
+        admin_btn_reject: "REJECT",
+    }
+};
+
+
+        let currentLang = localStorage.getItem('lang') || 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'th' ? 'en' : 'th';
+            localStorage.setItem('lang', currentLang);
+            updateLanguageUI();
+        }
+
+        // Global translation helper for JS
+        window.t = function(key) {
+            return (translations[currentLang] && translations[currentLang][key]) || key;
+        };
+
+        function updateLanguageUI() {
+            const langLabel = document.getElementById('lang-label');
+            if (langLabel && translations[currentLang]['nav_lang']) {
+                langLabel.innerText = translations[currentLang]['nav_lang'];
+            }
+
+            // --- Janis Expression Control ---
+            window.setJanisState = function(state) {
+                const img = document.getElementById('global-mascot-img');
+                if(!img) return;
+                
+                img.classList.remove('animate-[bounce_0.5s_ease-in-out]', 'animate-[pulse_1s_ease-in-out_infinite]');
+                
+                if(state === 'scanning') {
+                    img.src = '/static/images/janis/thinking.png';
+                    img.classList.add('animate-[pulse_1s_ease-in-out_infinite]');
+                } else if(state === 'safe') {
+                    img.src = '/static/images/janis/safe.png';
+                    img.classList.add('animate-[bounce_0.5s_ease-in-out]');
+                } else if(state === 'danger') {
+                    img.src = '/static/images/janis/danger.png';
+                    img.classList.add('animate-[bounce_0.5s_ease-in-out]');
+                } else if(state === 'error') {
+                    img.src = '/static/images/janis/error.png';
+                } else {
+                    img.src = '/static/images/janis/default.png';
+                }
+            };
+            // --------------------------------
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    // Update innerHTML if it contains layout/meta elements, or just textContent
+                    if (translations[currentLang][key].includes('<')) {
+                        el.innerHTML = translations[currentLang][key];
+                    } else {
+                        el.textContent = translations[currentLang][key];
+                    }
+                }
+            });
+
+            // Update Placeholders Globally
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[currentLang][key]) {
+                    el.placeholder = translations[currentLang][key];
+                }
+            });
+
+            // Update Tooltips/Titles Globally
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                const key = el.getAttribute('data-i18n-title');
+                if (translations[currentLang][key]) {
+                    el.title = translations[currentLang][key];
+                }
+            });
+
+            // Dispatch global event for page-specific scripts to sync
+            window.dispatchEvent(new CustomEvent('languageChanged', { detail: currentLang }));
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            if (menu.classList.contains('translate-x-full')) {
+                menu.classList.remove('translate-x-full');
+            } else {
+                menu.classList.add('translate-x-full');
+            }
+        }
+
+        // Init Language
+        document.addEventListener('DOMContentLoaded', updateLanguageUI);
+    </script>
+</body>
+
+</html>

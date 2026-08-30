@@ -1,0 +1,592 @@
+{% extends "layout.html" %}
+
+{% block title %}Vision | Omni-Channel OCR & Bank QR Forensic Intelligence{% endblock %}
+
+{% block content %}
+<!-- External forensic libraries -->
+<script src="https://cdn.jsdelivr.net/npm/exifreader@4/dist/exif-reader.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<div class="max-w-5xl mx-auto pt-32 pb-32 px-4 relative font-['Kanit'] text-slate-900">
+    <!-- Header -->
+    <header class="text-center mb-16 animate__animated animate__fadeIn">
+        <div class="inline-flex items-center gap-4 px-8 py-3 rounded-full border-2 border-cyan-600 bg-cyan-50 text-cyan-800 font-black text-xs uppercase tracking-[0.3em] mb-8 shadow-md">
+            <i class="fa-solid fa-eye animate-pulse text-cyan-600"></i>
+            <span data-i18n="hdr_ocr_badge">NEURAL_VISION_ACTIVE</span>
+        </div>
+        <h1 class="font-black tracking-tighter mb-6 uppercase italic font-['Orbitron'] text-slate-950" style="font-size: var(--fs-header-title);" data-i18n="hdr_ocr_title">
+            OCR <span class="text-gradient">VISION.</span>
+        </h1>
+        <p class="text-slate-800 max-w-4xl mx-auto font-bold leading-relaxed text-base" data-i18n="ocr_header_desc">
+            สกัดข้อความจากภาพถ่าย/สลิป ตรวจสอบ QR Code ตรวจ EXIF/GPS วิเคราะห์อุปกรณ์และสัญญาณภาพ AI พร้อม Threat Analysis
+        </p>
+    </header>
+
+    <!-- Upload -->
+    <section class="relative group max-w-4xl mx-auto animate__animated animate__fadeInUp">
+        <div class="absolute -inset-2 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-[3rem] blur-xl opacity-10 group-hover:opacity-30 transition duration-1000"></div>
+        <div class="relative cyber-card p-12 md:p-20 text-center border-2 border-slate-300 hover:border-cyan-600 transition-all cursor-pointer bg-white shadow-2xl backdrop-blur-3xl overflow-hidden rounded-3xl" id="upload-zone">
+            <div class="relative z-10">
+                <div class="mb-8"><i class="fa-solid fa-cloud-arrow-up text-7xl text-cyan-700 group-hover:text-cyan-600 group-hover:scale-110 transition-all duration-700"></i></div>
+                <h3 class="text-xl md:text-2xl font-black uppercase tracking-widest mb-4 font-['Orbitron'] text-slate-950" data-i18n="ocr_init_upload">INITIALIZE_UPLOAD</h3>
+                <p class="text-slate-800 text-xs font-black uppercase tracking-wider mb-8 border-t-2 border-b-2 border-slate-300 py-3 inline-block" data-i18n="ocr_max_payload">MAX_PAYLOAD: 10MB // FORMATS: JPG, PNG, WEBP, GIF, HEIC</p>
+                <form action="#" method="POST" enctype="multipart/form-data" id="ocr-form" onsubmit="return false;">
+                    <input type="file" id="file-upload" class="hidden" accept="image/*">
+                    <label for="file-upload" class="cyber-btn px-6 py-4 md:px-12 md:py-5 text-sm font-black tracking-widest inline-block mobile-full shadow-lg cursor-pointer">
+                        เลือกไฟล์ภาพ / สลิปธนาคาร (SELECT_IMAGE_FILE)
+                    </label>
+                </form>
+            </div>
+            <div id="scan-line" class="absolute left-0 right-0 h-[2px] bg-cyan-600 shadow-[0_0_30px_#0284c7] opacity-0 group-hover:opacity-100 pointer-events-none"></div>
+        </div>
+    </section>
+
+    <!-- Preview -->
+    <section id="active-preview-card" class="mt-12 hidden animate__animated animate__fadeIn max-w-4xl mx-auto" aria-live="polite">
+        <div class="cyber-card p-6 md:p-8 bg-white text-slate-950 rounded-2xl shadow-xl border-2 border-slate-950">
+            <div class="flex items-center justify-between border-b-2 border-slate-950 pb-4 mb-6">
+                <div class="flex items-center gap-3"><i class="fa-solid fa-image text-xl"></i><span class="text-xs font-mono font-black uppercase tracking-wider">IMAGE_PREVIEW // รูปภาพที่อัปโหลด</span></div>
+                <span id="preview-file-size" class="text-xs font-mono font-black">0 Bytes</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-6 flex justify-center bg-slate-50 p-4 rounded-xl border-2 border-slate-950 shadow-sm">
+                    <img id="instant-image-preview" src="" alt="Uploaded Evidence" class="max-h-[360px] w-auto object-contain rounded-lg shadow-md border-2 border-slate-950">
+                </div>
+                <div class="md:col-span-6 space-y-4 font-mono text-xs">
+                    <div class="bg-slate-50 p-5 rounded-xl border-2 border-slate-950 space-y-3">
+                        <div class="flex justify-between border-b border-slate-300 pb-2"><span class="text-slate-700 font-bold">ชื่อไฟล์:</span><span id="preview-filename" class="text-slate-950 font-black truncate max-w-[200px]" title="">-</span></div>
+                        <div class="flex justify-between border-b border-slate-300 pb-2"><span class="text-slate-700 font-bold">ขนาดพิกเซล:</span><span id="preview-dimensions" class="text-slate-950 font-black">-</span></div>
+                        <div class="flex justify-between border-b border-slate-300 pb-2"><span class="text-slate-700 font-bold">ประเภทไฟล์:</span><span id="preview-filetype" class="text-slate-950 font-black">-</span></div>
+                        <div class="flex justify-between"><span class="text-slate-700 font-bold">วันที่แก้ไขล่าสุด:</span><span id="preview-filedate" class="text-slate-950 font-black">-</span></div>
+                    </div>
+                    <div id="quick-ocr-status" class="bg-white border-2 border-slate-950 p-4 rounded-xl flex items-center gap-4 shadow-sm">
+                        <div class="w-6 h-6 border-3 border-green-600 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+                        <span id="quick-status-text" class="text-slate-950 text-xs font-black font-mono">กำลังประมวลผลข้อความ, QR Code และวิเคราะห์ข้อมูล...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processing -->
+    <section id="processing-state" class="mt-8 hidden animate__animated animate__fadeIn max-w-4xl mx-auto" aria-live="polite">
+        <div class="cyber-card p-6 bg-white border-2 border-cyan-600 shadow-xl rounded-xl">
+            <div class="flex items-center gap-6">
+                <div class="w-12 h-12 rounded-full border-4 border-cyan-200 border-t-cyan-700 animate-spin flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-center mb-1"><p class="text-slate-950 font-black uppercase tracking-widest text-xs">NEURAL_VISION_SCANNING</p><span id="ocr-progress-pct" class="text-xs font-mono font-black text-cyan-800">0%</span></div>
+                    <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden border border-slate-400"><div id="ocr-progress-bar" class="bg-gradient-to-r from-cyan-600 to-blue-700 h-3 rounded-full transition-all duration-300" style="width:0%"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <canvas id="hidden-ocr-canvas" class="hidden"></canvas>
+
+    <!-- Results -->
+    <section id="ocr-result-container" class="mt-12 max-w-4xl mx-auto hidden" aria-live="polite">
+        <div class="cyber-card overflow-hidden border-2 border-slate-950 bg-white shadow-2xl rounded-2xl">
+            <div class="bg-slate-100 px-8 py-4 border-b-2 border-slate-950 flex items-center justify-between text-slate-950">
+                <div class="flex items-center gap-3"><span class="w-3.5 h-3.5 rounded-full bg-rose-500 border border-slate-950"></span><span class="w-3.5 h-3.5 rounded-full bg-amber-500 border border-slate-950"></span><span class="w-3.5 h-3.5 rounded-full bg-emerald-500 border border-slate-950"></span></div>
+                <span class="text-xs font-black uppercase tracking-[0.3em] italic font-mono">IMAGE_FORENSIC_INTELLIGENCE</span>
+            </div>
+
+            <div class="p-8 md:p-12 space-y-10">
+                <div class="flex items-center justify-between border-b-2 border-slate-200 pb-6 flex-wrap gap-4">
+                    <div class="flex items-center gap-4"><span class="text-slate-700 font-mono text-xs font-black">[SYSTEM]</span><span class="text-emerald-700 font-mono text-xs font-black uppercase tracking-wider">ANALYSIS_COMPLETE // การวิเคราะห์ภาพเสร็จสมบูรณ์</span></div>
+                    <span id="scan-timestamp" class="text-slate-800 font-mono text-xs font-black"></span>
+                </div>
+
+                <!-- QR -->
+                <section id="bank-qr-card" class="hidden cyber-card bg-white text-slate-950 rounded-2xl p-6 md:p-8 border-2 border-slate-950 shadow-xl space-y-6">
+                    <div class="flex justify-between items-center border-b-2 border-slate-950 pb-4 flex-wrap gap-3">
+                        <h4 class="text-slate-950 font-black tracking-wider uppercase flex items-center gap-3 text-base font-mono"><i id="qr-type-icon" class="fa-solid fa-qrcode text-xl text-green-600"></i><span id="qr-card-title-text">ผลการวิเคราะห์ QR CODE</span></h4>
+                        <span id="bank-qr-status-badge" class="px-4 py-1.5 bg-green-50 text-green-700 border-2 border-green-600 text-xs font-black rounded-lg font-mono">QR_CODE_DETECTED</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-xs">
+                        <div class="bg-slate-50 p-5 rounded-xl border-2 border-slate-950 space-y-4">
+                            <div class="flex justify-between border-b border-slate-300 pb-3 items-center"><span id="qr-field1-label" class="text-slate-700 font-bold">ประเภท:</span><span id="bank-name-val" class="text-slate-950 font-black text-sm text-right break-words">-</span></div>
+                            <div class="flex justify-between border-b border-slate-300 pb-3 items-center"><span id="qr-field2-label" class="text-slate-700 font-bold">เป้าหมาย:</span><span id="bank-target-val" class="text-green-700 font-black text-sm text-right break-words">-</span></div>
+                            <div class="flex justify-between items-center"><span id="qr-field3-label" class="text-slate-700 font-bold">ประเภท:</span><span id="bank-target-type-val" class="text-slate-950 font-black text-xs text-right break-words">-</span></div>
+                        </div>
+                        <div class="bg-slate-50 p-5 rounded-xl border-2 border-slate-950 space-y-4">
+                            <div class="flex justify-between border-b border-slate-300 pb-3 items-center"><span id="qr-field4-label" class="text-slate-700 font-bold">จำนวนเงิน:</span><span id="bank-amount-val" class="text-slate-950 font-black text-sm text-right break-words">-</span></div>
+                            <div class="flex justify-between border-b border-slate-300 pb-3 items-center"><span id="qr-field5-label" class="text-slate-700 font-bold">สถานะ:</span><span id="bank-verify-status" class="text-emerald-700 font-black text-right break-words">-</span></div>
+                            <div><span class="text-slate-700 font-bold block mb-2">Raw Payload:</span><code id="bank-raw-payload" class="block bg-slate-950 text-emerald-300 rounded-lg p-3 text-[11px] break-all max-h-32 overflow-auto">-</code></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- EXIF -->
+                <section class="space-y-4">
+                    <h4 class="text-slate-950 font-black tracking-wider uppercase flex items-center gap-2 text-sm font-mono border-b-2 border-slate-950 pb-2"><i class="fa-solid fa-microscope text-green-600"></i> ผลการวิเคราะห์ที่มาของภาพ EXIF</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="cyber-card p-6 rounded-xl border-2 border-slate-950 bg-white shadow-md"><div class="text-xs font-mono font-black uppercase mb-2"><i class="fa-solid fa-mobile-screen-button"></i> โทรศัพท์ / รุ่นกล้อง</div><p id="meta-device" class="text-sm font-black font-mono">กำลังตรวจสอบ...</p><p id="meta-device-sub" class="text-xs text-slate-600 font-bold font-mono">-</p></div>
+                        <div class="cyber-card p-6 rounded-xl border-2 border-slate-950 bg-white shadow-md"><div class="text-xs font-mono font-black uppercase mb-2"><i class="fa-solid fa-wand-magic-sparkles"></i> ซอฟต์แวร์ / แอปตัดต่อ</div><p id="meta-software" class="text-sm font-black font-mono">กำลังตรวจสอบ...</p><p id="meta-software-sub" class="text-xs text-slate-600 font-bold font-mono">-</p></div>
+                        <div class="cyber-card p-6 rounded-xl border-2 border-slate-950 bg-white shadow-md"><div class="text-xs font-mono font-black uppercase mb-2"><i class="fa-solid fa-robot"></i> ตรวจสอบการสร้างจาก AI</div><p id="meta-ai-status" class="text-sm font-black font-mono">กำลังตรวจสอบ...</p><p id="meta-ai-sub" class="text-xs text-slate-600 font-bold font-mono">-</p></div>
+                    </div>
+                </section>
+
+                <!-- Vision AI -->
+                <section class="space-y-4">
+                    <h4 class="text-slate-950 font-black tracking-wider uppercase flex items-center gap-2 text-sm font-mono border-b-2 border-slate-950 pb-2"><i class="fa-solid fa-brain text-green-600"></i> วิเคราะห์อุปกรณ์และแหล่งที่มาด้วย AI Vision</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="cyber-card p-6 rounded-xl border-2 border-slate-950 bg-white shadow-md"><div class="text-xs font-mono font-black uppercase mb-2"><i class="fa-solid fa-mobile-screen-button"></i> รุ่นโทรศัพท์/อุปกรณ์ (Vision AI)</div><p id="meta-vision-device" class="text-sm font-black font-mono">กำลังวิเคราะห์ด้วย AI...</p><p class="text-xs text-slate-600 font-bold font-mono">วิเคราะห์จากลักษณะภาพ / UI / Watermark</p></div>
+                        <div class="cyber-card p-6 rounded-xl border-2 border-slate-950 bg-white shadow-md"><div class="text-xs font-mono font-black uppercase mb-2"><i class="fa-solid fa-grid-2"></i> แอพ / แหล่งที่มาของภาพ (Vision AI)</div><p id="meta-source-app" class="text-sm font-black font-mono">กำลังวิเคราะห์ด้วย AI...</p><p class="text-xs text-slate-600 font-bold font-mono">เช่น LINE / Instagram / Screenshot / Camera Roll</p></div>
+                    </div>
+                </section>
+
+                <!-- GPS -->
+                <section id="gps-location-card" class="hidden cyber-card bg-white text-slate-950 rounded-2xl p-6 md:p-8 border-2 border-slate-950 shadow-xl space-y-6">
+                    <div class="flex justify-between items-center border-b-2 border-slate-950 pb-4 flex-wrap gap-3">
+                        <h4 class="font-black tracking-wider uppercase flex items-center gap-3 text-base font-mono"><i class="fa-solid fa-location-dot text-xl text-green-600"></i> พิกัดสถานที่ถ่ายภาพ (EXIF_GPS_LOCATION)</h4>
+                        <div class="flex items-center gap-3"><span class="px-4 py-1.5 bg-green-50 text-green-700 border-2 border-green-600 text-xs font-black rounded-lg font-mono">GPS: <span id="gps-lat-lng-text">0.000, 0.000</span></span><a id="gmaps-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="cyber-btn px-4 py-1.5 text-xs font-mono inline-block shadow-md"><i class="fa-solid fa-map-location-dot"></i> เปิดใน Google Maps</a></div>
+                    </div>
+                    <div class="relative w-full h-80 rounded-xl overflow-hidden border-2 border-slate-950 shadow-inner z-10"><div id="leaflet-map" class="w-full h-full"></div></div>
+                    <div class="flex justify-between items-center text-xs font-mono flex-wrap gap-2"><span>ละติจูด: <strong id="gps-lat-val" class="text-green-700 font-black">0.000000</strong></span><span>ลองจิจูด: <strong id="gps-lng-val" class="text-green-700 font-black">0.000000</strong></span><span id="gps-altitude-val" class="text-slate-600">ความสูง: -</span></div>
+                </section>
+
+                <!-- OCR -->
+                <section class="space-y-4">
+                    <div class="flex justify-between items-center flex-wrap gap-3 border-b-2 border-slate-950 pb-2">
+                        <h4 class="text-slate-950 font-black tracking-wider uppercase flex items-center gap-2 text-sm font-mono"><i class="fa-solid fa-file-lines text-green-600"></i> ข้อความที่ถอดรหัสอ่านได้จากภาพ</h4>
+                        <div class="flex items-center gap-3"><span id="meta-textstats" class="text-xs font-mono font-black">0 คำ / 0 ตัวอักษร</span><button type="button" id="copy-text-btn" class="cyber-btn px-5 py-2.5 text-xs font-mono shadow-md"><i class="fa-solid fa-copy"></i> <span id="copy-btn-text">คัดลอกข้อความ</span></button></div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 border-2 border-slate-950 font-mono shadow-md"><textarea id="extracted-text-box" readonly class="w-full h-52 bg-slate-50 text-slate-950 p-4 rounded-xl font-mono text-sm md:text-base resize-y outline-none leading-relaxed border-2 border-slate-950 focus:border-green-600 font-black tracking-wide" placeholder="กำลังถอดรหัสข้อความ..."></textarea></div>
+                </section>
+
+                <!-- Threat Analysis -->
+                <section id="threat-section" class="bg-rose-100 border-2 border-rose-400 rounded-2xl p-6 space-y-4 font-mono text-xs shadow-md">
+                    <div class="flex justify-between items-center flex-wrap gap-3"><h4 class="text-rose-950 font-black uppercase tracking-wider flex items-center gap-2 text-sm"><i class="fa-solid fa-triangle-exclamation text-rose-700"></i> ผลการตรวจพบลิงก์ & ภัยคุกคามในภาพ (THREAT_ANALYSIS)</h4><div id="risk-badge" class="px-5 py-2 bg-slate-700 text-white text-xs font-black rounded-lg uppercase tracking-wider shadow-md">ANALYZING</div></div>
+                    <div id="detected-urls-list" class="space-y-3"></div>
+                </section>
+
+                <div class="pt-6 border-t-2 border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <button type="button" id="upload-another-btn" class="text-slate-900 hover:text-cyan-800 text-xs font-mono font-black flex items-center gap-2"><i class="fa-solid fa-arrows-rotate"></i> อัปโหลดภาพใหม่</button>
+                    <a href="/report" class="cyber-btn px-8 py-3.5 text-xs font-black tracking-widest inline-block shadow-lg">แจ้งเบาะแสภาพนี้ (REPORT_EVIDENCE)</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Intel -->
+    <section id="tech-intel-section" class="mt-32 hidden animate__animated animate__fadeIn grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div class="p-10 border-l-4 border-cyan-600 bg-white shadow-xl rounded-r-2xl border-2 border-slate-950"><h4 class="font-black uppercase tracking-widest mb-4 flex items-center gap-3 text-slate-950"><i class="fa-solid fa-circle-info text-cyan-600"></i> หลักการทำงานของเอ็นจิ้น</h4><p class="text-slate-800 text-sm font-bold leading-relaxed">ระบบใช้ Vision API เป็น OCR หลัก และใช้ Tesseract.js เป็น fallback พร้อม jsQR สำหรับ QR Code, ExifReader สำหรับ EXIF/GPS และ Leaflet สำหรับแผนที่</p></div>
+        <div class="p-10 border-l-4 border-amber-500 bg-white shadow-xl rounded-r-2xl border-2 border-slate-950"><h4 class="font-black uppercase tracking-widest mb-4 flex items-center gap-3 text-slate-950"><i class="fa-solid fa-bolt text-amber-600"></i> การตอบสนองภัยคุกคาม</h4><p class="text-slate-800 text-sm font-bold leading-relaxed">ระบบสกัด URL และคีย์เวิร์ดที่เกี่ยวข้องกับการหลอกลวง พร้อมจัดระดับความเสี่ยงและส่ง URL ไปยังหน้า scanner ของระบบ</p></div>
+    </section>
+</div>
+
+<style>
+@keyframes ocrScan { 0%{top:0;opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{top:100%;opacity:0} }
+.group:hover #scan-line { animation:ocrScan 2.5s linear infinite; }
+</style>
+
+<script>
+(() => {
+    'use strict';
+
+    const state = {
+        currentText: '',
+        leafletMap: null,
+        processingToken: 0
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const setText = (id, value) => { const el = $(id); if (el) el.textContent = value ?? '-'; return el; };
+    const show = (id, display = 'block') => { const el = $(id); if (!el) return; el.classList.remove('hidden'); el.style.display = display; };
+    const hide = (id) => { const el = $(id); if (!el) return; el.classList.add('hidden'); el.style.display = 'none'; };
+
+    function formatBytes(bytes, decimals = 2) {
+        if (!Number.isFinite(bytes) || bytes <= 0) return '0 Bytes';
+        const units = ['Bytes','KB','MB','GB','TB'];
+        const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+        return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(Math.max(0, decimals)))} ${units[i]}`;
+    }
+
+    function updateProgress(percent, message) {
+        const pct = Math.max(0, Math.min(100, Math.round(percent)));
+        const bar = $('ocr-progress-bar');
+        if (bar) bar.style.width = `${pct}%`;
+        setText('ocr-progress-pct', `${pct}%`);
+        if (message) setText('quick-status-text', message);
+    }
+
+    function resetResultState() {
+        hide('ocr-result-container');
+        hide('tech-intel-section');
+        hide('bank-qr-card');
+        hide('gps-location-card');
+        show('processing-state');
+        state.currentText = '';
+        setText('meta-textstats', '0 คำ / 0 ตัวอักษร');
+        setText('scan-timestamp', '');
+        setText('extracted-text-box', '');
+        const box = $('extracted-text-box'); if (box) box.value = '';
+        setText('risk-badge', 'ANALYZING');
+        const risk = $('risk-badge'); if (risk) risk.className = 'px-5 py-2 bg-slate-700 text-white text-xs font-black rounded-lg uppercase tracking-wider shadow-md';
+        const list = $('detected-urls-list'); if (list) list.replaceChildren();
+        setText('meta-device', 'กำลังตรวจสอบ...'); setText('meta-device-sub', '-');
+        setText('meta-software', 'กำลังตรวจสอบ...'); setText('meta-software-sub', '-');
+        setText('meta-ai-status', 'กำลังตรวจสอบ...'); setText('meta-ai-sub', '-');
+        setText('meta-vision-device', 'กำลังวิเคราะห์ด้วย AI...'); setText('meta-source-app', 'กำลังวิเคราะห์ด้วย AI...');
+    }
+
+    function isImageFile(file) {
+        return !!file && (file.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|heic|heif)$/i.test(file.name));
+    }
+
+    $('upload-zone')?.addEventListener('click', (event) => {
+        if (event.target.closest('#file-upload, label')) return;
+        $('file-upload')?.click();
+    });
+
+    $('upload-another-btn')?.addEventListener('click', () => $('file-upload')?.click());
+    $('copy-text-btn')?.addEventListener('click', copyExtractedText);
+    $('file-upload')?.addEventListener('change', handleFileSelection);
+
+    async function handleFileSelection(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        if (!isImageFile(file)) {
+            setText('quick-status-text', 'ไฟล์นี้ไม่ใช่รูปภาพที่รองรับ');
+            event.target.value = '';
+            return;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+            setText('quick-status-text', 'ไฟล์มีขนาดเกิน 10MB');
+            event.target.value = '';
+            return;
+        }
+
+        const token = ++state.processingToken;
+        resetResultState();
+        show('active-preview-card');
+        updateProgress(10, 'กำลังเตรียมไฟล์ภาพ...');
+
+        setText('preview-filename', file.name); $('preview-filename')?.setAttribute('title', file.name);
+        setText('preview-filetype', (file.type || 'IMAGE/UNKNOWN').toUpperCase());
+        setText('preview-file-size', formatBytes(file.size));
+        setText('preview-filedate', file.lastModified ? new Date(file.lastModified).toLocaleString('th-TH') : new Date().toLocaleString('th-TH'));
+
+        try {
+            const dataUrl = await readAsDataURL(file);
+            if (token !== state.processingToken) return;
+            const img = await loadImage(dataUrl);
+            const preview = $('instant-image-preview'); if (preview) preview.src = dataUrl;
+            setText('preview-dimensions', `${img.naturalWidth} × ${img.naturalHeight} px`);
+
+            scanCanvasForQRCode(img);
+            analyzeImageForensics(file);
+            await performDualOCRRecognition(file, token);
+        } catch (error) {
+            console.error('Image processing error:', error);
+            finalizeOCRResult('', file, token, 'เกิดข้อผิดพลาดระหว่างประมวลผลภาพ');
+        }
+    }
+
+    function readAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error || new Error('FileReader failed'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function loadImage(src) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => reject(new Error('Image decode failed'));
+            img.src = src;
+        });
+    }
+
+    function scanCanvasForQRCode(img) {
+        if (typeof jsQR === 'undefined') return;
+        const canvas = $('hidden-ocr-canvas');
+        if (!canvas) return;
+        const maxDimension = 2400;
+        const scale = Math.min(1, maxDimension / Math.max(img.naturalWidth, img.naturalHeight));
+        canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        try {
+            const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(data.data, data.width, data.height, { inversionAttempts: 'attemptBoth' });
+            if (code?.data) renderQRCodeCard(parseQRCodePayload(code.data));
+        } catch (error) {
+            console.debug('QR scan:', error);
+        }
+    }
+
+    function baseQRInfo(payload) {
+        const text = String(payload || '').trim();
+        return {
+            type: 'TEXT_GENERAL',
+            type_title: 'ผลการวิเคราะห์ QR CODE ข้อความทั่วไป (GENERAL_TEXT_QR)',
+            type_badge: 'TEXT_QR_CODE',
+            icon_class: 'fa-solid fa-font text-xl text-green-600',
+            field1_label: 'ประเภทข้อมูล:', field1_val: 'ข้อความทั่วไป / รหัสซีเรียล',
+            field2_label: 'ความยาวข้อความ:', field2_val: `${text.length} ตัวอักษร`,
+            field3_label: 'รูปแบบ Encoding:', field3_val: 'UTF-8 Plaintext',
+            field4_label: 'เนื้อหาใน QR:', field4_val: text.length > 25 ? `${text.slice(0,25)}...` : text,
+            field5_val: 'ถอดรหัสข้อความใน QR Code สำเร็จ', raw_payload: text
+        };
+    }
+
+    function parseQRCodePayload(payload) {
+        const text = String(payload || '').trim();
+        if (!text) return null;
+        const lower = text.toLowerCase();
+        const q = baseQRInfo(text);
+
+        if (text.includes('A000000677010111') || text.includes('A000000677010112') || text.startsWith('000201')) {
+            q.type = 'BANK_PAYMENT'; q.type_title = 'ผลการวิเคราะห์ QR CODE ธนาคาร / พร้อมเพย์ (BANK_PAYMENT_QR)'; q.type_badge = 'PAYMENT_QR_DETECTED'; q.icon_class = 'fa-solid fa-money-bill-transfer text-xl text-green-600';
+            q.field1_label = '🏦 สถาบันการเงิน / ธนาคาร:'; q.field1_val = 'พร้อมเพย์ / Thai QR Payment';
+            q.field2_label = '👤 บัญชีผู้รับเงิน / พร้อมเพย์:'; q.field2_val = 'ผู้รับเงินตามระบบพร้อมเพย์';
+            q.field3_label = 'ประเภทบัญชี/ID:'; q.field3_val = 'พร้อมเพย์ (PromptPay)';
+            q.field4_label = '💰 จำนวนเงิน (Amount):'; q.field4_val = 'ผู้จ่ายระบุจำนวนเงิน';
+            q.field5_val = 'ตรวจพบโครงสร้าง QR สำหรับการชำระเงิน';
+            if (lower.includes('scb') || text.includes('000414')) q.field1_val = 'SCB (ธนาคารไทยพาณิชย์)';
+            else if (lower.includes('kbank') || text.includes('000004')) q.field1_val = 'KBank (ธนาคารกสิกรไทย)';
+            else if (lower.includes('ktb') || text.includes('000006')) q.field1_val = 'KTB (ธนาคารกรุงไทย)';
+            else if (lower.includes('bbl') || text.includes('000002')) q.field1_val = 'BBL (ธนาคารกรุงเทพ)';
+            else if (lower.includes('bay') || text.includes('000025')) q.field1_val = 'BAY (ธนาคารกรุงศรีอยุธยา)';
+            else if (lower.includes('ttb') || text.includes('000011')) q.field1_val = 'TTB (ธนาคารทหารไทยธนชาต)';
+            else if (lower.includes('gsb') || text.includes('000030')) q.field1_val = 'GSB (ธนาคารออมสิน)';
+            const mobile = text.match(/01130066(\d{9})/);
+            if (mobile) { q.field2_val = `0${mobile[1]}`.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'); q.field3_val = 'หมายเลขโทรศัพท์พร้อมเพย์'; }
+            const tax = text.match(/0213(\d{13})/);
+            if (tax) { q.field2_val = tax[1]; q.field3_val = 'เลขประจำตัวผู้เสียภาษี/บัตรประชาชน'; }
+            const amount = text.match(/54(\d{2})(\d+\.\d{2}|\d+)/);
+            if (amount) { const len = Number(amount[1]); const value = amount[2].slice(0, len); if (!Number.isNaN(Number(value))) q.field4_val = `${Number(value).toLocaleString('th-TH',{minimumFractionDigits:2})} บาท`; }
+            return q;
+        }
+
+        if (/^(https?:\/\/|line:\/\/|wa\.me\/)/i.test(text)) {
+            q.type = 'URL_WEBSITE'; q.type_title = 'ผลการวิเคราะห์ QR CODE ลิงก์เว็บไซต์ / โซเชียล (WEBSITE_URL_QR)'; q.type_badge = 'URL_QR_DETECTED'; q.icon_class = 'fa-solid fa-link text-xl text-green-600';
+            q.field1_label = '🌐 ประเภท QR Code:'; q.field1_val = 'เว็บไซต์ / ลิงก์ URL'; q.field2_label = '🔗 ที่อยู่ปลายทาง:'; q.field2_val = text;
+            try { q.field3_label = '🔒 โดเมนหลัก:'; q.field3_val = new URL(text.startsWith('http') ? text : `https://${text}`).hostname; } catch { q.field3_label = 'ชนิดลิงก์:'; q.field3_val = 'Web Application Link'; }
+            q.field4_label = '🚀 ทางลัดเปิดลิงก์:'; q.field4_val = text; q.field5_val = 'ตรวจพบลิงก์ URL ใน QR Code';
+            return q;
+        }
+
+        if (lower.startsWith('wifi:')) {
+            q.type = 'WIFI_NETWORK'; q.type_title = 'ผลการวิเคราะห์ QR CODE เชื่อมต่อ Wi-Fi (WIFI_NETWORK_QR)'; q.type_badge = 'WIFI_QR_DETECTED'; q.icon_class = 'fa-solid fa-wifi text-xl text-green-600';
+            const ssid = text.match(/S:([^;]+)/i), pass = text.match(/P:([^;]+)/i), auth = text.match(/T:([^;]+)/i);
+            q.field1_label = '📶 ชื่อเครือข่าย Wi-Fi (SSID):'; q.field1_val = ssid ? ssid[1] : 'ไม่ระบุชื่อ';
+            q.field2_label = '🔑 รหัสผ่าน (Password):'; q.field2_val = pass ? pass[1] : 'ไม่มีรหัสผ่าน (Open Network)';
+            q.field3_label = '🛡️ ระบบเข้ารหัส:'; q.field3_val = auth ? auth[1].toUpperCase() : 'WPA/WPA2'; q.field4_label = 'สถานะการเชื่อมต่อ:'; q.field4_val = 'พบข้อมูลเครือข่าย'; q.field5_val = 'โครงสร้าง Wi-Fi QR Code ถูกต้อง';
+            return q;
+        }
+
+        if (lower.includes('begin:vcard') || lower.startsWith('mecard:')) {
+            q.type = 'VCARD_CONTACT'; q.type_title = 'ผลการวิเคราะห์ QR CODE ข้อมูลติดต่อบุคคล (CONTACT_VCARD_QR)'; q.type_badge = 'VCARD_QR_DETECTED'; q.icon_class = 'fa-solid fa-address-card text-xl text-green-600';
+            const name = text.match(/(?:FN|N):([^\r\n;]+)/i), tel = text.match(/TEL[^:]*:([^\r\n;]+)/i), email = text.match(/EMAIL[^:]*:([^\r\n;]+)/i);
+            q.field1_label = '👤 ชื่อผู้ติดต่อ:'; q.field1_val = name ? name[1].trim() : 'ไม่ระบุชื่อ'; q.field2_label = '📞 หมายเลขโทรศัพท์:'; q.field2_val = tel ? tel[1].trim() : '-'; q.field3_label = '✉️ อีเมล:'; q.field3_val = email ? email[1].trim() : '-'; q.field4_label = 'ประเภทการ์ด:'; q.field4_val = 'vCard Contact Profile'; q.field5_val = 'ข้อมูลผู้ติดต่อ vCard ถูกถอดรหัสแล้ว';
+        }
+        return q;
+    }
+
+    function renderQRCodeCard(q) {
+        if (!q) return;
+        setText('qr-card-title-text', q.type_title); setText('bank-qr-status-badge', q.type_badge);
+        const icon = $('qr-type-icon'); if (icon) icon.className = q.icon_class || 'fa-solid fa-qrcode text-xl text-green-600';
+        setText('qr-field1-label', q.field1_label); setText('bank-name-val', q.field1_val); setText('qr-field2-label', q.field2_label); setText('bank-target-val', q.field2_val); setText('qr-field3-label', q.field3_label); setText('bank-target-type-val', q.field3_val); setText('qr-field4-label', q.field4_label); setText('bank-amount-val', q.field4_val); setText('qr-field5-label', 'สถานะการตรวจสอบ:'); setText('bank-verify-status', q.field5_val); setText('bank-raw-payload', q.raw_payload);
+        show('bank-qr-card');
+    }
+
+    function analyzeImageForensics(file) {
+        const defaults = () => { setText('meta-device','ไม่พบข้อมูลกล้อง (No EXIF)'); setText('meta-device-sub','ภาพอาจเป็น Screenshot หรือไฟล์ที่ถูกลบ Metadata'); setText('meta-software','ไม่พบร่องรอยซอฟต์แวร์'); setText('meta-software-sub','-'); setText('meta-ai-status','ไม่พบข้อมูลสถิติ AI'); setText('meta-ai-sub','ต้องใช้ Vision AI ประกอบ'); };
+        if (typeof ExifReader === 'undefined') { defaults(); return; }
+        ExifReader.load(file).then(tags => {
+            const make = tags.Make?.description, model = tags.Model?.description, lens = tags.LensModel?.description;
+            setText('meta-device', make || model ? `${make || ''} ${model || ''}`.trim() : 'ไม่พบข้อมูลกล้องถ่าย'); setText('meta-device-sub', make || model ? (lens ? `เลนส์: ${lens}` : 'ข้อมูล EXIF จากกล้องถ่าย') : 'ภาพสกรีนช็อตหรือภาพที่ไม่มี EXIF');
+            const software = tags.Software?.description || tags.ProcessingSoftware?.description || tags.HostComputer?.description;
+            setText('meta-software', software || 'ไม่พบร่องรอยแอปตัดต่อ'); setText('meta-software-sub', software ? 'ตรวจพบข้อมูลซอฟต์แวร์ใน Metadata' : 'ไม่พบ Software tag');
+            const signatures = ['midjourney','dall-e','dalle','stable diffusion','comfyui','firefly','bing image creator','chatgpt','novelai','c2pa','generative'];
+            let ai = false, reason = '';
+            outer: for (const key of Object.keys(tags)) { const desc = String(tags[key]?.description ?? '').toLowerCase(); for (const sig of signatures) { if (desc.includes(sig)) { ai = true; reason = `พบ Metadata ที่เกี่ยวข้องกับ ${sig}`; break outer; } } }
+            const fname = file.name.toLowerCase(); if (!ai && /(midjourney|dalle|stable[_ -]?diffusion)/.test(fname)) { ai = true; reason = 'ชื่อไฟล์มีรูปแบบที่เกี่ยวข้องกับภาพสังเคราะห์ AI'; }
+            setText('meta-ai-status', ai ? '🚨 ตรวจพบสัญญาณภาพจาก AI' : (make || model ? '✅ พบข้อมูล Hardware EXIF' : '⚪ ไม่พบหลักฐาน AI จาก Metadata')); setText('meta-ai-sub', reason || (make || model ? 'มี EXIF Hardware Data' : 'ไม่พบ Metadata ที่ยืนยันการสร้างด้วย AI'));
+            const gps = extractGPSFromTags(tags); if (gps) renderGPSMap(gps.lat, gps.lng, gps.alt); else hide('gps-location-card');
+        }).catch(() => { defaults(); hide('gps-location-card'); });
+    }
+
+    function extractGPSFromTags(tags) {
+        if (tags?.gps && Number.isFinite(tags.gps.Latitude) && Number.isFinite(tags.gps.Longitude)) return {lat: tags.gps.Latitude, lng: tags.gps.Longitude, alt: Number.isFinite(tags.gps.Altitude) ? tags.gps.Altitude : null};
+        if (!tags?.GPSLatitude || !tags?.GPSLongitude) return null;
+        try {
+            const raw = (tag) => tag?.description ?? tag?.value;
+            const parse = (value, ref) => {
+                if (typeof value === 'number') return ['S','W'].includes(ref) ? -value : value;
+                if (Array.isArray(value) && value.length >= 3) {
+                    const ratio = x => Array.isArray(x) ? x[0] / (x[1] || 1) : Number(x);
+                    const d = ratio(value[0]), m = ratio(value[1]), s = ratio(value[2]); const result = d + m/60 + s/3600; return ['S','W'].includes(ref) ? -result : result;
+                }
+                const result = Number.parseFloat(value); return ['S','W'].includes(ref) ? -result : result;
+            };
+            const latRef = String(raw(tags.GPSLatitudeRef) || 'N').toUpperCase(); const lngRef = String(raw(tags.GPSLongitudeRef) || 'E').toUpperCase();
+            const lat = parse(raw(tags.GPSLatitude), latRef), lng = parse(raw(tags.GPSLongitude), lngRef); const alt = tags.GPSAltitude ? Number.parseFloat(raw(tags.GPSAltitude)) : null;
+            return Number.isFinite(lat) && Number.isFinite(lng) ? {lat,lng,alt:Number.isFinite(alt)?alt:null} : null;
+        } catch { return null; }
+    }
+
+    function renderGPSMap(lat, lng, alt) {
+        const card = $('gps-location-card'); if (!card) return;
+        show('gps-location-card'); setText('gps-lat-val', lat.toFixed(6)); setText('gps-lng-val', lng.toFixed(6)); setText('gps-lat-lng-text', `${lat.toFixed(4)}, ${lng.toFixed(4)}`); setText('gps-altitude-val', alt != null ? `ความสูง: ${alt.toFixed(1)} เมตร` : 'ความสูง: ไม่ระบุ');
+        const url = `https://www.google.com/maps?q=${encodeURIComponent(`${lat},${lng}`)}`; const link = $('gmaps-link-btn'); if (link) link.href = url;
+        setTimeout(() => {
+            const mapEl = $('leaflet-map'); if (!mapEl || typeof L === 'undefined') return;
+            if (state.leafletMap) { state.leafletMap.remove(); state.leafletMap = null; }
+            state.leafletMap = L.map(mapEl).setView([lat,lng],15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(state.leafletMap);
+            L.marker([lat,lng]).addTo(state.leafletMap).bindPopup(`พิกัดภาพ: ${lat.toFixed(5)}, ${lng.toFixed(5)}`).openPopup();
+            setTimeout(() => state.leafletMap?.invalidateSize(), 100);
+        }, 150);
+    }
+
+    async function performDualOCRRecognition(file, token) {
+        updateProgress(35, 'กำลังสกัดข้อความในพิกเซลภาพด้วย AI...');
+        try {
+            const form = new FormData(); form.append('file', file);
+            const response = await fetch('/api/ocr', {method:'POST', body:form});
+            if (!response.ok) throw new Error(`OCR API ${response.status}`);
+            const data = await response.json();
+            if (token !== state.processingToken) return;
+            applyVisionAIResult(data);
+            if (data?.success && String(data.text || '').trim()) { updateProgress(100,'ถอดรหัสข้อความเสร็จสมบูรณ์ (Vision AI)'); finalizeOCRResult(data.text,file,token); return; }
+        } catch (error) { console.warn('Backend OCR failed; using Tesseract fallback:', error); }
+        const text = await runClientTesseract(file, updateProgress);
+        if (token === state.processingToken) { updateProgress(100,'ถอดรหัสข้อความเสร็จสมบูรณ์ (Tesseract)'); finalizeOCRResult(text,file,token); }
+    }
+
+    function applyVisionAIResult(data) {
+        let reason = String(data?.ai_reason || '')
+            .replace(/\*\*/g, '')
+            .replace(/[-•*]\s*/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        // แสดงเหตุผลเต็ม ไม่ตัดเหลือ 120 ตัวอักษร
+        if (data?.ai_status === 'failed' || data?.ai_status === 'unavailable') {
+            setText('meta-ai-status', '⚠️ ไม่สามารถวิเคราะห์ AI ได้');
+            setText('meta-ai-sub', reason || 'ระบบไม่สามารถประเมินภาพนี้ได้ในขณะนี้');
+        } else if (data?.is_ai) {
+            setText('meta-ai-status', '🚨 ตรวจพบสัญญาณภาพสังเคราะห์จาก AI');
+            setText('meta-ai-sub', reason || 'Vision AI ตรวจพบลักษณะที่อาจเกี่ยวข้องกับภาพสังเคราะห์');
+        } else {
+            setText('meta-ai-status', '✅ ไม่พบหลักฐาน AI ที่ชัดเจน');
+            setText('meta-ai-sub', reason || 'จากการวิเคราะห์ ไม่พบหลักฐานเด่นชัดที่บ่งชี้ว่าภาพสร้างด้วย AI');
+        }
+        setText('meta-vision-device', data?.device_hint && data.device_hint !== 'Unknown' ? data.device_hint : 'ไม่สามารถระบุได้จากลักษณะภาพ');
+        setText('meta-source-app', data?.source_app && data.source_app !== 'Unknown' ? data.source_app : 'ไม่พบสัญลักษณ์แอพที่ชัดเจน');
+    }
+
+    async function runClientTesseract(file, progress) {
+        if (typeof Tesseract === 'undefined') return '';
+        progress(50,'กำลังถอดรหัสข้อความด้วย Tesseract Core...');
+        try {
+            const result = await Tesseract.recognize(file,'eng+tha',{logger:m=>{if(m.status==='recognizing text'){const p=Math.round(m.progress*100);progress(Math.min(95,50+Math.round(p*.45)),`กำลังแกะข้อความ... (${p}%)`);}}});
+            return result?.data?.text || '';
+        } catch (error) {
+            console.warn('Tesseract eng+tha failed:',error);
+            try { const result = await Tesseract.recognize(file,'eng'); return result?.data?.text || ''; } catch { return ''; }
+        }
+    }
+
+    function finalizeOCRResult(text, file, token, errorMessage = '') {
+        if (token !== state.processingToken) return;
+        state.currentText = String(text || '').trim();
+        parseBankTextFromOCR(state.currentText);
+        const words = state.currentText ? state.currentText.split(/\s+/).filter(Boolean).length : 0;
+        setText('meta-textstats', `${words} คำ / ${state.currentText.length} ตัวอักษร`);
+        const box = $('extracted-text-box'); if (box) box.value = state.currentText || (errorMessage || '[ระบบประมวลผลแล้ว แต่ไม่พบข้อความตัวอักษร หรือข้อความมีความเบลอเป็นอย่างมาก]');
+        analyzeThreats(state.currentText);
+        setText('scan-timestamp', `TIMESTAMP: ${new Date().toLocaleTimeString('th-TH')}`);
+        hide('processing-state'); show('ocr-result-container'); show('tech-intel-section','grid');
+        setText('quick-status-text', errorMessage || 'การวิเคราะห์เสร็จสมบูรณ์');
+    }
+
+    function analyzeThreats(text) {
+        const normalized = String(text || '');
+        const lower = normalized.toLowerCase();
+        const urlRegex = /(?:https?:\/\/[^\s]+|(?:www\.)?[a-zA-Z0-9-]+\.(?:com|co\.th|net|org|xyz|tk|ga|ml|cf|gq|top|vip|live|online|site)(?:\/[^\s]*)?)/gi;
+        const urls = [...new Set((normalized.match(urlRegex) || []).map(u => u.replace(/[.,;)]+$/,'')))];
+        const keywords = ['login','verify','account','password','scb','kbank','krungthai','bangkokbank','shopee','lazada','โอนเงิน','ยืนยัน','อัปเดต','รับรางวัล','bit.ly','@'];
+        const found = keywords.filter(k => lower.includes(k));
+        const highRisk = urls.length > 0 || found.length >= 2;
+        const list = $('detected-urls-list'); if (!list) return; list.replaceChildren();
+        if (urls.length) urls.forEach(url => list.appendChild(createThreatURLItem(url)));
+        else if (found.length) { const item=document.createElement('div'); item.className='text-xs text-amber-950 font-mono bg-amber-100 border-2 border-amber-400 rounded-xl p-4 font-black'; item.textContent=`⚠ ตรวจพบคำสุ่มเสี่ยงหลอกลวงในภาพ: ${found.join(', ')}`; list.appendChild(item); }
+        else { const item=document.createElement('div'); item.className='text-xs text-emerald-950 font-mono bg-emerald-100 border-2 border-emerald-400 rounded-xl p-4 font-black'; item.textContent='✓ ไม่พบ URL หรือสัญลักษณ์ภัยคุกคามในข้อความภาพนี้'; list.appendChild(item); }
+        const badge=$('risk-badge'); if(!badge)return;
+        if(highRisk){badge.textContent='CRITICAL DANGER / มีความเสี่ยงสูง'; badge.className='px-5 py-2 bg-rose-700 text-white text-xs font-black rounded-lg uppercase tracking-wider shadow-md animate-pulse';}
+        else if(found.length){badge.textContent='SUSPICIOUS / น่าสงสัย'; badge.className='px-5 py-2 bg-amber-600 text-white text-xs font-black rounded-lg uppercase tracking-wider shadow-md';}
+        else {badge.textContent='SAFE / ปลอดภัย'; badge.className='px-5 py-2 bg-emerald-700 text-white text-xs font-black rounded-lg uppercase tracking-wider shadow-md';}
+    }
+
+    function createThreatURLItem(url) {
+        const item=document.createElement('div'); item.className='flex items-center justify-between bg-white border-2 border-rose-400 rounded-xl p-4 gap-3 flex-wrap shadow-md';
+        const wrap=document.createElement('div'); wrap.className='flex items-center gap-2 font-mono text-xs text-rose-950 font-black truncate max-w-[280px] md:max-w-[400px]';
+        const icon=document.createElement('i'); icon.className='fa-solid fa-link text-rose-700 text-sm'; const span=document.createElement('span'); span.className='font-black truncate'; span.textContent=url; wrap.append(icon,span);
+        const button=document.createElement('button'); button.type='button'; button.className='px-4 py-2 bg-rose-700 hover:bg-rose-800 text-white rounded-lg text-xs font-black font-mono transition-all flex items-center gap-1 shadow-md'; button.innerHTML='<i class="fa-solid fa-magnifying-glass"></i> สแกน URL นี้'; button.addEventListener('click',()=>scanDetectedUrl(url));
+        item.append(wrap,button); return item;
+    }
+
+    function parseBankTextFromOCR(text) {
+        if (!text) return;
+        const lower=text.toLowerCase();
+        const bankSlip = ['scb','kbank','promptpay','พร้อมเพย์','โอนเงินสำเร็จ','โอนเงิน','ไทยพาณิชย์','กสิกร','กรุงไทย'].some(k=>lower.includes(k));
+        if (!bankSlip) return;
+        let bank='พร้อมเพย์ / Thai QR Payment';
+        if(lower.includes('scb')||lower.includes('ไทยพาณิชย์')) bank='SCB (ธนาคารไทยพาณิชย์)';
+        else if(lower.includes('kbank')||lower.includes('กสิกร')) bank='KBank (ธนาคารกสิกรไทย)';
+        else if(lower.includes('krungthai')||lower.includes('กรุงไทย')) bank='KTB (ธนาคารกรุงไทย)';
+        else if(lower.includes('bangkok')||lower.includes('กรุงเทพ')) bank='BBL (ธนาคารกรุงเทพ)';
+        let target='ตรวจพบสลิปการโอนเงิน/QR'; const acc=text.match(/(?:xxx-xxx-\d{4}|\d{3}-\d{3}-\d{4}|\d{10,13})/); if(acc) target=acc[1];
+        const name=text.match(/(นาย|นาง|นางสาว|บริษัท|บจก\.|ร้าน)\s+([^\n\r]+)/); if(name) target += ` (${name[1]} ${name[2].trim()})`;
+        renderQRCodeCard({type_title:'ผลการวิเคราะห์ข้อมูลสลิปธนาคารจาก OCR',type_badge:'BANK_SLIP_DETECTED',icon_class:'fa-solid fa-money-bill-transfer text-xl text-green-600',field1_label:'🏦 ธนาคาร:',field1_val:bank,field2_label:'👤 ผู้รับเงิน:',field2_val:target,field3_label:'ประเภท:',field3_val:'สลิปการโอนเงิน / PromptPay',field4_label:'💰 จำนวนเงิน:',field4_val:'ระบุตามข้อมูลที่ OCR อ่านได้',field5_val:'ตรวจพบข้อมูลที่เกี่ยวข้องกับการโอนเงินจาก OCR',raw_payload:'สกัดข้อมูลจากข้อความบนสลิปธนาคาร'});
+    }
+
+    async function copyExtractedText() {
+        if (!state.currentText) return;
+        try { await navigator.clipboard.writeText(state.currentText); } catch { const box=$('extracted-text-box'); box?.select(); document.execCommand('copy'); }
+        setText('copy-btn-text','คัดลอกสำเร็จ!'); setTimeout(()=>setText('copy-btn-text','คัดลอกข้อความ'),2000);
+    }
+
+    function scanDetectedUrl(url) {
+        const clean = String(url || '').trim();
+        if (!clean) return;
+        window.location.href = `/?url=${encodeURIComponent(clean)}`;
+    }
+})();
+</script>
+{% endblock %}
+EOF
+node --check /dev/stdin < <(python3 - <<'PY'
+from pathlib import Path
+s=Path('/mnt/data/ocr_vision_clean.html').read_text()
+start=s.index('<script>')+len('<script>')
+end=s.rindex('</script>')
+print(s[start:end])
+PY
+)
+
+<style>
+#meta-ai-sub {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+</style>
